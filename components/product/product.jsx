@@ -16,7 +16,7 @@ export default function AllProduct() {
       <section
         id="AllProduct"
         className="AllProduct pro_item mb-3 "
-        onClick={handleNavigation}
+        
       >
         <div className="img_div">
           <Link href={`/shop-product-detail/2`}>
@@ -28,10 +28,10 @@ export default function AllProduct() {
             <p className="price">$80.00</p>
             <p className="old_price">$100.00</p>
           </div>
-          <div className="btn_div">
-            <button className="cart mt-1">Add to cart</button>
-          </div> 
           </Link>
+          <div className="btn_div">
+            <button onClick={handleNavigation} className="cart mt-1">Add to cart</button>
+          </div> 
         </div>
       </section>
       <section id="AllProduct" className="AllProduct pro_item mb-3">
@@ -45,7 +45,7 @@ export default function AllProduct() {
             <p className="old_price">$100.00</p>
           </div>
           <div className="btn_div">
-            <button className="cart mt-1">Add to cart</button>
+            <button onClick={handleNavigation} className="cart mt-1">Add to cart</button>
           </div>
         </div>
       </section>
