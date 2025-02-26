@@ -1,5 +1,5 @@
 import React from "react";
-import "./product_grid.css";
+import "./Product_grid.css";
 export default function ProGrid() {
   return (
     <>
