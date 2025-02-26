@@ -10,12 +10,12 @@ export default function Nav() {
   return (
     <>
       <li>
-        <Link href={`/page-features`}>Home</Link>
+        <Link href={`/`}>Home</Link>
       </li>
 
       <li className="has-dd-menu">
-        <a role="button" aria-haspopup="true">
-          Shop{" "}
+        <Link href={`/all-products`} role="button" aria-haspopup="true">
+          Shop
           <span
             data-uc-navbar-parent-icon=""
             className="uc-icon uc-navbar-parent-icon"
@@ -29,10 +29,10 @@ export default function Nav() {
               />
             </svg>
           </span>
-        </a>
+        </Link>
         {/* uc-navbar-dropdown uc-drop uc-open */}
 
-        <div className={`uc-navbar-dropdown uc-drop w-100`}>
+        {/* <div className={`uc-navbar-dropdown uc-drop w-100`}>
           <div
             className="uc-drop-grid row child-cols g-4 uc-grid uc-grid-stack"
             data-uc-grid=""
@@ -101,18 +101,18 @@ export default function Nav() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </li>
 
       <li>
-        <Link href={`/page-pricing`}>Our Story</Link>
-      </li>
+        <Link href={`/`}>Our Story</Link>
+      </li> 
 
       <li>
-        <Link href={`/page-about`}>Blog</Link>
+        <Link href={`/`}>Blog</Link>
       </li>
       <li>
-        <Link href={`/page-contact-2`}>Contact Us</Link>
+        <Link href={`/`}>Contact Us</Link>
       </li>
     </>
   );

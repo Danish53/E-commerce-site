@@ -3,12 +3,13 @@ import React from "react";
 import "./style.css";
 import { FaRegHeart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AllProduct() {
   const router = useRouter();
 
   const handleNavigation = () => {
-    router.push("/product-details"); // Replace with your target page route
+    router.push("/shop-cart"); // Replace with your target page route
   };
   return (
     <div className="all_product_parent_div">
@@ -18,6 +19,7 @@ export default function AllProduct() {
         onClick={handleNavigation}
       >
         <div className="img_div">
+          <Link href={`/shop-product-detail/2`}>
           <img src="/assets/images/products/productImg.png" alt="" />
           <FaRegHeart className="icon_size" />
           <h2 className="mt-1">Allen Solly</h2>
@@ -28,7 +30,8 @@ export default function AllProduct() {
           </div>
           <div className="btn_div">
             <button className="cart mt-1">Add to cart</button>
-          </div>
+          </div> 
+          </Link>
         </div>
       </section>
       <section id="AllProduct" className="AllProduct pro_item mb-3">
