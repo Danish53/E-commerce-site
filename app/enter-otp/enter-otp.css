@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
+
+.otp {
+  font-family: "Jost" !important;
+}
+#otp .d_flex {
+  display: flex;
+}
+#otp .icon_div {
+  display: flex;
+  gap: 15px;
+}
+
+#otp .square-input {
+  width: 47px;
+  height: 47px;
+  text-align: center;
+  appearance: none;
+  border-radius: 6px;
+  border: 1px solid #b8b9b9;
+  outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#otp .height_width {
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+}
+
+#otp h2 {
+  font-size: 40px;
+  font-weight: 800;
+  font-family: "Jost" !important;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+}
+#otp img {
+  height: 100vh;
+  width: 100%;
+}
+#otp form label {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 0 !important;
+}
+#otp form input.border_radius {
+  border-radius: 11px !important;
+  border: 1px solid #626665;
+}
+#otp .input_parent_div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#otp button {
+  font-family: "Jost" !important;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+  #otp h2 {
+    font-size: 32px;
+    height: 34px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #otp h2 {
+    font-size: 32px;
+    height: 54px;
+  }
+  #otp img {
+    display: none;
+  }
+  #otp input.large {
+    max-width: 100%;
+  }
+  #otp .j-center {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #otp form {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 430px) {
+  #otp p {
+    text-align: center;
+  }
+  #otp form {
+    width: 290px;
+  }
+  #otp input.large {
+    width: 100%;
+    height: 40px;
+  }
+}

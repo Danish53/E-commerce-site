@@ -1,0 +1,59 @@
+#promotions {
+  font-family: "Jost" !important;
+}
+
+#promotions h1 {
+  font-weight: 800;
+  font-size: 48px;
+  color: black;
+  font-family: "Jost" !important;
+  text-align: center;
+}
+#promotions h4 {
+  margin-top: 20px;
+  font-size: 32px;
+  font-weight: 400;
+  text-align: center;
+  font-family: "Jost" !important;
+  color: #626665;
+}
+
+#promotions .tab_div {
+  max-width: 733px;
+  height: 56px;
+  border: 1px solid #626665;
+  border-radius: 137px;
+  margin: 0 auto;
+  padding: 5px 0px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  cursor: pointer;
+}
+#promotions .active {
+  border: 1px solid #5c1391;
+  border-radius: 137px;
+  padding: 14px 30px;
+  font-weight: 600;
+  color: #5c1391 !important;
+}
+#promotions .tab_div p {
+  margin-top: 0 !important;
+  color: #626665;
+}
+
+@media screen and (max-width: 800px) {
+  .tab_div {
+    width: 690px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .tab_div {
+    width: 100%;
+    flex-wrap: wrap;
+    border: none !important;
+    text-align: center;
+    justify-content: center;
+  }
+}

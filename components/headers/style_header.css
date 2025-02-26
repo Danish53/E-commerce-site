@@ -1,0 +1,43 @@
+.icon_div_main {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.icon_size {
+  height: 30px;
+  width: 30px;
+}
+img.icon_size {
+  margin-left: 20px;
+}
+.btn_black {
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  height: 37px;
+  width: 73px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+}
+.nav_main_width {
+  width: 100%;
+}
+.increase_width_left {
+  width: 70%;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 750px) {
+  .increase_width_left {
+    max-width: 30%;
+  }
+}

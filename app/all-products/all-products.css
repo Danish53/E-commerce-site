@@ -1,0 +1,8 @@
+.margin_top {
+  margin-top: 70px !important;
+}
+@media screen and (max-width: 992px) {
+  .show_not {
+    display: none;
+  }
+}
