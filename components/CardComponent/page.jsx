@@ -1,0 +1,77 @@
+"use client";
+import React, { useContext, useState } from "react";
+import "./card.css";
+import { IoMdClose } from "react-icons/io";
+import { RiDeleteBin5Fill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
+import { ResponseContext } from "@/app/login/ResponseContext";
+import Link from "next/link";
+
+export default function Page() {
+  const router = useRouter();
+  const { cart, removeFromCart } = useContext(ResponseContext);
+  console.log(cart, '......cart aa hai na')
+  const [isPopupOpen, setIsPopupOpen] = useState(true);
+
+  const handleCheckout = () => {
+    router.push("/shop-cart");
+  };
+
+  const getTotalAmount = () => {
+    return cart?.reduce((total, item) => total + item.current_price * item.quantity, 0).toFixed(2) || "0.00";
+  };
+
+  return (
+    <div>
+      {isPopupOpen && (
+        <div className={`pop_up show`}>
+          <div className="close_div">
+            <p id="total_item">
+              {cart?.length > 0 ? `You have ${cart.length} items in your cart` : ""}
+            </p>
+            {/* <IoMdClose className="close_icon" onClick={handlePopup} /> */}
+          </div>
+
+          {cart?.length > 0 ? (
+            cart.map((item) => (
+              <div className="pop_up_parent_div mt-3 pb-2" key={item.id}>
+                <div className="img_div">
+                  <img src={item?.thumbnail || "/assets/images/products/checkout_pic.png"} alt="Product" />
+                </div>
+                <div className="content_div">
+                  <p className="prod_title">{item?.title}</p>
+                  <p className="prod_quantity">
+                  {item?.quantity} x ${Number(item?.current_price || 0).toFixed(2)}
+                  </p>
+                  <div className="delete_div">
+                    <p className="sizes">Size: {item?.size || "N/A"}</p>
+                    <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="pop_up_parent_div mt-3 pb-2" style={{width: "220px"}}>
+              <p style={{ margin: "20px auto" }}>Your Cart is empty!</p>
+            </div>
+          )}
+
+          {cart?.length > 0 && (
+            <>
+              <div className="total_div mt-1 mb-1">
+                <p className="sub_total">Subtotal</p>
+                <p className="total_amount">${getTotalAmount()}</p>
+              </div>
+              <div className="btn_div mt-2">
+                {/* <button id="view_cart">View Cart</button> */}
+                <Link href="/shop-cart"><button id="checkout" onClick={handleCheckout}>
+                  Checkout
+                </button></Link>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

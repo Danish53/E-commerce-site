@@ -1,0 +1,142 @@
+.icon_div_main {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+}
+.img_div {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.cart_counter {
+  position: absolute;
+  top: -7px;
+  right: -10px;
+  background: #000000;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.pop_up_compoent {
+  position: absolute;
+  top: 70px;
+  right: 0px;
+  background-color: white !important;
+  border: 1px solid black;
+  visibility: hidden;
+  transition: visibility 0.3s ease-in-out;
+  z-index: 999;
+}
+.show_popup {
+  visibility: visible !important;
+}
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+.icons .search_div {
+  position: absolute;
+  top: 53px;
+  left: 0px;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+.active {
+  visibility: visible !important;
+}
+.icons .search_input {
+  outline: none !important;
+  padding: 2px 3px;
+  border-radius: 5px;
+  /* max-width: 100px; */
+}
+.icon_size {
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+}
+img.icon_size {
+  margin-left: 20px;
+}
+.btn_black {
+  background-color: black;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  height: 37px;
+  width: 73px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+}
+.nav_main_width {
+  width: 100%;
+}
+.increase_width_left {
+  width: 70%;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 750px) {
+  .increase_width_left {
+    max-width: 30%;
+  }
+}
+
+
+.search_div {
+  position: relative;
+  width: 0px; 
+  height: 40px;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 25px;
+  overflow: hidden;
+  transition: width 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: 2px solid #ccc;
+}
+
+.search_div.active {
+  width: 250px; /* Expanded width */
+  box-shadow: 0 0 8px rgba(30, 42, 54, 0.4);
+}
+
+.search_icon {
+  font-size: 18px;
+  color: #777;
+  margin: 0 12px;
+  transition: color 0.3s ease-in-out;
+}
+
+.search_div.active .search_icon {
+  color: #666666;
+}
+
+.search_input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none !important;
+  outline: none !important;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.search_div.active .search_input {
+  opacity: 1;
+}
+

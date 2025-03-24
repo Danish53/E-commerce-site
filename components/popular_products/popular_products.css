@@ -1,0 +1,22 @@
+* {
+  font-family: "Jost" !important;
+}
+
+#popular_products h1 {
+  font-family: "Jost" !important;
+  font-size: 40px;
+  font-weight: 800;
+}
+#popular_products hr {
+  width: 100%;
+  height: 1px;
+  color: #626665;
+}
+
+@media screen and (max-width: 770px) {
+  /* #popular_products .popular_products {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  } */
+}

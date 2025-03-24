@@ -1,0 +1,49 @@
+.myProfile_parent_div {
+  border: 1px solid black;
+  max-width: 284px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  box-shadow: 0px 0px 04px rgba(0, 0, 0, 0.3), 0px 0px 04px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.myProfile_parent_div .bottom_border {
+  /* border-bottom: 2px solid #131118; */
+  width: 80%;
+  padding: 10px 12px;
+  background-color: black;
+  color: white;
+}
+.myProfile {
+  max-width: 284px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 15px;
+  border-bottom: 1px solid black;
+}
+.myProfile p {
+  font-size: 16px;
+  font-weight: 400;
+  color: #626665;
+}
+.myProfile h5 {
+  font-size: 16px;
+  font-weight: 700;
+}
+.myProfile .img_div img {
+  height: 68px;
+  width: 68px;
+}
+.myProfile_parent_div .flex_props {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding-bottom: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .myProfile_parent_div {
+    max-width: 100% !important;
+  }
+}
