@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LanguageSelect from "../common/LanguageSelect";
 import { footerLinks, socialLinks } from "@/data/footer";
+import imgCard from "../../public/assets/images/credit-card.png" 
 
 import { MdOutlinePhoneInTalk } from "react-icons/md";
 import { MdOutlineAttachEmail } from "react-icons/md";
@@ -60,7 +61,8 @@ export default function Footer2() {
                   <CiLocationOn className="icon_size" />
                 </div>
                 <div className="text_div">
-                  <p>3056 Ranchview Dr. Richard California 6269</p>
+                  <p>3056 Ranchview Dr. Richard</p>
+                  <p>California 6269</p>
                 </div>
               </div>
             </div>
@@ -115,7 +117,13 @@ export default function Footer2() {
           {/* <hr /> */}
 
           <div className="bottom_foter pt-3 pb-3 d-flex">
-            <img src="/assets/images/common/visa_card.png" />
+            {/* <img src="/assets/images/common/visa_card.png" />  */}
+            <div style={{display:"flex", alignItems:"center", gap:"10px"}}>
+            <img src="/assets/images/credit-card.png" style={{width:"55px", height:"55px"}} alt="card" />
+            <img src="/assets/images/amex.png" style={{width:"55px", height:"45px"}} alt="card" />
+            <img src="/assets/images/google-pay.png" style={{width:"55px", height:"55px"}} alt="card" />
+            <img src="/assets/images/paypal.png" style={{width:"60px", height:"60px"}} alt="card" />
+            </div>
             <p>2025 Krist All Rights are reserved</p>
             <div className="icon_div">
               <LiaFacebookSquare className="social_icon_size" />

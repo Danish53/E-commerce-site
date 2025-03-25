@@ -16,6 +16,7 @@ import CardComponent from "../CardComponent/page";
 import { toast, Toaster } from "react-hot-toast"
 import { FaSearch } from "react-icons/fa";
 import { ResponseContext } from "@/app/login/ResponseContext";
+import { FaPerson } from "react-icons/fa6";
 
 export default function Header2() {
   const [showSearch, setShowSearch] = useState(false);
@@ -126,14 +127,19 @@ export default function Header2() {
                         className="search_input"
                       />
                     </div>
+
+                    <Link href="/personal-info">
+                      <img className="icon_size cursor-pointer" style={{ marginLeft: "0px", width: "22px", height: "22px" }} src="/assets/images/user.png" alt="" />
+                    </Link>
+
                   </div>
                   <div className={`img_div `} onClick={togglePopup}>
                     <img
                       className="icon_size"
-                      src="/assets/images/common/login.png"
+                      src="/assets/images/add-button.png"
                       alt=""
                     />
-                    <span className="cart_counter">{cart? cart?.length : "0"}</span>
+                    <span className="cart_counter">{cart ? cart?.length : "0"}</span>
                     <div
                       className={`pop_up_compoent ${showPopup ? "show_popup" : ""
                         }`}

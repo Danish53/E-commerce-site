@@ -37,7 +37,6 @@ export default function Page() {
 
     if (!agreeTerms) {
       toast.error("You must agree to the Terms & Conditions.");
-      setLoading(false);
       return;
     }
 

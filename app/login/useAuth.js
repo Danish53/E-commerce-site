@@ -1,9 +1,7 @@
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect } from "react";
 import { ResponseContext } from "./ResponseContext";
-import { toast, Toaster } from "react-hot-toast"
+import { toast } from "react-hot-toast";
 
 const useAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -11,6 +9,7 @@ const useAuth = () => {
   const router = useRouter();
   const { response_Context, setResponse_Context } = useContext(ResponseContext);
 
+  // ✅ Register a New User
   const registration = async (first_name, last_name, email, password) => {
     setLoading(true);
     setError(null);
@@ -29,32 +28,132 @@ const useAuth = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "registration failed");
+        throw new Error(data.message || "Registration failed");
       }
 
       if (data.status === true) {
-        localStorage.setItem("token", data.data.token);
-        setResponse_Context(data);
-        toast.success("User Registerd Successful!");
+        toast.success("User Registered Successfully!");
         router.push("/login");
         return data;
       } else {
-        throw new Error(data?.error?.email || "registration failed.");
+        throw new Error(data?.error?.email || "Registration failed.");
       }
     } catch (err) {
       setError(err?.message);
-      toast.error(error?.message || "registration failed.")
+      toast.error(err?.message || "Registration failed.");
       return null;
     } finally {
       setLoading(false);
     }
   };
-  // Log response_Context when it updates
-  useEffect(() => {
-    console.log("Updated response_Context:", response_Context);
-  }, [response_Context]);
 
-  return { registration, loading, error };
+  // ✅ Login User and Store in Context
+  const login = async (email, password) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        "https://foundation.alphalive.pro/api/user/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      if (data.status === true) {
+        setResponse_Context({
+          user: data.data.user,
+          token: data.data.token,
+          user_id: data.data.user.id,
+        });
+
+        localStorage.setItem("token", data.data.token)
+        toast.success("Login Successful!");
+        router.push("/"); // Redirect to the website
+        return data;
+      } else {
+        throw new Error(data?.error || "Login failed.");
+      }
+    } catch (err) {
+      setError(err?.message);
+      toast.error(err?.message || "Login failed.");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Update User Profile Without Refresh
+  const updateProfile = async (updatedUserData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        "https://foundation.alphalive.pro/api/user/profile/update",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${response_Context.token}`,
+          },
+          body: JSON.stringify(updatedUserData),
+        }
+      );
+
+      const data = await res.json();
+      console.log(data, "profile updated data")
+
+      if (!res.ok) {
+        throw new Error(data.message || "Profile update failed");
+      }
+
+      if (data.status === true) {
+        setResponse_Context((prev) => ({
+          ...prev,
+          user: { ...prev.user, ...updatedUserData },
+        }));
+
+        toast.success("Profile Updated Successfully!");
+        return data;
+      } else {
+        throw new Error(data?.error || "Profile update failed.");
+      }
+    } catch (err) {
+      setError(err?.message);
+      toast.error(err?.message || "Profile update failed.");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const fetchDataOrder = async (userId) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `https://foundation.alphalive.pro/api/user/dashboard/${userId}`
+      );
+      console.log(res, "response order ka")
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { registration, login, updateProfile, fetchDataOrder, loading, error };
 };
 
 export default useAuth;

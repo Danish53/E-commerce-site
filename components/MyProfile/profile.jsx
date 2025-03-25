@@ -1,15 +1,14 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
 
-import React from "react";
+import React, { useContext } from "react";
 import "./profile.css";
 import { FaRegUser } from "react-icons/fa6";
 import { FaBorderAll } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
 import { IoLocationOutline } from "react-icons/io5";
-import { IoCardSharp } from "react-icons/io5";
-import { IoIosNotificationsOutline } from "react-icons/io";
-import { CiSettings } from "react-icons/ci";
+import { CiSettings } from "react-icons/ci"; 
+import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function profile() {
   const router = useRouter();
@@ -39,6 +38,8 @@ export default function profile() {
     router.push("/orders");
   };
 
+  const { response_Context } = useContext(ResponseContext);
+
   return (
     <>
       <h1 className="profile_heading">My Profile</h1>
@@ -46,11 +47,11 @@ export default function profile() {
       <section className="myProfile_parent_div">
         <div className="myProfile ">
           <div className="img_div">
-            <img src="/assets/images/common/profile_pic.png" alt="" />
+            <img width={20} height={20} src={response_Context? response_Context.user?.propic : "/assets/images/common/profile_pic.png"} alt="profile" />
           </div>
           <div className="info_div">
-            <p>Hello!</p>
-            <h6>Robert Fox</h6>
+            <p>{response_Context? response_Context.user?.full_name : "User Name"}</p>
+            <h6>{response_Context? response_Context.user?.email : "user email"}</h6>
           </div>
         </div>
         <div className="user_info ">

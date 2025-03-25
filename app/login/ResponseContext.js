@@ -53,7 +53,27 @@ export const ResponseProvider = ({ children }) => {
     );
   };
 
-  const [response_Context, setResponse_Context] = useState({});
+  const [response_Context, setResponse_Context] = useState({
+    user: null,
+    token: null,
+    user_id: null,
+  });
+
+  // Load user data from sessionStorage (optional)
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("authData");
+    if (storedData) {
+      setResponse_Context(JSON.parse(storedData));
+    }
+  }, []);
+
+  // Save authentication data when it changes
+  useEffect(() => {
+    if (response_Context.token) {
+      sessionStorage.setItem("authData", JSON.stringify(response_Context));
+    }
+  }, [response_Context]);
+  
   return (
     <ResponseContext.Provider value={{ response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart }}>
       {children}

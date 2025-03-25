@@ -1,14 +1,97 @@
-import React from "react";
+"use client"
+import React, { useState, useContext, useEffect } from "react";
 import "./personal-info.css";
 import MyProfile from "../../components/MyProfile/profile";
 import "../../public/assets/css/theme/main.css";
 import { FaRegEdit } from "react-icons/fa";
 import Footer2 from "@/components/footers/Footer2";
 import Header2 from "@/components/headers/Header2";
+import { ResponseContext } from "../login/ResponseContext";
+import useAuth from "../login/useAuth";
 
-export default function page() {
+export default function Page() {
+  const { response_Context, setResponse_Context } = useContext(ResponseContext);
+  const { updateProfile, fetchDataOrder, loading } = useAuth();
+
+    const [data, setData] = useState();
+    console.log(data?.user?.first_name, "order wala")
+    const userId = response_Context?.user?.id;
+    console.log(userId, "......id  user")
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const result = await fetchDataOrder(userId); // Wait for the API response
+        setData(result.data); // Update state with fetched data
+      };
+    
+      fetchData();
+    }, [userId]);
+
+  // Initialize state with user data from context
+  const [formData, setFormData] = useState({
+    first_name: data?.user?.first_name || "",
+    last_name: data?.user?.last_name || "",
+    phone: data?.user?.phone || "",
+    email: data?.user?.email || "",
+    address: data?.user?.address || "",
+    photo: null, // New field for photo
+  });
+
+  console.log(formData.first_name, "formdata")
+
+  const [previewphoto, setPreviewphoto] = useState(
+    data?.user?.photo || "/assets/images/common/persona_img.png"
+  );
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle photo selection
+  const handlephotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, photo: file });
+
+      // Preview the selected photo
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewphoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("first_name", formData.first_name);
+    formDataToSend.append("last_name", formData.last_name);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("address", formData.address);
+
+    // Append photo only if user selected a new one
+    if (formData.photo) {
+      formDataToSend.append("photo", formData.photo);
+    }
+
+    const updatedUser = await updateProfile(formDataToSend);
+
+    if (updatedUser) {
+      // Update context with new user data
+      setResponse_Context((prev) => ({
+        ...prev,
+        user: { ...prev.user, ...updatedUser },
+      }));
+    }
+  };
+
   return (
-    <section className="persoal_info ">
+    <section className="persoal_info">
       <div className="heading_div">
         <Header2 />
       </div>
@@ -22,8 +105,16 @@ export default function page() {
           <div className="col-lg-8">
             <div className="first_flex_div">
               <div className="img_div">
-                <img src="/assets/images/common/persona_img.png" alt="" />
-                <FaRegEdit className="edit_icon" />
+                <img src={previewphoto} alt="Profile Preview" />
+                <label className="edit_icon">
+                  <FaRegEdit />
+                  <input
+                    type="file"
+                    accept="photo/*"
+                    onChange={handlephotoChange}
+                    style={{ display: "none" }}
+                  />
+                </label>
               </div>
               <div className="edit_btn">
                 <FaRegEdit />
@@ -31,24 +122,29 @@ export default function page() {
               </div>
             </div>
 
-            <form className="mt-3 perosnal_info_form">
+            {/* Form for updating user profile */}
+            <form className="mt-3 perosnal_info_form" onSubmit={handleSubmit}>
               <div className="row margin_bottom">
-                <div className="col-md-6 ">
+                <div className="col-md-6">
                   <label htmlFor="firstName">First Name</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="firstName"
+                    name="first_name"
                     placeholder="First name"
+                    value={formData.first_name}
+                    onChange={handleChange}
                   />
                 </div>
-                <div className="col-md-6 ">
+                <div className="col-md-6">
                   <label htmlFor="lastName">Last Name</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="lastName"
+                    name="last_name"
                     placeholder="Last name"
+                    value={formData.last_name}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -58,8 +154,10 @@ export default function page() {
                   <input
                     type="text"
                     className="form-control"
-                    id="phoneNumber"
+                    name="phone"
                     placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="col-md-6">
@@ -67,8 +165,10 @@ export default function page() {
                   <input
                     type="text"
                     className="form-control"
-                    id="emailAddress"
+                    name="email"
                     placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -78,12 +178,27 @@ export default function page() {
                   <input
                     type="text"
                     className="form-control"
-                    id="address"
+                    name="address"
                     placeholder="Address"
+                    value={formData.address}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
-              <button className="submit_btn mb-3">Submit</button>
+              <button className="submit_btn mb-3" type="submit">
+              {loading ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      Update Profile...
+                    </>
+                  ) : (
+                    "Update Profile"
+                  )}
+              </button>
             </form>
           </div>
         </div>

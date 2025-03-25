@@ -10,7 +10,7 @@ import Link from "next/link";
 export default function Page() {
   const router = useRouter();
   const { cart, removeFromCart } = useContext(ResponseContext);
-  console.log(cart, '......cart aa hai na')
+  // console.log(cart, '......cart aa hai na')
   const [isPopupOpen, setIsPopupOpen] = useState(true);
 
   const handleCheckout = () => {
@@ -35,10 +35,10 @@ export default function Page() {
           {cart?.length > 0 ? (
             cart.map((item) => (
               <div className="pop_up_parent_div mt-3 pb-2" key={item.id}>
-                <div className="img_div">
-                  <img src={item?.thumbnail || "/assets/images/products/checkout_pic.png"} alt="Product" />
+                <div className="img_div" style={{width:"35%"}}>
+                  <img width={"100%"} src={item?.thumbnail || "/assets/images/products/checkout_pic.png"} alt="Product" />
                 </div>
-                <div className="content_div">
+                <div className="content_div"  style={{width:"65%"}} >
                   <p className="prod_title">{item?.title}</p>
                   <p className="prod_quantity">
                   {item?.quantity} x ${Number(item?.current_price || 0).toFixed(2)}

@@ -6,11 +6,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 // import useAuth from "./useAuth";
 import { toast, Toaster } from "react-hot-toast"
+import useAuth from "./useAuth";
 
 
 export default function LoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -30,39 +30,43 @@ export default function LoginPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const { login, loading, error } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await fetch(
-        "https://foundation.alphalive.pro/api/user/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
 
-      let data = await response.json();
-      console.log("data response login ka data", data);
+    login(formData.email, formData.password);
 
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong!");
-      }
+    // try {
+    //   const response = await fetch(
+    //     "https://foundation.alphalive.pro/api/user/registration",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify(formData),
+    //     }
+    //   );
 
-      if (data.status === true) {
-        localStorage.setItem("token", data.data.token);
-        toast.success("User Login Successful!");
-        router.push("/");
-      } else {
-        throw new Error(data?.error?.email || "login failed.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error(error?.email || "An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    //   let data = await response.json();
+    //   console.log("data response register ka data", data);
+
+    //   if (!response.ok) {
+    //     throw new Error(data.message || "Something went wrong!");
+    //   }
+
+    //   if (data.status === true) {
+    //     localStorage.setItem("token", data.data.token);
+    //     toast.success("User Register Successful!");
+    //     router.push("/login");
+    //   } else {
+    //     throw new Error(data?.error?.email || "Registration failed.");
+    //   }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    //   toast.error(error?.email || "An error occurred. Please try again.");
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   // const handleChange = (e) => {

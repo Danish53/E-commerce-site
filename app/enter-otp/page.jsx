@@ -92,6 +92,10 @@ export default function OtpPage() {
     }
   };
 
+  const handleBackBtn = () => {
+    router.push("/forget-password");
+  };
+
   const handleResetFormData = (e) => {
     setResetFormData({ ...resetFormData, [e.target.name]: e.target.value });
   };
@@ -144,7 +148,7 @@ export default function OtpPage() {
             </div>
 
             <div className="col-lg-5 j-center">
-              <div className="icon_div">
+              <div className="icon_div" onClick={handleBackBtn}>
                 <IoIosArrowBack />
                 <p>Back</p>
               </div>
