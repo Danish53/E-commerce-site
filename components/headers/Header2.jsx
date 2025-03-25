@@ -128,9 +128,9 @@ export default function Header2() {
                       />
                     </div>
 
-                    <Link href="/personal-info">
+                    {isLoggedIn? (<Link href="/personal-info">
                       <img className="icon_size cursor-pointer" style={{ marginLeft: "0px", width: "22px", height: "22px" }} src="/assets/images/user.png" alt="" />
-                    </Link>
+                    </Link>) : ("")}
 
                   </div>
                   <div className={`img_div `} onClick={togglePopup}>

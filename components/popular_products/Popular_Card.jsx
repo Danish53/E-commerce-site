@@ -3,12 +3,12 @@ import "./popular_card.css";
 
 import { FaStar } from "react-icons/fa";
 
-export default function Popular_Card({ img_src, productName, price, rating }) {
+export default function Popular_Card({ img_src, productName, price, rating, onClick}) {
   return (
     <section id="popular_card" className="pt-3">
       <div className="container">
         <div className="single_card">
-          <div className="img_div">
+          <div className="img_div" onClick={onClick}>
             <img src={img_src} />
           </div>
           <p>{productName}</p>

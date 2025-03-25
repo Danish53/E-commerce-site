@@ -8,15 +8,17 @@ import Footer2 from "@/components/footers/Footer2";
 import Header2 from "@/components/headers/Header2";
 import { ResponseContext } from "../login/ResponseContext";
 import useAuth from "../login/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { response_Context, setResponse_Context } = useContext(ResponseContext);
   const { updateProfile, fetchDataOrder, loading } = useAuth();
 
+  const router = useRouter();
+
     const [data, setData] = useState();
     console.log(data?.user?.first_name, "order wala")
     const userId = response_Context?.user?.id;
-    console.log(userId, "......id  user")
   
     useEffect(() => {
       const fetchData = async () => {
@@ -89,6 +91,12 @@ export default function Page() {
       }));
     }
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      router.push("/login");
+    }
+  }, [])
 
   return (
     <section className="persoal_info">

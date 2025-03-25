@@ -1,13 +1,31 @@
 "use client";
-
 import Link from "next/link";
-import Image from "next/image";
-import { pagesData } from "@/data/menu";
+// import Image from "next/image";
+// import { pagesData } from "@/data/menu";
 import { usePathname } from "next/navigation";
 import "./Nav_new.css";
+import useCategories from "../categories";
+import { useEffect, useState } from "react";
 
 export default function Nav() {
   const pathname = usePathname();
+
+  const { latestCategories } = useCategories();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await latestCategories();
+      if (data.status && Array.isArray(data.data)) {
+        setCategories(data.data); // ✅ Store categories in state
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <li>
@@ -44,44 +62,24 @@ export default function Nav() {
           <div>
             {/* <div className="uc-drop-grid row child-cols g-4 uc-grid uc-grid-stack"> */}
             <div className="custom_grid">
-              {pagesData.map((section, index) => (
-                <div key={index}>
+              {categories?.map((category) => (
+                <div key={category.id}>
+                  {/* Category Name */}
                   <ul className="uc-nav uc-navbar-dropdown-nav">
-                    <li className="uc-nav-header">{section.header}</li>
-                    {section.items.map((item, itemIndex) => (
-                      <li key={itemIndex}>
-                        {item.href.startsWith("/") ? (
-                          <Link
-                            href={item.href}
-                            className={
-                              pathname.split("/")[1] == item.href.split("/")[1]
-                                ? "menuActive"
-                                : "inActiveMenu"
-                            }
-                          >
-                            {item.label}
-                            {item.badge && (
-                              <span
-                                className={`fw-bold fs-8 ms-1 px-1 border rounded-pill ${item.badge.className}`}
-                              >
-                                {item.badge.text}
-                              </span>
-                            )}
+                    <li className="uc-nav-header"><Link href={`/`}>{category?.name}</Link></li>
+
+                    {/* Display Subcategories */}
+                    {category?.subs.length > 0 ? (
+                      category?.subs.map((sub) => (
+                        <li key={sub.id}>
+                          <Link href={`/category/${category.slug}/${sub.slug}`}>
+                            {sub.name}
                           </Link>
-                        ) : (
-                          <a href={item.href}>
-                            {item.label}
-                            {item.badge && (
-                              <span
-                                className={`fw-bold fs-8 ms-1 px-1 border rounded-pill ${item.badge.className}`}
-                              >
-                                {item.badge.text}
-                              </span>
-                            )}
-                          </a>
-                        )}
-                      </li>
-                    ))}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-muted">No subcategories available</li>
+                    )}
                   </ul>
                 </div>
               ))}

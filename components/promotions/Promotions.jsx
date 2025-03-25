@@ -1,28 +1,78 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./promotions.css";
+import useCategories from "../headers/categories";
+import { useRouter } from "next/navigation";
 
 export default function Promotions() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("recommendations");
+  const { latestCategories } = useCategories();
+  const [categories, setCategories] = useState([]);
 
-  const categories = ["Smart Home", "Smart Appliances", "Gadgets", "Phone"];
-  const products = {
-    "Smart Home": [
-      { name: "Smart Bulb", img: "/assets/images/products/smartbulb.png", discount: "20% OFF" },
-      { name: "Smart Lock", img: "/assets/images/products/smartlock.png", discount: "15% OFF" }
-    ],
-    "Smart Appliances": [
-      { name: "Air Purifier", img: "/assets/images/products/airpurifier.png", discount: "10% OFF" },
-      { name: "Robot Vacuum", img: "/assets/images/products/robotvacuum.png", discount: "25% OFF" }
-    ],
-    "Gadgets": [
-      { name: "Wireless Earbuds", img: "/assets/images/products/earbuds.png", discount: "30% OFF" },
-      { name: "Smart Watch", img: "/assets/images/products/smartwatch.png", discount: "40% OFF" }
-    ],
-    "Phone": [
-      { name: "iPhone 14", img: "/assets/images/products/iphone14.png", discount: "5% OFF" },
-      { name: "Samsung S23", img: "/assets/images/products/samsungs23.png", discount: "10% OFF" }
-    ]
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await latestCategories();
+      if (data.status && Array.isArray(data.data)) {
+        setCategories(data.data); // ✅ Store categories in state
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+
+  const [procCat, setProcat] = useState();
+
+  const fetchCategoryProducts = async (categoryName) => {
+    try {
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/front/products/category/${encodeURIComponent(categoryName)}`
+      );
+      console.log(response, "response cate product")
+      const data = await response.json();
+      setProcat(data.data || []); 
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  // Handle category click
+  const handleCategoryClick = (categoryName) => {
+    setActiveTab(categoryName);
+    fetchCategoryProducts(categoryName); // Pass category name only
+  };
+
+
+  const [productss, setProducts] = useState();
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await fetch(
+          "https://foundation.alphalive.pro/api/front/deal-of-the-day"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data, "data recomm")
+        setProducts(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProducts();
+  }, []);
+
+  const handleNavigation = (id) => {
+    router.push(`/shop-product-detail/${id}`);
   };
 
   return (
@@ -35,17 +85,20 @@ export default function Promotions() {
           <div className="tab_div">
             <p
               className={activeTab === "recommendations" ? "active" : ""}
-              onClick={() => setActiveTab("recommendations")}
+              onClick={() => {
+                setActiveTab("recommendations");
+                setProcat([]); // ✅ Clear category products when clicking "Recommendations"
+              }}
             >
               Recommendations
             </p>
-            {categories.map((category, index) => (
+            {categories?.slice(0, 4).map((category, index) => (
               <p
                 key={index}
-                className={activeTab === category ? "active" : ""}
-                onClick={() => setActiveTab(category)}
+                className={activeTab === category.name ? "active" : ""}
+                onClick={() => handleCategoryClick(category.name)}
               >
-                {category}
+                {category?.name}
               </p>
             ))}
           </div>
@@ -65,24 +118,26 @@ export default function Promotions() {
                     <div className="row flex_one_row">
                       <div className="col-md-6 width_50">
                         <h3 className="mt-3 heading">
-                          Lenovo
-                          <br /> Office & Work Laptop
+                          {/* Lenovo
+                          <br /> Office & Work Laptop */}
+                          {productss?.title}
                         </h3>
-                        <div className="text_icon_div">
-                          <p id="shop_now">Shop Now</p>
-                          <img
-                            src="/assets/images/common/icons/arrow_img.png"
-                            alt=""
-                          />
-                        </div>
-                        <p className="mt-2" id="latest">
+                        <a href={productss?.shop_link} target="_blank" style={{ textDecoration: "none" }}>
+                          <div className="text_icon_div">
+                            <p id="shop_now">Shop Now</p>
+                            <img
+                              src="/assets/images/common/icons/arrow_img.png"
+                              alt=""
+                            />
+                          </div></a>
+                        {/* <p className="mt-2" id="latest">
                           Power & Versatility
-                        </p>
-                        <p id="latest">ThinkPad X1 Gen 12 Latest Workstation</p>
+                        </p> */}
+                        <p id="latest">{productss?.details}</p>
                       </div>
                       <div className="col-md-6 img_col width_50">
                         <img
-                          src="/assets/images/products/computer1.png"
+                          src={productss ? productss?.image : "/assets/images/products/computer1.png"}
                           alt=""
                         />
                       </div>
@@ -131,29 +186,28 @@ export default function Promotions() {
           )}
 
           <div className="popular_products2 pb-3">
-            {products[activeTab]?.map((product, index) => (
+          {procCat?.map((product, index) => (
               <div className="single_card2" key={index}>
-                <div className="img_div">
-                  <img src={product?.img} />
+                <div className="img_div" onClick={() => handleNavigation(product.id)}>
+                  <img src={product?.thumbnail} />
                 </div>
-                <p>{product?.name}</p>
+                <p style={{textAlign:"left", margin:"10px 0px"}}>{product?.title}</p>
 
-                <div className="review_div">
-                  {/* <div className="div_1">
-                  <FaStar className="icon_props" />
+                <div className="review_div" style={{textAlign:"left"}}>
+                  <div className="div_1">
                   <p>
-                    <strong>{rating}</strong> 12k reviews
+                    <strong>{product?.category_name}</strong>
                   </p>
-                </div> */}
+                </div>
 
                   <div className="price_div">
                     <p>
-                      <strong>${product?.discount}</strong>
+                      <strong>${product?.current_price}</strong>
                     </p>
                   </div>
                 </div>
               </div>
-            ))}
+          ))}
           </div>
         </div>
       </section>

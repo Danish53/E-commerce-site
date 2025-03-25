@@ -143,7 +143,7 @@ export default function Hero() {
                       <div className="tick_sec_parent">
                         <div className="tick_single">
                           <MdOutlineDone className="icon_size" />
-                          <p>{item?.current_price}</p>
+                          <p>$ {item?.current_price}</p>
                         </div>
                       </div>
                       <div

@@ -7,12 +7,15 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { fetchPopularProducts } from "./fetchPopularProducts";
+import { useRouter } from "next/navigation";
 
 export default function Popular_Products() {
   const [counter, setCounter] = useState(1);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const router = useRouter();
 
 
   // const products = [
@@ -121,6 +124,10 @@ export default function Popular_Products() {
     getProducts();
   }, []);
 
+  const handleNavigation = (id) => {
+    router.push(`/shop-product-detail/${id}`);
+  };
+
     if (error) return <p>Error: {error}</p>;
 
   return (  
@@ -145,6 +152,7 @@ export default function Popular_Products() {
               return (
                 <Popular_Card
                   key={index}
+                  onClick={() => handleNavigation(item.id)}
                   img_src={item?.thumbnail}
                   productName={item?.title}
                   price={item.current_price}
