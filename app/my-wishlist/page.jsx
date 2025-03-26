@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 import MyProfile from "../../components/MyProfile/profile";
 import "../../public/assets/css/theme/main.css";
 import "./my-wishlist.css";
@@ -6,8 +7,11 @@ import Header2 from "@/components/headers/Header2";
 import Footer2 from "@/components/footers/Footer2";
 import Features from "@/components/Features_div/page";
 import { MdDelete } from "react-icons/md";
+import { ResponseContext } from "../login/ResponseContext";
 
 export default function page() {
+  const { removeFromWishlist, wishlist } = useContext(ResponseContext);
+  console.log(wishlist)
   return (
     <section className="my_wishlist">
       <div className="heading_div">
@@ -22,96 +26,25 @@ export default function page() {
           </div>
           <div className="col-lg-8">
             <div className="product_grid_main_div">
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Show Variety</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
+              {wishlist && wishlist.length > 0 ? wishlist.map((item, index) => {
+                return (
+                  <div className="product_parent_div mb-2" key={index}>
+                    <div className="img_div">
+                      <img src={item?.thumbnail || "/assets/images/common/dress_pic.png"} alt="" />
+                      <MdDelete className="delte_icon" onClick={()=>{removeFromWishlist(item?.id)}}/>
+                      <button className="mt-1 add_to_cart">Show Variety</button>
+                    </div>
+                    <div className="content">
+                      <h6>{item?.title}</h6>
+                      <p id="color_gray">{item?.category_name}</p>
+                      <div className="price_div">
+                        <p id="newPrice">${item?.current_price}</p>
+                        <p id="old_Price">${item?.previous_price}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Add to Cart</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
-                  </div>
-                </div>
-              </div>
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Add to Cart</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
-                  </div>
-                </div>
-              </div>
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Show Variety</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
-                  </div>
-                </div>
-              </div>
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Add to Cart</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
-                  </div>
-                </div>
-              </div>
-              <div className="product_parent_div mb-2">
-                <div className="img_div">
-                  <img src="/assets/images/common/dress_pic.png" alt="" />
-                  <MdDelete className="delte_icon" />
-                  <button className="mt-1  add_to_cart">Show Variety</button>
-                </div>
-                <div className="content">
-                  <h6>Allen Solly</h6>
-                  <p id="color_gray">Women Textured Handheld Bag</p>
-                  <div className="price_div">
-                    <p id="newPrice">$80.00</p>
-                    <p id="old_Price">$100.00</p>
-                  </div>
-                </div>
-              </div>
+                );
+              }) : <p>Empty my wishlist</p>}
             </div>
           </div>
           <div className="mt-3">

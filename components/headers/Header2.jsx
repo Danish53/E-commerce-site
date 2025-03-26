@@ -66,6 +66,8 @@ export default function Header2() {
     };
   }, [prevScrollPos]);
 
+  const { wishlist } = useContext(ResponseContext);
+
   return (
     <>
       <Toaster
@@ -116,9 +118,7 @@ export default function Header2() {
                       className="icon_size cursor-pointer"
                       onClick={toggleSearch}
                     />
-                    <Link href="/my-wishlist">
-                      <CiHeart className="icon_size cursor-pointer" />
-                    </Link>
+
                     <div className={`search_div ${showSearch ? "active" : ""}`}>
                       <FaSearch className="search_icon" />
                       <input
@@ -131,6 +131,12 @@ export default function Header2() {
                     {isLoggedIn? (<Link href="/personal-info">
                       <img className="icon_size cursor-pointer" style={{ marginLeft: "0px", width: "22px", height: "22px" }} src="/assets/images/user.png" alt="" />
                     </Link>) : ("")}
+
+                    
+                    <Link href="/my-wishlist" >
+                      <CiHeart className="icon_size cursor-pointer" style={{position:"relative"}} />
+                      <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span>
+                    </Link>
 
                   </div>
                   <div className={`img_div `} onClick={togglePopup}>

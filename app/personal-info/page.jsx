@@ -12,32 +12,37 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { response_Context, setResponse_Context } = useContext(ResponseContext);
-  const { updateProfile, fetchDataOrder, loading } = useAuth();
+  console.log(response_Context, "response id")
+  const { updateProfile, loading } = useAuth();
 
   const router = useRouter();
 
     const [data, setData] = useState();
-    console.log(data?.user?.first_name, "order wala")
-    const userId = response_Context?.user?.id;
+    // console.log(data?.user, "order wala")
+    var userId = response_Context?.user_id || "No ID available";
+    console.log(userId, "id aa")
   
-    useEffect(() => {
-      const fetchData = async () => {
-        const result = await fetchDataOrder(userId); // Wait for the API response
-        setData(result.data); // Update state with fetched data
-      };
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     const result = await fetchDataOrder(userId); // Wait for the API response
+    //     setData(result.data); // Update state with fetched data
+    //   };
     
-      fetchData();
-    }, [userId]);
+    //   fetchData();
+    // }, [userId]);
 
   // Initialize state with user data from context
   const [formData, setFormData] = useState({
     first_name: data?.user?.first_name || "",
     last_name: data?.user?.last_name || "",
-    phone: data?.user?.phone || "",
+    // phone: data?.user?.phone || "",
     email: data?.user?.email || "",
     address: data?.user?.address || "",
     photo: null, // New field for photo
+    user_id: userId
   });
+
+  console.log(formData, "form data....")
 
   console.log(formData.first_name, "formdata")
 
@@ -68,21 +73,35 @@ export default function Page() {
   // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Ensure user_id is available
+    const userId = response_Context?.user_id; // Adjust this if user_id is stored differently
+    if (!userId) {
+      toast.error("User ID is missing");
+      return;
+    }
+  
+    // Create FormData
     const formDataToSend = new FormData();
-    formDataToSend.append("first_name", formData.first_name);
-    formDataToSend.append("last_name", formData.last_name);
-    formDataToSend.append("phone", formData.phone);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("address", formData.address);
-
+    formDataToSend.append("first_name", String(formData.first_name || ""));
+    formDataToSend.append("last_name", String(formData.last_name || ""));
+    formDataToSend.append("email", String(formData.email || ""));
+    formDataToSend.append("address", String(formData.address || ""));
+    formDataToSend.append("user_id", String(userId)); // Convert to string
+  
     // Append photo only if user selected a new one
-    if (formData.photo) {
+    if (formData.photo instanceof File) {
       formDataToSend.append("photo", formData.photo);
     }
-
+  
+    // Debugging: Log FormData contents
+    for (let pair of formDataToSend.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+  
+    // Call updateProfile API function
     const updatedUser = await updateProfile(formDataToSend);
-
+  
     if (updatedUser) {
       // Update context with new user data
       setResponse_Context((prev) => ({
@@ -91,6 +110,8 @@ export default function Page() {
       }));
     }
   };
+  
+  
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -157,7 +178,7 @@ export default function Page() {
                 </div>
               </div>
               <div className="row margin_bottom">
-                <div className="col-md-6">
+                {/* <div className="col-md-6">
                   <label htmlFor="phoneNumber">Phone Number</label>
                   <input
                     type="text"
@@ -167,7 +188,7 @@ export default function Page() {
                     value={formData.phone}
                     onChange={handleChange}
                   />
-                </div>
+                </div> */}
                 <div className="col-md-6">
                   <label htmlFor="emailAddress">Email Address</label>
                   <input

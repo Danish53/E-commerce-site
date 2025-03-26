@@ -24,6 +24,8 @@ export default function Popular_Products2() {
       fetchCategories();
     }, []);
 
+    
+
   return (
     <section id="Popular_Products2" className="mt-3 mb-5">
       <div className="container">

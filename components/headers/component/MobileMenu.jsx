@@ -7,6 +7,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { toast, Toaster } from "react-hot-toast"
+
 export default function MobileMenu() {
   const { isChecked, handleToggle } = useContextElement();
   const pathname = usePathname();
@@ -14,6 +16,23 @@ export default function MobileMenu() {
   const [activeParent2, setActiveParent2] = useState(-1);
   const elementRef = useRef(null);
   const containerRef = useRef(null);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+
+  const handleAuth = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      toast.success('User Logout Successfully!')
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -226,11 +245,11 @@ export default function MobileMenu() {
               </li>
             ))}
             <li className="hr opacity-10 my-1" />
-            <li>
+            {/* <li>
               <Link href={`/sign-up`}>Create an account</Link>
-            </li>
-            <li>
-              <Link href={`/login`}>Log in</Link>
+            </li> */}
+            <li onClick={handleAuth}>
+              <Link href={`/login`} >{isLoggedIn? "Logout" : "Login"}</Link>
             </li>
             {/* <li>
               <a href="https://themeforest.net/user/ib-themes/portfolio">

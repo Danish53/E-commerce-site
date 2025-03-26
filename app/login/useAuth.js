@@ -93,37 +93,33 @@ const useAuth = () => {
   };
 
   // ✅ Update User Profile Without Refresh
-  const updateProfile = async (updatedUserData) => {
+  const updateProfile = async (formDataToSend) => {
     setLoading(true);
     setError(null);
+  
     try {
       const res = await fetch(
         "https://foundation.alphalive.pro/api/user/profile/update",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${response_Context.token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // ❌ DO NOT add "Content-Type" manually for FormData
           },
-          body: JSON.stringify(updatedUserData),
+          body: formDataToSend,
         }
       );
-
+  
       const data = await res.json();
-      console.log(data, "profile updated data")
-
+      console.log("API Response:", data);
+  
       if (!res.ok) {
         throw new Error(data.message || "Profile update failed");
       }
-
+  
       if (data.status === true) {
-        setResponse_Context((prev) => ({
-          ...prev,
-          user: { ...prev.user, ...updatedUserData },
-        }));
-
         toast.success("Profile Updated Successfully!");
-        return data;
+        return data.user;
       } else {
         throw new Error(data?.error || "Profile update failed.");
       }
@@ -135,6 +131,8 @@ const useAuth = () => {
       setLoading(false);
     }
   };
+  
+  
 
 
   const fetchDataOrder = async (userId) => {

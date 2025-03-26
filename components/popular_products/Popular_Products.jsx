@@ -130,6 +130,7 @@ export default function Popular_Products() {
 
     if (error) return <p>Error: {error}</p>;
 
+
   return (  
       <>
     {
@@ -157,6 +158,7 @@ export default function Popular_Products() {
                   productName={item?.title}
                   price={item.current_price}
                   rating={item?.rating}
+                  productId={item.id}
                 />
               );
             })}
