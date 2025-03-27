@@ -59,32 +59,32 @@ export default function Page() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-      loading? <SkeletonLoader /> : (
-        <section id="all_product" className="all_product">
-      <div className="heading_div">
-        <Header2 />
-      </div>
-      <div className="container margin_top">
-        <div className="row">
-          <div className="col-md-12 col-lg-3 show_not">
-            <Dropdown
-              setSelectedSizes={setSelectedSizes}
-              sizeCounts={sizeCounts}
-              minPrice={minPrice}
-              setMinPrice={setMinPrice}
-              maxPrice={maxPrice}
-              setMaxPrice={setMaxPrice}
-              mostExpensive={mostExpensive}
-            />
-          </div>
-          <div className="col-md-12 col-lg-9">
-            <AllProduct products={filteredProducts} />
-          </div>
-          <Features />
+    loading ? <SkeletonLoader /> : (
+      <section id="all_product" className="all_product">
+        <div className="heading_div">
+          <Header2 />
         </div>
-      </div>
-      <Footer2 />
-    </section>
-      )
+        <div className="container margin_top">
+          <div className="row">
+            <div className="col-md-12 col-lg-3 show_not">
+              <Dropdown
+                setSelectedSizes={setSelectedSizes}
+                sizeCounts={sizeCounts}
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
+                mostExpensive={mostExpensive}
+              />
+            </div>
+            <div className="col-md-12 col-lg-9">
+              <AllProduct products={filteredProducts} />
+            </div>
+            <Features />
+          </div>
+        </div>
+        <Footer2 />
+      </section>
+    )
   );
 }

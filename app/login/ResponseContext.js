@@ -83,6 +83,13 @@ const userId = response_Context.user_id;
 // Fetch Wishlist
 const fetchWishlist = async () => {
   try {
+    // Pehle localStorage check karlo
+    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    if (storedWishlist.length > 0) {
+      setWishlist(storedWishlist);
+    }
+
     const response = await fetch(
       `https://foundation.alphalive.pro/api/user/wishlists?user_id=${userId}`,
       {
@@ -97,6 +104,7 @@ const fetchWishlist = async () => {
 
     if (data.status) {
       setWishlist(data.data);
+      localStorage.setItem("wishlist", JSON.stringify(data.data)); // Save to localStorage
     }
   } catch (error) {
     console.error("Error fetching wishlist:", error);
@@ -123,7 +131,9 @@ const addToWishlist = async (productId) => {
     const data = await response.json();
 
     if (data.status) {
-      setWishlist((prev) => [...prev, data.data]);
+      const updatedWishlist = [...wishlist, data.data];
+      setWishlist(updatedWishlist);
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Save to localStorage
       toast.success("Added to wishlist!");
     }
   } catch (error) {
@@ -152,7 +162,9 @@ const removeFromWishlist = async (productId) => {
     const data = await response.json();
 
     if (data.status) {
-      setWishlist((prev) => prev.filter((item) => item.id !== productId));
+      const updatedWishlist = wishlist.filter((item) => item.id !== productId);
+      setWishlist(updatedWishlist);
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Update localStorage
       toast.success("Removed from wishlist!");
     }
   } catch (error) {

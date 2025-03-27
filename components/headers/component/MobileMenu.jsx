@@ -8,10 +8,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { toast, Toaster } from "react-hot-toast"
+import useCategories from "../categories";
 
 export default function MobileMenu() {
   const { isChecked, handleToggle } = useContextElement();
   const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState("menu");
   const [activeParent1, setActiveParent1] = useState(-1);
   const [activeParent2, setActiveParent2] = useState(-1);
   const elementRef = useRef(null);
@@ -84,6 +86,23 @@ export default function MobileMenu() {
     }
     return isActive;
   };
+
+  const { latestCategories } = useCategories();
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await latestCategories();
+      if (data.status && Array.isArray(data.data)) {
+        setCategories(data.data); // ✅ Store categories in state
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -107,7 +126,7 @@ export default function MobileMenu() {
               className="h5 text-none text-gray-900 dark:text-white"
             >
               <Image
-                className="w-32px"
+                className="w-72px"
                 alt="Lexend"
                 src="/assets/images/common/logo_main.png"
                 width="34"
@@ -124,170 +143,56 @@ export default function MobileMenu() {
           </button>
         </header>
         <div className="panel">
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            id="search-panel"
-            className="form-icon-group vstack gap-1 mb-2 uc-sticky mt-1"
-            data-uc-sticky=""
-          >
-            <input
-              type="email"
-              className="form-control form-control-sm fs-7 rounded-default"
-              placeholder="Search.."
-            />
-            <span className="form-icon text-gray">
-              <i className="unicon-search icon-1" />
-            </span>
-          </form>
-          <div className="uc-sticky-placeholder" hidden="" />
-          <ul className="nav-y gap-narrow fw-medium fs-6 uc-nav" data-uc-nav="">
-            {menuItems.map((item, index) => (
-              <li
-                key={index}
-                className={`${item.subItems ? "uc-parent" : ""} ${
-                  activeParent1 == index ? "active" : ""
-                }`}
-              >
-                {item.href ? (
-                  <Link
-                    className={isMenuActive(item) ? "menuActive" : ""}
-                    href={item.href}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <>
-                    <a
-                      className={isMenuActive(item) ? "menuActive" : ""}
-                      onClick={() =>
-                        setActiveParent1((pre) => (pre == index ? -1 : index))
-                      }
-                    >
-                      {item.label}
-                    </a>
-                    {item.subItems && (
-                      <ul
-                        className={`uc-nav-sub ${
-                          activeParent1 == index ? "active" : ""
-                        }`}
-                      >
-                        {item.subItems.map((subItem, index2) => (
-                          <li
-                            key={index2}
-                            className={`${!subItem.href ? "uc-parent" : ""}  ${
-                              activeParent2 == index2 ? "active" : ""
-                            }`}
-                            role="presentation"
-                          >
-                            {subItem.href ? (
-                              <Link
-                                className={
-                                  isMenuActive(subItem) ? "menuActive" : ""
-                                }
-                                href={subItem.href}
-                              >
-                                {subItem.label}
-                              </Link>
-                            ) : (
-                              <>
-                                <a
-                                  className={
-                                    isMenuActive(subItem) ? "menuActive" : ""
-                                  }
-                                  onClick={() =>
-                                    setActiveParent2((pre) =>
-                                      pre == index2 ? -1 : index2
-                                    )
-                                  }
-                                >
-                                  {subItem.label}
-                                </a>
-                                {subItem.subItems && (
-                                  <ul
-                                    className={`uc-nav-sub ${
-                                      activeParent2 == index2 ? "active" : ""
-                                    }`}
-                                  >
-                                    {subItem.subItems.map((subItem, index3) => (
-                                      <li
-                                        key={index3}
-                                        className={
-                                          !subItem.href ? "uc-parent" : ""
-                                        }
-                                        role="presentation"
-                                      >
-                                        {subItem.href ? (
-                                          <Link
-                                            className={
-                                              isMenuActive(subItem)
-                                                ? "menuActive"
-                                                : ""
-                                            }
-                                            href={subItem.href}
-                                          >
-                                            {subItem.label}
-                                          </Link>
-                                        ) : (
-                                          <></>
-                                        )}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                )}
-              </li>
-            ))}
-            <li className="hr opacity-10 my-1" />
-            {/* <li>
-              <Link href={`/sign-up`}>Create an account</Link>
-            </li> */}
-            <li onClick={handleAuth}>
-              <Link href={`/login`} >{isLoggedIn? "Logout" : "Login"}</Link>
-            </li>
-            {/* <li>
-              <a href="https://themeforest.net/user/ib-themes/portfolio">
-                Buy Template
-              </a>
-            </li> */}
-          </ul>
-          <ul className="social-icons nav-x mt-4">
-            <li>
-              {icons.map((icon, index) => (
-                <a key={index} href={icon.href}>
-                  <i className={icon.iconClass} />
-                </a>
-              ))}
-            </li>
-          </ul>
-          <div
-            className="py-2 hstack gap-2 mt-4 bg-white dark:bg-gray-900 uc-sticky uc-active uc-sticky-fixed"
-            data-uc-sticky="position: bottom"
-          >
-            <div className="vstack gap-1">
-              <span className="fs-7 opacity-60">Select theme:</span>
-              <div className="darkmode-trigger" data-darkmode-switch="">
-                <label className="switch">
-                  <input
-                    checked={!isChecked}
-                    onChange={handleToggle}
-                    type="checkbox"
-                  />
-                  <span className="slider fs-5" />
-                </label>
-              </div>
-            </div>
+          {/* Tab Buttons */}
+          <div className="tab-buttons">
+            <button
+              className={activeTab === "menu" ? "active text-white bg-dark" : ""}
+              style={{ width: "50%", border: "none", padding: "15px 0px" }}
+              onClick={() => setActiveTab("menu")}
+            >
+              Menu
+            </button>
+            <button
+              className={activeTab === "categories" ? "active text-white bg-dark" : ""}
+              style={{ width: "50%", border: "none", padding: "15px 0px" }}
+              onClick={() => setActiveTab("categories")}
+            >
+              Categories
+            </button>
           </div>
-          <div
-            className="uc-sticky-placeholder"
-            style={{ height: 83, width: 290, margin: "32px 0px 0px" }}
-          />
+
+          {/* Display Menu OR Categories based on activeTab */}
+          {activeTab === "menu" ? (
+            <ul className="nav-y gap-narrow fw-medium fs-6 uc-nav mt-3">
+              {menuItems.map((item, index) => (
+                <li
+                  key={index}
+                  className={`${item.subItems ? "uc-parent" : ""} ${activeParent1 === index ? "active" : ""}`}
+                >
+                  {item.href ? (
+                    <Link className="menuActive text-dark" href={item.href}>
+                      {item.label}
+                    </Link>
+                  ) : (
+                    ""
+                  )}
+                </li>
+              ))}
+              <li onClick={handleAuth}>
+                <Link href={`/login`} >{isLoggedIn ? "Logout" : "Login"}</Link>
+              </li>
+            </ul>
+          ) : (
+            <ul className="categories-list mt-3 p-0">
+              {categories.map((category, index) => (
+                <li key={index} style={{ listStyle: "none", marginBottom: "15px" }}>
+                  <Link className="text-dark" style={{ textDecoration: "none" }} href={`/all-products?category=${encodeURIComponent(category.name)}`}>
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>

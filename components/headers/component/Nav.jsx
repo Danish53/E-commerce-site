@@ -66,19 +66,18 @@ export default function Nav() {
                 <div key={category.id}>
                   {/* Category Name */}
                   <ul className="uc-nav uc-navbar-dropdown-nav">
-                    <li className="uc-nav-header"><Link href={`/`}>{category?.name}</Link></li>
-
+                    <li className="uc-nav-header"><Link href={`/all-products?category=${encodeURIComponent(category.name)}`}>{category?.name}</Link></li>
                     {/* Display Subcategories */}
                     {category?.subs.length > 0 ? (
                       category?.subs.map((sub) => (
                         <li key={sub.id}>
-                          <Link href={`/category/${category.slug}/${sub.slug}`}>
+                          <Link href={`/all-products?category=${encodeURIComponent(category.name)}&subcategory=${encodeURIComponent(sub.name)}`}>
                             {sub.name}
                           </Link>
                         </li>
                       ))
                     ) : (
-                      <li className="text-muted">No subcategories available</li>
+                      <li className="text-muted"></li>
                     )}
                   </ul>
                 </div>
@@ -111,7 +110,7 @@ export default function Nav() {
       </li>
 
       <li>
-        <Link href={``}>Blog</Link>
+        <Link href={`/my-blog`}>Blog</Link>
       </li>
       <li>
         <Link href={``}>Contact Us</Link>

@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
+body {
+  font-family: "Jost" !important ;
+}
+.blog_section {
+  position: relative;
+}
+
+.heading_div {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+.blogs_row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.single_card {
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.single_card img {
+  border-radius: 10px;
+  width: 100%;
+  height: 200px;
+}
+.blogs_row h1 {
+  font-family: "Jost" !important ;
+  margin-top: 10px;
+  padding: 10px 14px;
+}
+
+.blogs_row p {
+  padding-top: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 14px;
+}
+.blogs_row p a {
+  color: green;
+}
+.main_div {
+  margin-top: 80px;
+}
+.main_div .pagination {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  justify-content: end;
+}
+.main_div .pagination p {
+  margin-top: 0 !important;
+  margin: 0 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+@media screen and (max-width: 768px) {
+  .blogs_row {
+    grid-template-columns: 1fr;
+  }
+}

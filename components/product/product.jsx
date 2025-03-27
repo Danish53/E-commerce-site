@@ -2,7 +2,7 @@
 
 import "./style.css";
 import { FaRegHeart, FaHeart, FaArrowLeft, FaArrowRight, FaAngleDown } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import useAllProducts from "../../app/all-products/All_ProductResponse_Api";
 import { ResponseContext } from "@/app/login/ResponseContext";
@@ -13,6 +13,38 @@ export default function AllProduct() {
   const { addToCart } = useContext(ResponseContext);
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
+  const subcategory = searchParams.get("subcategory");
+  const [productss, setProducts] = useState([]);
+  console.log(productss, "filter out pro....")
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (!category) return;
+
+      let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
+      if (subcategory) {
+        apiUrl += `&${subcategory}`;
+      }
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(data, "prodata data data")
+        if (data.status && Array.isArray(data.data)) {
+          setProducts(data.data);
+        } else {
+          throw new Error("Invalid API response structure");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [category, subcategory]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const { products, loading, totalPages } = useAllProducts(currentPage);
 
@@ -20,8 +52,12 @@ export default function AllProduct() {
   console.log(wishlist, "wishlist")
 
   useEffect(() => {
-    console.log("Wishlist updated:", wishlist);
-  }, [wishlist]);
+    products.forEach(product => {
+      const productId = product.id;
+      const isFav = wishlist.some(item => item.id === productId);
+      console.log(`Product ID ${productId} favorite status: ${isFav}`);
+    });
+  }, [wishlist, products]);
 
   const handleNavigation = (id) => {
     router.push(`/shop-product-detail/${id}`);
@@ -57,7 +93,7 @@ export default function AllProduct() {
 
       {loading ? <SkeletonLoader /> : (
         <div className="all_product_parent_div">
-          {products.map((product, index) => {
+          {productss.map((product, index) => {
             const productId = product.id;
             const isFavorite = wishlist.some((item) => item.id === productId);
 
