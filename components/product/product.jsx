@@ -1,5 +1,4 @@
 "use client";
-
 import "./style.css";
 import { FaRegHeart, FaHeart, FaArrowLeft, FaArrowRight, FaAngleDown } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,7 +10,7 @@ import Link from "next/link";
 
 export default function AllProduct({ productsFilter }) {
 
-  const [showPopup, setShowPopup] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
   const { addToCart } = useContext(ResponseContext);
   const router = useRouter();
   const searchParams = useSearchParams();
