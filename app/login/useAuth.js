@@ -111,7 +111,7 @@ const useAuth = () => {
       );
   
       const data = await res.json();
-      console.log("API Response:", data);
+      console.log("API Response profile:", data);
   
       if (!res.ok) {
         throw new Error(data.message || "Profile update failed");

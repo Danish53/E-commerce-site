@@ -113,7 +113,7 @@ export default function Nav() {
         <Link href={`/my-blog`}>Blog</Link>
       </li>
       <li>
-        <Link href={``}>Contact Us</Link>
+        <Link href={`/contact`}>Contact Us</Link>
       </li>
     </>
   );

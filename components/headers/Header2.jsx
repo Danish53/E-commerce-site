@@ -37,6 +37,7 @@ export default function Header2() {
   const handleAuth = () => {
     if (isLoggedIn) {
       localStorage.removeItem("token");
+      sessionStorage.clear();
       setIsLoggedIn(false);
       toast.success('User Logout Successfully!')
     }
@@ -133,10 +134,13 @@ export default function Header2() {
                     </Link>) : ("")}
 
                     
-                    <Link href="/my-wishlist" >
+                    {isLoggedIn? (<Link href="/my-wishlist" >
                       <CiHeart className="icon_size cursor-pointer" style={{position:"relative"}} />
                       <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span>
-                    </Link>
+                    </Link>) : (<Link href="/login" >
+                      <CiHeart className="icon_size cursor-pointer" style={{position:"relative"}} />
+                      <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span>
+                    </Link>)}
 
                   </div>
                   <div className={`img_div `} onClick={togglePopup}>

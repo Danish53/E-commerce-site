@@ -7,31 +7,34 @@ import { useContext, useEffect, useState } from "react";
 import useAllProducts from "../../app/all-products/All_ProductResponse_Api";
 import { ResponseContext } from "@/app/login/ResponseContext";
 import SkeletonLoader from "./SkeletonLoader";
+import Link from "next/link";
 
-export default function AllProduct() {
+export default function AllProduct({ productsFilter }) {
+
   const [showPopup, setShowPopup] = useState(false);
   const { addToCart } = useContext(ResponseContext);
   const router = useRouter();
-
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const subcategory = searchParams.get("subcategory");
+
   const [productss, setProducts] = useState([]);
-  console.log(productss, "filter out pro....")
+  console.log(productss, "Fetched products...");
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      if (!category) return;
+    if (!category) return; // Skip API call if no category is selected
 
+    const fetchProducts = async () => {
       let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
       if (subcategory) {
-        apiUrl += `&${subcategory}`;
+        apiUrl += `?subcategory=${subcategory}`; // Correct query param format
       }
 
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
-        console.log(data, "prodata data data")
+        console.log(data, "API Response");
+
         if (data.status && Array.isArray(data.data)) {
           setProducts(data.data);
         } else {
@@ -47,14 +50,22 @@ export default function AllProduct() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const { products, loading, totalPages } = useAllProducts(currentPage);
-
   const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
-  console.log(wishlist, "wishlist")
+
+  console.log(wishlist, "Wishlist items");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
-    products.forEach(product => {
+    products.forEach((product) => {
       const productId = product.id;
-      const isFav = wishlist.some(item => item.id === productId);
+      const isFav = wishlist.some((item) => item.id === productId);
       console.log(`Product ID ${productId} favorite status: ${isFav}`);
     });
   }, [wishlist, products]);
@@ -75,6 +86,9 @@ export default function AllProduct() {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
+  // **Determine which products to display**
+  const displayedProducts = category ? productss : productsFilter;
+
   return (
     <>
       <div className="results_main mb-3">
@@ -93,7 +107,7 @@ export default function AllProduct() {
 
       {loading ? <SkeletonLoader /> : (
         <div className="all_product_parent_div">
-          {productss.map((product, index) => {
+          {displayedProducts.map((product, index) => {
             const productId = product.id;
             const isFavorite = wishlist.some((item) => item.id === productId);
 
@@ -113,11 +127,13 @@ export default function AllProduct() {
                     onClick={() => handleNavigation(productId)}
                     alt="product"
                   />
-                  {isFavorite ? (
-                    <FaHeart className="icon_size" onClick={toggleFavorite} />
-                  ) : (
-                    <FaRegHeart className="icon_size" onClick={toggleFavorite} />
-                  )}
+                  { isLoggedIn ? (
+                    <div>{isFavorite ? (
+                      <FaHeart className="icon_size" onClick={toggleFavorite} />
+                    ) : (
+                      <FaRegHeart className="icon_size" onClick={toggleFavorite} />
+                    )}</div>
+                  ) : (<Link href={'/login'}><FaRegHeart className="icon_size"  /></Link>)}
                   <h2 className="mt-1">{product.title.split(" ").slice(0, 10).join(" ")}...</h2>
                   <p className="detail">{product.category_name}</p>
                   <div className="price_div">

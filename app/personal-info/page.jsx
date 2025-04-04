@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { response_Context, setResponse_Context } = useContext(ResponseContext);
-  console.log(response_Context, "response id")
+  console.log(response_Context, "response id prof");
   const { updateProfile, loading } = useAuth();
 
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function Page() {
     const [data, setData] = useState();
     // console.log(data?.user, "order wala")
     var userId = response_Context?.user_id || "No ID available";
-    console.log(userId, "id aa")
+    console.log(userId, "id aa prof")
   
     // useEffect(() => {
     //   const fetchData = async () => {
@@ -101,6 +101,7 @@ export default function Page() {
   
     // Call updateProfile API function
     const updatedUser = await updateProfile(formDataToSend);
+    
   
     if (updatedUser) {
       // Update context with new user data
@@ -200,9 +201,7 @@ export default function Page() {
                     onChange={handleChange}
                   />
                 </div>
-              </div>
-              <div className="row margin_bottom">
-                <div className="col-md-12">
+                <div className="col-md-6">
                   <label htmlFor="address">Address</label>
                   <input
                     type="text"

@@ -24,7 +24,7 @@ export default function Page() {
   return (
     <div>
       {isPopupOpen && (
-        <div className={`pop_up show`}>
+        <div className={`pop_up show`} style={{ width: "265px"}}>
           <div className="close_div">
             <p id="total_item">
               {cart?.length > 0 ? `You have ${cart.length} items in your cart` : ""}
@@ -62,8 +62,11 @@ export default function Page() {
                 <p className="sub_total">Subtotal</p>
                 <p className="total_amount">${getTotalAmount()}</p>
               </div>
-              <div className="btn_div mt-2">
+              <div className="w-100 mt-2">
                 {/* <button id="view_cart">View Cart</button> */}
+                <Link href="/cart-list" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px"}}>
+                View Cart
+                </button></Link>
                 <Link href="/shop-cart"><button id="checkout" onClick={handleCheckout}>
                   Checkout
                 </button></Link>

@@ -12,6 +12,14 @@ import useAuth from "../login/useAuth";
 
 export default function page() {
 
+  const { orders, ordersData, response_Context } = useContext(ResponseContext);
+  console.log(ordersData, "ordersss.s.s.s.s.s.s.");
+
+  useEffect(() => {
+    if (response_Context?.user_id) {
+      orders(response_Context.user_id);
+    }
+  }, [response_Context?.user_id]);
 
 
   return (
@@ -38,127 +46,39 @@ export default function page() {
                 </div>
               </div>
             </div>
-            <div className="single_order_div pb-2 mb-3">
-              <div className="img_content_div">
-                <img
-                  src="/assets/images/common/product_imge.png"
-                  alt="prod image"
-                />
-                <div className="content_div">
-                  <h6>Girls Pink Moana Printed Dress</h6>
-                  <p>Size: S </p>
-                  <p>QTY: 1</p>
-                  <div className="flex_div_props">
-                    <p id="delivered">Delivered</p>
-                    <p>Your Product has been delivered</p>
+            {ordersData.length > 0 ? (
+              ordersData.map((order, index) => (
+                <div className="single_order_div pb-2 mb-3" key={index}>
+                  <div className="img_content_div">
+                    <img
+                      src="/assets/images/common/product_imge.png"
+                      alt="prod image"
+                    />
+                    <div className="content_div">
+                      <h6>Girls Pink Moana Printed Dress</h6>
+                      <p>Size: S </p>
+                      <p>QTY: 1</p>
+                      <div className="flex_div_props">
+                        <p id="delivered">Delivered</p>
+                        <p>Your Product has been delivered</p>
+                      </div>
+                    </div>
+                    <div className="view_div">
+                      <p id="price">$80.00</p>
+                      <div className="button_div">
+                        <button className="view_order">View Order</button>
+                        <button className="write_review">Write a review</button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="view_div">
-                  <p id="price">$80.00</p>
-                  <div className="button_div">
-                    <button className="view_order">View Order</button>
-                    <button className="write_review">Write a review</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="single_order_div pb-2 mb-3">
-              <div className="img_content_div">
-                <img
-                  src="/assets/images/common/product_imge.png"
-                  alt="prod image"
-                />
-                <div className="content_div">
-                  <h6>Girls Pink Moana Printed Dress</h6>
-                  <p>Size: S </p>
-                  <p>QTY: 1</p>
-                  <div className="flex_div_props">
-                    <p id="delivered">Delivered</p>
-                    <p>Your Product has been delivered</p>
-                  </div>
-                </div>
-                <div className="view_div">
-                  <p id="price">$80.00</p>
-                  <div className="button_div">
-                    <button className="view_order">View Order</button>
-                    <button className="write_review">Write a review</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+              ))
+            ) : (
+              <p className="alert alert-warning" hidden="">
+                No Orders Found!
+              </p>
+            )}
 
-            <div className="single_order_div pb-2 mb-3">
-              <div className="img_content_div">
-                <img
-                  src="/assets/images/common/product_imge.png"
-                  alt="prod image"
-                />
-                <div className="content_div">
-                  <h6>Girls Pink Moana Printed Dress</h6>
-                  <p>Size: S </p>
-                  <p>QTY: 1</p>
-                  <div className="flex_div_props">
-                    <p id="Inprocess">In Process</p>
-                    <p>Your Product has been delivered</p>
-                  </div>
-                </div>
-                <div className="view_div">
-                  <p id="price">$80.00</p>
-                  <div className="button_div">
-                    <button className="view_order">View Order</button>
-                    <button className="cancel">Cancel Order</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="single_order_div pb-2 mb-3">
-              <div className="img_content_div">
-                <img
-                  src="/assets/images/common/product_imge.png"
-                  alt="prod image"
-                />
-                <div className="content_div">
-                  <h6>Girls Pink Moana Printed Dress</h6>
-                  <p>Size: S </p>
-                  <p>QTY: 1</p>
-                  <div className="flex_div_props">
-                    <p id="Inprocess">In Process</p>
-                    <p>Your Product has been delivered</p>
-                  </div>
-                </div>
-                <div className="view_div">
-                  <p id="price">$80.00</p>
-                  <div className="button_div">
-                    <button className="view_order">View Order</button>
-                    <button className="cancel">Cancel Order</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="single_order_div pb-2 mb-3">
-              <div className="img_content_div">
-                <img
-                  src="/assets/images/common/product_imge.png"
-                  alt="prod image"
-                />
-                <div className="content_div">
-                  <h6>Girls Pink Moana Printed Dress</h6>
-                  <p>Size: S </p>
-                  <p>QTY: 1</p>
-                  <div className="flex_div_props">
-                    <p id="Inprocess">In Process</p>
-                    <p>Your Product has been delivered</p>
-                  </div>
-                </div>
-                <div className="view_div">
-                  <p id="price">$80.00</p>
-                  <div className="button_div">
-                    <button className="view_order">View Order</button>
-                    <button className="cancel">Cancel Order</button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

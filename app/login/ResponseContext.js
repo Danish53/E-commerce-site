@@ -1,6 +1,8 @@
 "use client"
 import { createContext, useEffect, useState } from "react";
-import { toast } from "react-hot-toast"; 
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { debounce } from "lodash";
 
 export const ResponseContext = createContext();
 
@@ -20,7 +22,7 @@ export const ResponseProvider = ({ children }) => {
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
-  
+
       if (existingProduct) {
         // Ensure quantity is correctly updated
         return prevCart.map((item) =>
@@ -32,7 +34,7 @@ export const ResponseProvider = ({ children }) => {
         return [...prevCart, { ...product, quantity }]; // Add new product with quantity
       }
     });
-  
+
     toast.success(`${product.title} added to cart!`);
   };
 
@@ -75,111 +77,218 @@ export const ResponseProvider = ({ children }) => {
   }, [response_Context]);
 
 
-// Wishlist
-const [wishlist, setWishlist] = useState([]);
+  // Wishlist
+  const [wishlist, setWishlist] = useState([]);
 
-const userId = response_Context.user_id;
+  var userId = response_Context?.user?.id || "No ID available";
 
-// Fetch Wishlist
-const fetchWishlist = async () => {
-  try {
-    // Pehle localStorage check karlo
-    const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  // Fetch Wishlist
+  const fetchWishlist = async () => {
+    try {
+      // Pehle localStorage check karlo
+      const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
-    if (storedWishlist.length > 0) {
-      setWishlist(storedWishlist);
-    }
-
-    const response = await fetch(
-      `https://foundation.alphalive.pro/api/user/wishlists?user_id=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (storedWishlist.length > 0) {
+        setWishlist(storedWishlist);
       }
-    );
 
-    const data = await response.json();
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/user/wishlists?user_id=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (data.status) {
-      setWishlist(data.data);
-      localStorage.setItem("wishlist", JSON.stringify(data.data)); // Save to localStorage
-    }
-  } catch (error) {
-    console.error("Error fetching wishlist:", error);
-  }
-};
+      const data = await response.json();
+      console.log(data.data, "get wishlists...")
 
-// Add to Wishlist
-const addToWishlist = async (productId) => {
-  try {
-    const response = await fetch(
-      `https://foundation.alphalive.pro/api/user/wishlist/add`, // Parameters in UR",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          product_id: productId,
-        }),
+      if (data.status) {
+        setWishlist(data.data);
+        localStorage.setItem("wishlist", JSON.stringify(data.data)); // Save to localStorage
       }
-    );
-
-    const data = await response.json();
-
-    if (data.status) {
-      const updatedWishlist = [...wishlist, data.data];
-      setWishlist(updatedWishlist);
-      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Save to localStorage
-      toast.success("Added to wishlist!");
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
     }
-  } catch (error) {
-    console.error("Error adding to wishlist:", error);
-  }
-};
+  };
 
-// Remove from Wishlist
-const removeFromWishlist = async (productId) => {
-  try {
-    const wishlistItem = wishlist.find((item) => item.id === productId);
-    if (!wishlistItem) {
-      console.error("Wishlist item not found!");
-      return;
-    }
-    const response = await fetch(
-      `https://foundation.alphalive.pro/api/user/wishlist/remove/${wishlistItem.id}?user_id=${userId}&product_id=${productId}`, // Parameters in URL",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  // Add to Wishlist
+  const addToWishlist = async (productId) => {
+    try {
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/user/wishlist/add`, // Parameters in UR",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            product_id: productId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data.data.product, "add wishlist");
+
+      if (data.status) {
+        const updatedWishlist = [...wishlist, data.data.product];
+        setWishlist(updatedWishlist);
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Save to localStorage
+        toast.success("Added to wishlist!");
       }
-    );
-
-    const data = await response.json();
-
-    if (data.status) {
-      const updatedWishlist = wishlist.filter((item) => item.id !== productId);
-      setWishlist(updatedWishlist);
-      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Update localStorage
-      toast.success("Removed from wishlist!");
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
     }
-  } catch (error) {
-    console.error("Error removing from wishlist:", error);
-  }
-};
+  };
 
-useEffect(() => {
-  if (userId) {
-    fetchWishlist();
+  // Remove from Wishlist
+  const removeFromWishlist = async (productId) => {
+    try {
+      const wishlistItem = wishlist.find((item) => item.id === productId);
+      if (!wishlistItem) {
+        console.error("Wishlist item not found!");
+        return;
+      }
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/user/wishlist/remove/${wishlistItem.id}?user_id=${userId}&product_id=${productId}`, // Parameters in URL",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.status) {
+        const updatedWishlist = wishlist.filter((item) => item.id !== productId);
+        setWishlist(updatedWishlist);
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Update localStorage
+        toast.success("Removed from wishlist!");
+      }
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchWishlist();
+    }
+  }, [userId]);
+
+
+  // filter products
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    category_name: "",
+    color: "",
+    size: "",
+    min_price: 0,
+    max_price: 100,
+  });
+
+  // Fetch filtered products when filters change
+  useEffect(() => {
+    fetchFilteredProducts();
+  }, [JSON.stringify(filters)]);
+
+  async function fetchFilteredProducts() {
+    setLoading(true);
+    try {
+      const queryParams = new URLSearchParams(filters).toString();
+      const response = await fetch(`https://foundation.alphalive.pro/api/front/filter-products?${queryParams}`);
+      const data = await response.json();
+      setProducts(data.products);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   }
-}, [userId]);
+
+
+
+  const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch all addresses
+  const fetchAddresses = async (userId) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://foundation.alphalive.pro/api/user/addresses/${userId}`);
+      setAddresses(response.data);
+    } catch (error) {
+      console.error("Error fetching addresses:", error);
+    }
+    setLoading(false);
+  };
+
+  // Add new address
+  const addAddress = async (newAddress) => {
+    try {
+      const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
+      console.log(response, "response ad ka")
+      setAddresses((prev) => [...prev, response.data.data]);
+    } catch (error) {
+      console.error("Error adding address:", error);
+    }
+  };
+
+  // Update address
+  const updateAddress = async (address_id, updatedData) => {
+    try {
+      await axios.put(`https://foundation.alphalive.pro/api/user/addresses/update/${address_id}`, updatedData);
+      setAddresses((prev) =>
+        prev.map((addr) => (addr.id === address_id ? { ...addr, ...updatedData } : addr))
+      );
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
+  };
+
+  // Delete address
+  const deleteAddress = async (address_id) => {
+    try {
+      await axios.delete(`https://foundation.alphalive.pro/api/user/addresses/delete/${address_id}`);
+      setAddresses((prev) => prev.filter((addr) => addr.id !== address_id));
+    } catch (error) {
+      console.error("Error deleting address:", error);
+    }
+  };
+
+
+
+  // orders
+  const [ordersData, setOrdersData] = useState([]);
+
+  const orders = async (userId) => {
+    try {
+      const response = await axios.get(`https://foundation.alphalive.pro/api/user/dashboard/${userId}`);
+      setOrdersData(response.data.data); 
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
   return (
-    <ResponseContext.Provider value={{ response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart, addToWishlist, removeFromWishlist, wishlist }}>
+    <ResponseContext.Provider value={{
+      response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart, addToWishlist, removeFromWishlist, wishlist, products, filters, setFilters, loading, error, addresses,
+      loading,
+      addAddress,
+      updateAddress,
+      deleteAddress,
+      setAddresses,
+      fetchAddresses,
+      ordersData,
+      orders,
+    }}>
       {children}
     </ResponseContext.Provider>
   );

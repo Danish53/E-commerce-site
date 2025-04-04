@@ -16,6 +16,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 
 import "./shopDetails1.css";
 import ReviewForm from "./ReviewForm";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 export default function ShopDetails1() {
   const { cart, addToCart, updateCart } = useContext(ResponseContext);
@@ -63,12 +64,38 @@ export default function ShopDetails1() {
   const handleAddToCart = () => {
     if (data) {
       const quantity = cartProducts[data.id] || 1;
-      console.log("Data being added to cart:", { ...data, quantity }); 
+      console.log("Data being added to cart:", { ...data, quantity });
       addToCart({ ...data, quantity });
     }
   };
-  
-  
+
+
+  const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
+  // console.log(wishlist, "wishlist add ed")
+  const [favorite, setFavorite] = useState(false);
+
+  useEffect(() => {
+    setFavorite(wishlist.some((item) => item.id == id));
+  }, [wishlist, id]);
+
+  const toggleFavorite = () => {
+    if (favorite) {
+      removeFromWishlist(id);
+    } else {
+      addToWishlist(id);
+    }
+    setFavorite(!favorite);
+  };
+
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
 
   return loading ? (
     <p>loading...</p>
@@ -147,7 +174,15 @@ export default function ShopDetails1() {
                   </div>
 
                   <button className="addCart" onClick={handleAddToCart}>Add to Cart</button>
-                  <CiHeart className="heart_icon" />
+                  {isLoggedIn ? (
+                    <div>{favorite ? (
+                      <FaHeart className="icon_size" onClick={toggleFavorite} />
+                    ) : (
+                      <FaRegHeart className="icon_size" onClick={toggleFavorite} />
+                    )}</div>
+                  ) : (<div style={{ position: "absolute", top: "10px", right: "10px" }}>
+                    <Link href={'/login'}><FaRegHeart className="icon_size" /></Link>
+                  </div>)}
                 </div>
               </div>
             </div>
@@ -171,4 +206,3 @@ export default function ShopDetails1() {
     </article>
   );
 }
- 

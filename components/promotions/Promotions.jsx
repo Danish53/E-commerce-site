@@ -62,7 +62,7 @@ export default function Promotions() {
         console.log(data, "data recomm")
         setProducts(data.data);
       } catch (err) {
-        setError(err.message);
+        console.log(err.message)
       }
     };
 
