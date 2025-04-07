@@ -1,6 +1,6 @@
 "use client";
-import React, { useContext, Suspense } from "react";
-import SkeletonLoader from "@/components/product/SkeletonLoader";
+import React, { useContext } from "react";
+// import SkeletonLoader from "@/components/product/SkeletonLoader";
 import Header2 from "@/components/headers/Header2";
 import Dropdown from "@/components/dropdown/Dropdown";
 import AllProduct from "@/components/product/product";
@@ -20,9 +20,9 @@ export default function Page() {
             <Dropdown />
           </div>
           <div className="col-md-12 col-lg-9">
-            <Suspense fallback={<SkeletonLoader />}>
+            {/* <Suspense fallback={<SkeletonLoader />}> */}
               <AllProduct productsFilter={products} />
-            </Suspense>
+            {/* </Suspense> */}
           </div>
         </div>
         {/* <Features /> */}
