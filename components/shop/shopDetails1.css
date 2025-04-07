@@ -106,9 +106,15 @@ h1.pro_details {
   border-radius: 4px;
   cursor: pointer;
 }
+
+.box.selected, .box.size.selected {
+  border: 2px solid #000;
+}
+
 .single_product .box-red {
   background-color: #ee0404;
 }
+
 
 .single_product .box-blue {
   background-color: #0f75fa;

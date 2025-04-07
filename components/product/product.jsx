@@ -9,46 +9,19 @@ import SkeletonLoader from "./SkeletonLoader";
 import Link from "next/link";
 
 export default function AllProduct({ productsFilter }) {
+  // console.log(productsFilter, "page filters??????");
+  // const { products } = useContext(ResponseContext);
+  
 
   // const [showPopup, setShowPopup] = useState(false);
-  const { addToCart } = useContext(ResponseContext);
+  const { addToCart, productsCategory, category } = useContext(ResponseContext);
+  
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const category = searchParams.get("category");
-  const subcategory = searchParams.get("subcategory");
-
-  const [productss, setProducts] = useState([]);
-  console.log(productss, "Fetched products...");
-
-  useEffect(() => {
-    if (!category) return; // Skip API call if no category is selected
-
-    const fetchProducts = async () => {
-      let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
-      if (subcategory) {
-        apiUrl += `?subcategory=${subcategory}`; // Correct query param format
-      }
-
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log(data, "API Response");
-
-        if (data.status && Array.isArray(data.data)) {
-          setProducts(data.data);
-        } else {
-          throw new Error("Invalid API response structure");
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, [category, subcategory]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const { products, loading, totalPages } = useAllProducts(currentPage);
+  const itemsPerPage = 9;
+
+  const { products, loading } = useAllProducts(currentPage);
   const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
 
   console.log(wishlist, "Wishlist items");
@@ -86,7 +59,13 @@ export default function AllProduct({ productsFilter }) {
   };
 
   // **Determine which products to display**
-  const displayedProducts = category ? productss : productsFilter;
+  const displayProducts = category ? productsCategory : productsFilter;
+  const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
+  const displayedProducts = displayProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
 
   return (
     <>
@@ -106,7 +85,7 @@ export default function AllProduct({ productsFilter }) {
 
       {loading ? <SkeletonLoader /> : (
         <div className="all_product_parent_div">
-          {displayedProducts.map((product, index) => {
+          {displayedProducts?.map((product, index) => {
             const productId = product.id;
             const isFavorite = wishlist.some((item) => item.id === productId);
 

@@ -2,6 +2,7 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 export const ResponseContext = createContext();
 
@@ -35,6 +36,7 @@ export const ResponseProvider = ({ children }) => {
     });
 
     toast.success(`${product.title} added to cart!`);
+    console.log("Updated cart:", cart);
   };
 
   const removeFromCart = (productId) => {
@@ -270,11 +272,81 @@ export const ResponseProvider = ({ children }) => {
   const orders = async (userId) => {
     try {
       const response = await axios.get(`https://foundation.alphalive.pro/api/user/dashboard/${userId}`);
-      setOrdersData(response.data.data); 
+      setOrdersData(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
   };
+
+
+  // coupon
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [couponError, setCouponError] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+
+  const applyCoupon = async (coupon, subtotal) => {
+    try {
+      const res = await axios.get(`https://foundation.alphalive.pro/api/front/get/coupon-code?coupon=${coupon}`);
+      console.log(res, "response.....a.a.a.a.");
+      const { type, price } = res.data.data;
+
+      let discount = 0;
+      if (type === 1) {
+        // Flat discount
+        discount = price;
+      } else if (type === 0) {
+        // Percentage discount
+        discount = (subtotal * price) / 100;
+      }
+
+      setCouponCode(coupon);
+      setDiscountAmount(discount);
+      setCouponError(res.data.error);
+    } catch (err) {
+      setCouponError('Invalid coupon code');
+      setCouponCode('');
+      setDiscountAmount(0);
+    }
+  };
+
+
+  // filter category
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const subcategory = searchParams.get('subcategory');
+
+  const [productsCategory, setProductsCategory] = useState([]);
+
+  useEffect(() => {
+    if (!category) return;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
+      if (subcategory) {
+        apiUrl += `?subcategory=${subcategory}`;
+      }
+
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        console.log(data, 'API Response');
+
+        if (data.status && Array.isArray(data.data)) {
+          setProductsCategory(data.data);
+        } else {
+          setProductsCategory([]);
+          throw new Error('Invalid API response structure');
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [category, subcategory]);
 
   return (
     <ResponseContext.Provider value={{
@@ -287,6 +359,12 @@ export const ResponseProvider = ({ children }) => {
       fetchAddresses,
       ordersData,
       orders,
+      discountAmount,
+      applyCoupon,
+      couponCode,
+      couponError,
+      productsCategory,
+      category
     }}>
       {children}
     </ResponseContext.Provider>

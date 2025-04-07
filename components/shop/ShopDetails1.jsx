@@ -17,13 +17,14 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 import "./shopDetails1.css";
 import ReviewForm from "./ReviewForm";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
 export default function ShopDetails1() {
   const { cart, addToCart, updateCart } = useContext(ResponseContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [bodyColor, setBodyColor] = useState(false);
   const [cartProducts, setCartProducts] = useState({});
+  const [selectedColor, setSelectedColor] = useState(null);  // New state for color
+  const [selectedSize, setSelectedSize] = useState(null);    // New state for size
   const { id } = useParams();
 
   useEffect(() => {
@@ -47,31 +48,36 @@ export default function ShopDetails1() {
   }, [id]);
 
   const updateCartQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1 || newQuantity > 99) return;
+    if (newQuantity < 1 || newQuantity > 99) return; // Prevent invalid quantities
     setCartProducts((prev) => ({ ...prev, [productId]: newQuantity }));
   };
-
+  
   const handleDecrease = (productId) => {
     if (cartProducts[productId] > 1) {
-      updateCartQuantity(productId, cartProducts[productId] - 1);
+      updateCartQuantity(productId, cartProducts[productId] - 1); // Decrease the quantity
     }
   };
-
+  
   const handleIncrease = (productId) => {
-    updateCartQuantity(productId, (cartProducts[productId] || 1) + 1);
+    updateCartQuantity(productId, (cartProducts[productId] || 1) + 1); // Increase the quantity
   };
 
   const handleAddToCart = () => {
-    if (data) {
-      const quantity = cartProducts[data.id] || 1;
-      console.log("Data being added to cart:", { ...data, quantity });
-      addToCart({ ...data, quantity });
+    if (data && selectedColor && selectedSize) {
+      const quantity = cartProducts[data.id] || 1;  // Default to 1 if no quantity is selected
+      console.log("Data being added to cart:", {
+        ...data,
+        quantity,
+        color: selectedColor,   // Add color
+        size: selectedSize,     // Add size
+      });
+      addToCart({ ...data, quantity, color: selectedColor, size: selectedSize }, quantity);
+    } else {
+      alert("Please select color and size before adding to cart.");
     }
   };
 
-
   const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
-  // console.log(wishlist, "wishlist add ed")
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
@@ -87,7 +93,6 @@ export default function ShopDetails1() {
     setFavorite(!favorite);
   };
 
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -95,7 +100,6 @@ export default function ShopDetails1() {
       setIsLoggedIn(true);
     }
   }, []);
-
 
   return loading ? (
     <p>loading...</p>
@@ -111,7 +115,7 @@ export default function ShopDetails1() {
               <div className="product-details sticky-element panel vstack gap-1 xl:gap-2">
                 <div className="flex_div">
                   <h1 className="pro_details">{data?.title}</h1>
-                  <p id="stock">In Stock</p>
+                  <p id="stock">{data?.stock_check == 1 ? "In Stock" : "out Stock"}</p>
                 </div>
                 <p id="prod_name">{data?.title}</p>
 
@@ -124,7 +128,7 @@ export default function ShopDetails1() {
                     ))}
                   </ul>
                   <span className="hstack gap-narrow fs-7 opacity-60 reviews">
-                    {Number(data?.rating)} <span className="d-none sm:d-inline-block reviews">(100 Reviews)</span>
+                    {Number(data?.rating)} <span className="d-none sm:d-inline-block reviews">({data?.reviews?.length})</span>
                   </span>
                 </div>
 
@@ -143,15 +147,26 @@ export default function ShopDetails1() {
 
                 <p id="color_word">Color</p>
                 <div className="box-container">
-                  {["red", "blue", "yellow", "black", "green"].map((color) => (
-                    <div key={color} className={`box box-${color}`} />
+                  {data?.colors?.map((color) => (
+                    <div
+                      key={color}
+                      className={`box ${selectedColor === color ? "selected" : ""}`}
+                      style={{ background: color }}
+                      onClick={() => setSelectedColor(color)}  // Set the selected color
+                    ></div>
                   ))}
                 </div>
 
                 <p id="color_word" className="mt-2">Size</p>
                 <div className="box-container">
-                  {["S", "M", "L", "XL", "XXL"].map((size) => (
-                    <div key={size} className="box size">{size}</div>
+                  {data?.sizes?.map((size) => (
+                    <div
+                      key={size}
+                      className={`box size ${selectedSize === size ? "selected" : ""}`}
+                      onClick={() => setSelectedSize(size)}  // Set the selected size
+                    >
+                      {size}
+                    </div>
                   ))}
                 </div>
 
@@ -171,7 +186,7 @@ export default function ShopDetails1() {
                       autoComplete="off"
                     />
                     <FiPlus className="quantity_icon" onClick={() => handleIncrease(data?.id)} />
-                  </div>
+                  </div> 
 
                   <button className="addCart" onClick={handleAddToCart}>Add to Cart</button>
                   {isLoggedIn ? (
@@ -180,9 +195,11 @@ export default function ShopDetails1() {
                     ) : (
                       <FaRegHeart className="icon_size" onClick={toggleFavorite} />
                     )}</div>
-                  ) : (<div style={{ position: "absolute", top: "10px", right: "10px" }}>
-                    <Link href={'/login'}><FaRegHeart className="icon_size" /></Link>
-                  </div>)}
+                  ) : (
+                    <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+                      <Link href={'/login'}><FaRegHeart className="icon_size" /></Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -194,13 +211,12 @@ export default function ShopDetails1() {
         </div>
 
         <Specifications />
-
         <ReviewSection product_review={data} />
         <div className="add_review_form mt-2">
           <ReviewForm />
         </div>
 
-        <FeaturedProducts />
+        <FeaturedProducts category={data?.category}/>
         <div className="features_sec mt-3 "></div>
       </div>
     </article>

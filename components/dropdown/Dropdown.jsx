@@ -6,21 +6,30 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 import Slider from "@mui/material/Slider";
 
 export default function Dropdown() {
-  const { filters, setFilters } = useContext(ResponseContext);
-  console.log(filters, "filters pro..,,,,.,.,")
+  const { filters, setFilters, category } = useContext(ResponseContext);
+  console.log(category, "cateeeee..,..,")
+  // console.log(filters, "filters pro..,,,,.,.,")
 
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [filterByPrice, setFilterByPrice] = useState(false);
-  const [filterByColor, setFilterByColor] = useState(false);
-  const [filterBySize, setFilterBySize] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+
+  const [categoriesOpen, setCategoriesOpen] = useState(true);
+  const [filterByPrice, setFilterByPrice] = useState(true);
+  const [filterByColor, setFilterByColor] = useState(true);
+  const [filterBySize, setFilterBySize] = useState(true);
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Electronic");
   const [selectedColor, setSelectedColor] = useState("");
-  const [selectedSize, setSelectedSize] = useState("XXL");
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [selectedSize, setSelectedSize] = useState("S");
+  const [priceRange, setPriceRange] = useState([20, 10000]);
 
-  const colors = ["red", "blue", "green", "black", "white"];
+  const colors = [
+    { name: "Red", code: "#f41c1c" },
+    { name: "Blue", code: "#3c34d5" },
+    { name: "Green", code: "#007137" },
+    { name: "Black", code: "#000000" },
+    { name: "Purple", code: "#c12ec8" },
+  ];
   const sizes = ["S", "M", "L", "XL", "XXL"];
 
   // Fetch categories from API
@@ -43,26 +52,41 @@ export default function Dropdown() {
   }, []);
 
   // Update filters and trigger API call when selected filters change
-  useEffect(() => {
-    // Update filters when category, color, size, or price range changes
-    setFilters({
-      category_name: selectedCategory,
-      color: selectedColor,
-      size: selectedSize,
-      min_price: priceRange[0],
-      max_price: priceRange[1],
-    });
+  const [hasInitializedFromUrl, setHasInitializedFromUrl] = useState(false);
 
-    // Update the URL to reflect the selected filters
-    const queryParams = new URLSearchParams({
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const category = params.get("category_name") || "Electronic";
+    const color = params.get("color") || "";
+    const size = params.get("size") || "S";
+    const min_price = parseInt(params.get("min_price") || 20);
+    const max_price = parseInt(params.get("max_price") || 10000);
+
+    setSelectedCategory(category);
+    setSelectedColor(color);
+    setSelectedSize(size);
+    setPriceRange([min_price, max_price]);
+    setHasInitializedFromUrl(true); // ✅ Set flag to true when done
+  }, []);
+
+  useEffect(() => {
+    if (!hasInitializedFromUrl) return;
+
+    const updatedFilters = {
       category_name: selectedCategory,
       color: selectedColor,
       size: selectedSize,
       min_price: priceRange[0],
       max_price: priceRange[1],
-    }).toString();
-    // window.history.pushState({}, "", `?${queryParams}`);
-  }, [selectedCategory, selectedColor, selectedSize, priceRange, setFilters]);
+    };
+
+    setFilters(updatedFilters);
+
+    const queryParams = new URLSearchParams(updatedFilters).toString();
+    window.history.pushState({}, "", `?${queryParams}`);
+  }, [selectedCategory, selectedColor, selectedSize, priceRange, hasInitializedFromUrl]);
+
 
   return (
     <div className="Product_Categories">
@@ -71,29 +95,40 @@ export default function Dropdown() {
         <h3>Product Categories</h3>
         <RiArrowDropDownLine className="drop_down_icon" />
       </div>
+
       {categoriesOpen && (
         <ul>
-          {categories.map((category) => (
+          {(showAllCategories ? categories : categories.slice(0, 10)).map((category) => (
             <li key={category.id}>
               <input
                 type="radio"
                 id={category.name}
                 name="category"
                 checked={selectedCategory === category.name}
-                onChange={() => setSelectedCategory(category.name)}  // Ensure state update
+                onChange={() => setSelectedCategory(category.name)}
               />
               <label htmlFor={category.name}>{category.name}</label>
             </li>
           ))}
+
+          {categories.length > 10 && (
+            <button
+              className="" style={{ margin: "0px", border: "none", background: "transparent", textDecoration: "underline" }}
+              onClick={() => setShowAllCategories(!showAllCategories)}
+            >
+              {showAllCategories ? "See Less" : "See More"}
+            </button>
+          )}
         </ul>
       )}
+
 
       {/* Price Filter */}
       <div className="heading_icon" onClick={() => setFilterByPrice(!filterByPrice)}>
         <h3>Filter by Price</h3>
         <RiArrowDropDownLine className="drop_down_icon" />
       </div>
-      {filterByPrice && (
+      {/* {filterByPrice && (
         <div className="slider-container">
           <div className="slider-value">Price: ${priceRange[0]} - ${priceRange[1]}</div>
           <Slider
@@ -105,6 +140,27 @@ export default function Dropdown() {
             max={100}
           />
         </div>
+      )} */}
+      {filterByPrice && (
+        <div className="slider-container">
+          <div className="slider-value">Price: ${priceRange[0]} - ${priceRange[1]}</div>
+          <Slider
+            className="custom-slider"
+            value={priceRange}
+            onChange={(_, newValue) => setPriceRange(newValue)} // Just update local state
+            onChangeCommitted={(_, newValue) => {
+              setPriceRange(newValue);
+              setFilters(prev => ({
+                ...prev,
+                min_price: newValue[0],
+                max_price: newValue[1],
+              }));
+            }}
+            valueLabelDisplay="auto"
+            min={20}
+            max={10000}
+          />
+        </div>
       )}
 
       {/* Color Filter */}
@@ -113,17 +169,17 @@ export default function Dropdown() {
         <RiArrowDropDownLine className="drop_down_icon" />
       </div>
       {filterByColor && (
-        <ul className="color_div d-flex">
+        <ul>
           {colors.map((color) => (
-            <li key={color}>
+            <li key={color.code}>
               <input
                 type="radio"
-                id={color}
+                id={color.code}
                 name="color"
-                checked={selectedColor === color}
-                onChange={() => setSelectedColor(color)}
+                checked={selectedColor === color.code}
+                onChange={() => setSelectedColor(color.code)} // set the color code in state
               />
-              <label htmlFor={color}>{color.charAt(0).toUpperCase() + color.slice(1)}</label>
+              <label htmlFor={color.code}>{color.name}</label> {/* show readable name */}
             </li>
           ))}
         </ul>
@@ -135,7 +191,7 @@ export default function Dropdown() {
         <RiArrowDropDownLine className="drop_down_icon" />
       </div>
       {filterBySize && (
-        <ul className="color_div d-flex">
+        <ul >
           {sizes.map((size) => (
             <li key={size}>
               <input

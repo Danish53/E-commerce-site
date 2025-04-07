@@ -5,7 +5,35 @@ import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
-export default function FeaturedProducts() {
+import { useEffect, useState } from "react";
+export default function FeaturedProducts({category}) {
+  const [products, setProducts] = useState();
+  console.log(products, "relatd aa/////")
+
+  useEffect(() => {
+      if (!category) return; // Skip API call if no category is selected
+  
+      const fetchProducts = async () => {
+        let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
+  
+        try {
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          console.log(data, "API Response");
+  
+          if (data.status && Array.isArray(data.data)) {
+            setProducts(data.data);
+          } else {
+            throw new Error("Invalid API response structure");
+          }
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+  
+      fetchProducts();
+    }, [category]);
+
   return (
     <div className="featured-products-panel panel featured_products_panel mt-4 ">
       <h2>Related Products</h2>
@@ -44,7 +72,7 @@ export default function FeaturedProducts() {
             },
           }}
         >
-          {products.map((elm, i) => (
+          {products?.map((elm, i) => (
             <SwiperSlide key={i} className="swiper-slide">
               <article className="product type-product panel">
                 <div className="vstack gap-2">
@@ -52,34 +80,34 @@ export default function FeaturedProducts() {
                     <figure className="featured-image m-0 rounded ratio ratio-1x1 uc-transition-toggle overflow-hidden">
                       <Image
                         className="media-cover image uc-transition-scale-up uc-transition-opaque"
-                        src={elm.image}
+                        src={elm?.thumbnail}
                         width={1280}
                         height={1707}
                         alt="Elegant Watch"
                       />
                       <Link
-                        href={`/shop-product-detail/${elm.id}`}
+                        href={`/shop-product-detail/${elm?.id}`}
                         className="position-cover"
                         data-caption="Elegant Watch"
                       ></Link>
                     </figure>
-                    {elm.discount && (
+                    {/* {elm?.previous_price && (
                       <span className="position-absolute top-0 start-0 m-1 fs-7 ft-tertiary lh-sm h-16px px-narrow rounded bg-yellow-400 text-dark">
-                        {elm.discount}
+                        {elm?.previous_price}
                       </span>
-                    )}
+                    )} */}
                   </div>
                   <div className="content vstack  gap-1 fs-6  xl:mt-1">
                     <div className="my_content_div">
-                      <h4>Allen Solly</h4>
-                      <p className="description">Women Textured Handheld Bag</p>
+                      <h4>{elm?.title}</h4>
+                      <p className="description">{elm?.category_name}</p>
                       <div className="prices">
                         <div className="new_price">
-                          <p>$80.00</p>
+                          <p>{elm?.current_price}</p>
                         </div>
                         <div className="old_price">
                           <p className="text-muted">
-                            <del> $100.00</del>
+                            <del>{elm?.previous_price}</del>
                           </p>
                         </div>
                       </div>

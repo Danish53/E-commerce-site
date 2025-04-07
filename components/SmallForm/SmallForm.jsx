@@ -1,7 +1,17 @@
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 import "./small_form.css";
+import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function SmallForm() {
+
+    const { cart } = useContext(ResponseContext);
+  
+  
+    const getTotalAmount = () => {
+      return cart?.reduce((total, item) => total + item.current_price * item.quantity, 0).toFixed(2) || "0.00";
+    };
+
   return (
     <section className="small_form">
       <form className="border p-4 shadow-sm rounded">
@@ -9,7 +19,7 @@ export default function SmallForm() {
           <label htmlFor="subtotal" className="form-label mb-0 fw-bold">
             Subtotal
           </label>
-          <span id="subtotal">$200.00</span>
+          <span id="subtotal">${getTotalAmount()}</span>
         </div>
         <label htmlFor="" id="discount">
           Enter Discount Code

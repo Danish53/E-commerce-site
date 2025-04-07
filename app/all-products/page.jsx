@@ -11,9 +11,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 export default function Page() {
   const { products, loading, error } = useContext(ResponseContext);
 
-  return loading ? (
-    <SkeletonLoader />
-  ) : (
+  return (
     <section id="all_product" className="all_product">
       <Header2 />
       <div className="container margin_top" style={{ paddingTop: "100px" }}>

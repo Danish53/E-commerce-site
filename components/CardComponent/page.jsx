@@ -64,10 +64,10 @@ export default function Page() {
               </div>
               <div className="w-100 mt-2">
                 {/* <button id="view_cart">View Cart</button> */}
-                <Link href="/cart-list" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px"}}>
+                <Link href="/cart-list" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px", padding:"10px", color:"black"}}>
                 View Cart
                 </button></Link>
-                <Link href="/shop-cart"><button id="checkout" onClick={handleCheckout}>
+                <Link href="/shop-cart"><button id="checkout"  style={{background:"black", width:"100%", borderRadius:"6px", color:"white",  padding:"10px", marginTop:"10px"}} onClick={handleCheckout}>
                   Checkout
                 </button></Link>
               </div>

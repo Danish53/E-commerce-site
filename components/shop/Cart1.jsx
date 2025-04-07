@@ -9,7 +9,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function Cart1() {
   const router = useRouter();
-  const { cart, removeFromCart, updateCart } = useContext(ResponseContext);
+  const { cart, removeFromCart, updateCart, discountAmount, applyCoupon, couponCode, couponError } = useContext(ResponseContext);
   const [loading, setLoading] = useState(false);
 
   console.log(cart, "chekout response and pass api...")
@@ -64,6 +64,20 @@ export default function Cart1() {
   const handleNavigate = ()=>{
     router.push("/shipping-address");
   }
+
+  const [inputCode, setInputCode] = useState("");
+  console.log(inputCode, "code input.,.,.,")
+  const subtotal = getTotalAmount();
+  const deliveryFee = 5;
+  const grandtotalPrice = subtotal - discountAmount + deliveryFee;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true)
+    applyCoupon(inputCode, subtotal);
+    setLoading(false)
+  };
+
   return (
     <div className="section ">
       <div className="container">
@@ -173,85 +187,94 @@ export default function Cart1() {
               </form>
             </div>
 
-            <div className="col-lg-4">
-              <table className="table table_border table-borderless pb-3">
-                <tbody className="mb-3">
-                  <tr className="sub_total border_bottom">
-                    <th className="ft-tertiary text-black font_family">
-                      <span className="font_family">
-                        Subtotal
-                      </span>
-                    </th>
-                    <td className="text_align_right">
-                      ${getTotalAmount()}
-                    </td>
-                  </tr>
+            <div className="col-lg-4"> 
+            <table className="table table_border table-borderless pb-3">
+      <tbody className="mb-3">
+        <tr className="sub_total border_bottom">
+          <th className="ft-tertiary text-black font_family">
+            <span className="font_family">Subtotal</span>
+          </th>
+          <td className="text_align_right">${subtotal}</td>
+        </tr>
 
-                  <tr>
-                    <td colSpan="2" className="p-3">
-                      <form className="">
-                        <label>Enter Discount Code</label>
-                        <div className="input_div d-flex justify-content-center align-items-center">
-                          <input
-                            type="text"
-                            placeholder="Flat 50"
-                            className="cupon_input"
-                          />
-                          <button type="submit" className="apply">
-                            Apply
-                          </button>
-                        </div>
-                      </form>
-                    </td>
-                  </tr>
+        {discountAmount > 0 && (
+          <tr className="sub_total border_bottom">
+            <th className="ft-tertiary text-success font_family">
+              Discount ({couponCode})
+            </th>
+            <td className="text_align_right text-success">
+              -${discountAmount.toFixed(2)}
+            </td>
+          </tr>
+        )}
 
-                  <tr className="border_bottom">
-                    <th className="ft-tertiary text-black delivery_charges ">
-                      <span className="font_family">Delivery Charges</span>
-                    </th>
-                    <td className="text_align_right">
-                      <span className="total font_family delivery_charges">
-                        {/* ${(totalPrice + 23).toFixed(2)} */}
-                        $5.00
-                      </span>
-                    </td>
-                  </tr>
+        <tr>
+          <td colSpan="2" className="p-3">
+            <form onSubmit={handleSubmit}>
+              <label>Enter Discount Code</label>
+              <div className="input_div d-flex justify-content-center align-items-center">
+                <input
+                  type="text"
+                  placeholder="Flat 50"
+                  value={inputCode}
+                  onChange={(e) => setInputCode(e.target.value)}
+                  className="cupon_input"
+                />
+                <button type="submit" className="apply">{loading? "....." : "Apply"}</button>
+              </div>
+              {couponError && (
+                <small className="text-danger mt-1 d-block">{couponError}</small>
+              )}
+            </form>
+          </td>
+        </tr>
 
-                  <tr>
-                    <th className="ft-tertiary text-black grand_total">
-                      <span className="font_family">Grand Total</span>
-                    </th>
-                    <td className="text_align_right">
-                      <span className="total  grand_total font_family ">
-                        ${(totalPrice + 23).toFixed(2)}
-                      </span>
-                    </td>
-                  </tr>
+        <tr className="border_bottom">
+          <th className="ft-tertiary text-black delivery_charges ">
+            <span className="font_family">Delivery Charges</span>
+          </th>
+          <td className="text_align_right">
+            <span className="total font_family delivery_charges">
+              ${deliveryFee.toFixed(2)}
+            </span>
+          </td>
+        </tr>
 
-                  <tr className="tr_row ft-tertiary">
-                    <td colSpan="2" className="checkout_td text-center">
-                      <button
-                        // href={`/shop-checkout`}
-                        className="w-100  check_out_btn"
-                        onClick={handleNavigate}
-                      >
-                        {loading ? (
-                          <>
-                            <span
-                              className="spinner-border spinner-border-sm me-2"
-                              role="status"
-                              aria-hidden="true"
-                            ></span>
-                            Proceed to checkout...
-                          </>
-                        ) : (
-                          "Proceed to checkout"
-                        )}
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+        <tr>
+          <th className="ft-tertiary text-black grand_total">
+            <span className="font_family">Grand Total</span>
+          </th>
+          <td className="text_align_right">
+            <span className="total  grand_total font_family ">
+              ${grandtotalPrice.toFixed(2)}
+            </span>
+          </td>
+        </tr>
+
+        <tr className="tr_row ft-tertiary">
+          <td colSpan="2" className="checkout_td text-center">
+            <button
+              className="w-100 check_out_btn"
+              onClick={handleNavigate}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Proceed to checkout...
+                </>
+              ) : (
+                "Proceed to checkout"
+              )}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
             </div>
           </div>
         </div>
