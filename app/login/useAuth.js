@@ -7,7 +7,7 @@ const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
-  const { response_Context, setResponse_Context } = useContext(ResponseContext);
+  const { setResponse_Context } = useContext(ResponseContext);
 
   // ✅ Register a New User
   const registration = async (first_name, last_name, email, password) => {
@@ -64,6 +64,7 @@ const useAuth = () => {
       );
 
       const data = await res.json();
+      console.log(data, "login data??>>>>>")
 
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
@@ -81,7 +82,7 @@ const useAuth = () => {
         router.push("/"); // Redirect to the website
         return data;
       } else {
-        throw new Error(data?.error || "Login failed.");
+        throw new Error(data?.error.message || "Login failed.");
       }
     } catch (err) {
       setError(err?.message);

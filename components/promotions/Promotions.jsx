@@ -9,15 +9,18 @@ export default function Promotions() {
   const [activeTab, setActiveTab] = useState("recommendations");
   const { latestCategories } = useCategories();
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true);
       const data = await latestCategories();
       if (data.status && Array.isArray(data.data)) {
         setCategories(data.data); // ✅ Store categories in state
       } else {
         throw new Error("Invalid API response structure");
       }
+      setLoading(false);
     };
 
     fetchCategories();
@@ -27,15 +30,18 @@ export default function Promotions() {
   const [procCat, setProcat] = useState();
 
   const fetchCategoryProducts = async (categoryName) => {
+    setLoading(true);
     try {
       const response = await fetch(
         `https://foundation.alphalive.pro/api/front/products/category/${encodeURIComponent(categoryName)}`
       );
-      console.log(response, "response cate product")
+      // console.log(response, "response cate product")
       const data = await response.json();
-      setProcat(data.data || []); 
+      setProcat(data.data || []);
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +65,6 @@ export default function Promotions() {
         }
 
         const data = await response.json();
-        console.log(data, "data recomm")
         setProducts(data.data);
       } catch (err) {
         console.log(err.message)
@@ -85,20 +90,30 @@ export default function Promotions() {
               className={activeTab === "recommendations" ? "active" : ""}
               onClick={() => {
                 setActiveTab("recommendations");
-                setProcat([]); // ✅ Clear category products when clicking "Recommendations"
+                setProcat([]);
               }}
             >
               Recommendations
             </p>
-            {categories?.slice(0, 4).map((category, index) => (
-              <p
-                key={index}
-                className={activeTab === category.name ? "active" : ""}
-                onClick={() => handleCategoryClick(category.name)}
-              >
-                {category?.name}
-              </p>
-            ))}
+            {
+              loading ? (
+                <>
+                  {[...Array(4)].map((_, index) => (
+                    <p key={index} className="skeleton-tab mb-2"></p>
+                  ))}
+                </>
+              ) : (
+                categories?.slice(0, 4).map((category, index) => (
+                  <p
+                    key={index}
+                    className={activeTab === category.name ? "active" : ""}
+                    onClick={() => handleCategoryClick(category.name)}
+                  >
+                    {category?.name}
+                  </p>
+                ))
+              )
+            }
           </div>
         </div>
       </section>
@@ -184,28 +199,49 @@ export default function Promotions() {
           )}
 
           <div className="popular_products2 pb-3">
-          {procCat?.map((product, index) => (
-              <div className="single_card2" key={index}>
-                <div className="img_div" onClick={() => handleNavigation(product.id)}>
-                  <img src={product?.thumbnail} />
-                </div>
-                <p style={{textAlign:"left", margin:"10px 0px"}}>{product?.title}</p>
-
-                <div className="review_div" style={{textAlign:"left"}}>
-                  <div className="div_1">
-                  <p>
-                    <strong>{product?.category_name}</strong>
-                  </p>
-                </div>
-
-                  <div className="price_div">
-                    <p>
-                      <strong>${product?.current_price}</strong>
-                    </p>
+            {
+              loading ? (
+                [...Array(4)].map((_, index) => (
+                  <div className="single_card2 skeleton" key={index}>
+                    <div className="img_div skeleton-box" />
+                    <p className="skeleton-line mt-2" />
+                    <div className="review_div">
+                      <div className="div_1">
+                        <p className="skeleton-line" style={{ width: "60%" }} />
+                      </div>
+                      <div className="price_div">
+                        <p className="skeleton-line" style={{ width: "40%" }} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-          ))}
+                ))
+              ) : procCat?.length > 0 ? (
+                procCat.map((product, index) => (
+                  <div className="single_card2" key={index}>
+                    <div className="img_div" onClick={() => handleNavigation(product.id)}>
+                      <img src={product?.thumbnail} />
+                    </div>
+                    <p style={{ textAlign: "left", margin: "10px 0px" }}>{product?.title}</p>
+                    <div className="review_div" style={{ textAlign: "left" }}>
+                      <div className="div_1">
+                        <p>
+                          <strong>{product?.category_name}</strong>
+                        </p>
+                      </div>
+                      <div className="price_div">
+                        <p>
+                          <strong>${product?.current_price}</strong>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                ""
+              )
+            }
+
+
           </div>
         </div>
       </section>

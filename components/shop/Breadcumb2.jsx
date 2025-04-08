@@ -28,10 +28,10 @@ export default function Breadcumb2({ product }) {
           <li>
             <Link href={`/shop`}>Shop</Link>
           </li>
-          <li>
+          {/* <li>
             <i className="unicon-chevron-right fw-medium opacity-50 rtl:rotate-180" />
           </li>
-          <li>
+          <li> 
             <Link href={`/shop-category/toys`}>Toys</Link>
           </li>
           <li>
@@ -39,7 +39,7 @@ export default function Breadcumb2({ product }) {
           </li>
           <li>
             <span className="opacity-50">{product.name}</span>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>

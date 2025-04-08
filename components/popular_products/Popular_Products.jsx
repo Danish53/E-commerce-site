@@ -105,7 +105,7 @@ export default function Popular_Products() {
   //         setLoading(false);
   //       }
   //     };
-  
+
   //     fetchData();
   //   }, []);
   useEffect(() => {
@@ -128,47 +128,55 @@ export default function Popular_Products() {
     router.push(`/shop-product-detail/${id}`);
   };
 
-    if (error) return <p>Error: {error}</p>;
+  // if (error) return <p>Error: {error}</p>;
 
 
-  return (  
-      <>
-    {
-      loading ? (
-        <>
-        <span
-          className="spinner-border spinner-border-sm m-5"
-          role="status"
-          aria-hidden="true"
-        ></span>
-        
-      </> 
-    ) : (
-    <section id="popular_products" className="pb-3">
-      <div className="container ">
-        <h1>Popular Products</h1>
-        <div className="popular_products pb-3">
-          <Slider {...settings}>
-            {products?.map((item, index) => {
-              return (
-                <Popular_Card
-                  key={index}
-                  onClick={() => handleNavigation(item.id)}
-                  img_src={item?.thumbnail}
-                  productName={item?.title}
-                  price={item.current_price}
-                  rating={item?.rating}
-                  productId={item.id}
-                />
-              );
-            })}
-          </Slider>
-        </div>
-        <hr />
-      </div>
-    </section>
-      )
-    }
+  return (
+    <>
+      {
+        loading ? (
+          <section id="popular_products" className="pb-3">
+            <div className="container">
+              <h1>Popular Products</h1>
+              <div className="popular_products pb-3">
+                <Slider {...settings}>
+                  {[...Array(4)].map((_, index) => (
+                    <div className="popular_card_skeleton" key={index}>
+                      <div className="skeleton-image" />
+                      <div className="skeleton-line skeleton-title" />
+                      <div className="skeleton-line skeleton-price" />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+              <hr />
+            </div>
+          </section>
+        ) : (
+          <section id="popular_products" className="pb-3">
+            <div className="container">
+              <h1>Popular Products</h1>
+              <div className="popular_products pb-3">
+                <Slider {...settings}>
+                  {products?.map((item, index) => (
+                    <Popular_Card
+                      key={index}
+                      onClick={() => handleNavigation(item.id)}
+                      img_src={item?.thumbnail}
+                      productName={item?.title}
+                      price={item.current_price}
+                      rating={item?.rating}
+                      productId={item.id}
+                    />
+                  ))}
+                </Slider>
+              </div>
+              <hr />
+            </div>
+          </section>
+        )
+      }
+
     </>
   );
 }

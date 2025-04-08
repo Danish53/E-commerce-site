@@ -24,7 +24,7 @@ export default function Page() {
   return (
     <div>
       {isPopupOpen && (
-        <div className={`pop_up show`} style={{ width: "265px"}}>
+        <div className={`pop_up show`} style={{ width: "320px"}}>
           <div className="close_div">
             <p id="total_item">
               {cart?.length > 0 ? `You have ${cart.length} items in your cart` : ""}
@@ -64,10 +64,10 @@ export default function Page() {
               </div>
               <div className="w-100 mt-2">
                 {/* <button id="view_cart">View Cart</button> */}
-                <Link href="/cart-list" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px", padding:"10px", color:"black"}}>
+                <Link href="/shop-cart" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px", padding:"10px", color:"black"}}>
                 View Cart
                 </button></Link>
-                <Link href="/shop-cart"><button id="checkout"  style={{background:"black", width:"100%", borderRadius:"6px", color:"white",  padding:"10px", marginTop:"10px"}} onClick={handleCheckout}>
+                <Link href="/shipping-address"><button id="checkout"  style={{background:"black", width:"100%", borderRadius:"6px", color:"white",  padding:"10px", marginTop:"10px"}} onClick={handleCheckout}>
                   Checkout
                 </button></Link>
               </div>

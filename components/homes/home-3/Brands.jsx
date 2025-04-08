@@ -42,29 +42,6 @@ export default function Brands() {
     ],
   };
 
-  const products = [
-    {
-      image_src: "/assets/images/common/mobile_img.png",
-      prod_name: "Smart Phone",
-    },
-    {
-      image_src: "/assets/images/common/mobile_img.png",
-      prod_name: "Laptop",
-    },
-    { image_src: "/assets/images/common/mobile_img.png", prod_name: "Tablet" },
-    {
-      image_src: "/assets/images/common/mobile_img.png",
-      prod_name: "Smart Phone",
-    },
-    { image_src: "/assets/images/common/mobile_img.png", prod_name: "Laptop" },
-    { image_src: "/assets/images/common/mobile_img.png", prod_name: "Tablet" },
-    {
-      image_src: "/assets/images/common/mobile_img.png",
-      prod_name: "Smart Phone",
-    },
-    { image_src: "/assets/images/common/mobile_img.png", prod_name: "Laptop" },
-    { image_src: "/assets/images/common/mobile_img.png", prod_name: "Tablet" },
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,41 +65,51 @@ export default function Brands() {
     fetchData();
   }, []);
 
-  if (error) return <p>Error: {error}</p>;
+  // if (error) return <p>Error: {error}</p>;
 
   return (
     <>
-    {
-      loading ? (
-        <>
-        <span
-          className="spinner-border spinner-border-sm m-5"
-          role="status"
-          aria-hidden="true"
-        ></span>
-        
-      </> 
-    ) : (
-        <div className="container mt-4  pb-3 brands">
-        <div className="row ">
-          <div className="product_list">
-            <Slider {...settings}>
-              {data.map((item, index) => {
-                return (
-                  <SingleProduct
-                    key={index}
-                    image_src={item.image}
-                    prod_name={item.name}
-                  />
-                );
-              })}
-            </Slider>
+      {
+        loading ? (
+          <>
+            <div className="container mt-4 pb-3 brands">
+              <div className="row">
+                <div className="product_list">
+                  <Slider {...settings}>
+                    {[...Array(5)].map((_, index) => (
+                      <div key={index} className="skeleton-product">
+                        <div className="skeleton-image mb-2"></div>
+                        <div className="skeleton-text w-75 mb-1"></div>
+                        <div className="skeleton-text w-50"></div>
+                      </div>
+                    ))}
+                  </Slider>
+                </div>
+              </div>
+              <hr />
+            </div>
+          </>
+        ) : (
+          <div className="container mt-4  pb-3 brands">
+            <div className="row ">
+              <div className="product_list">
+                <Slider {...settings}>
+                  {data.map((item, index) => {
+                    return (
+                      <SingleProduct
+                        key={index}
+                        image_src={item.image}
+                        prod_name={item.name}
+                      />
+                    );
+                  })}
+                </Slider>
+              </div>
+            </div>
+            <hr />
           </div>
-        </div>
-        <hr />
-      </div>
-      )
-    }
+        )
+      }
     </>
   );
 }

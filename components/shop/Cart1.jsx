@@ -10,6 +10,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 export default function Cart1() {
   const router = useRouter();
   const { cart, removeFromCart, updateCart, discountAmount, applyCoupon, couponCode, couponError } = useContext(ResponseContext);
+  console.log(cart, "cart data done???")
   const [loading, setLoading] = useState(false);
 
   console.log(cart, "chekout response and pass api...")
@@ -145,6 +146,7 @@ export default function Cart1() {
                                   </Link>
                                 </h5>
                                 <p>Size: {elm?.size}</p>
+                                <span>Color: {elm?.color}</span>
                               </div>
                             </div>
                           </td>

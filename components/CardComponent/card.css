@@ -250,7 +250,7 @@ p.reviewed {
   cursor: pointer;
 }
 .pop_up {
-  max-width: 280px;
+  max-width: 320px;
   max-height: 0; /* Initially hidden */
   background-color: white;
   padding: 10px 14px;
@@ -266,7 +266,7 @@ p.reviewed {
 }
 
 .pop_up.show {
-  max-height: 500px; /* Expand */
+  max-height: 600px; /* Expand */
   opacity: 1;
   transform: translateY(0);
 }

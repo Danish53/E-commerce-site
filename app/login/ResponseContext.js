@@ -195,9 +195,9 @@ export const ResponseProvider = ({ children }) => {
   });
 
   // Fetch filtered products when filters change
-  // useEffect(() => {
-  //   fetchFilteredProducts();
-  // }, [JSON.stringify(filters)]);
+  useEffect(() => {
+    fetchFilteredProducts();
+  }, [JSON.stringify(filters)]);
 
   async function fetchFilteredProducts() {
     setLoading(true);
@@ -234,7 +234,7 @@ export const ResponseProvider = ({ children }) => {
   const addAddress = async (newAddress) => {
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
-      console.log(response, "response ad ka")
+      // console.log(response, "response ad ka")
       setAddresses((prev) => [...prev, response.data.data]);
     } catch (error) {
       console.error("Error adding address:", error);
@@ -286,7 +286,7 @@ export const ResponseProvider = ({ children }) => {
   const applyCoupon = async (coupon, subtotal) => {
     try {
       const res = await axios.get(`https://foundation.alphalive.pro/api/front/get/coupon-code?coupon=${coupon}`);
-      console.log(res, "response.....a.a.a.a.");
+      // console.log(res, "response.....a.a.a.a.");
       const { type, price } = res.data.data;
 
       let discount = 0;

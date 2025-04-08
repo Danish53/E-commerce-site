@@ -13,6 +13,8 @@ import ProductSlide from "./ProductSlide";
 import ReviewSection from "../ReviewSection/ReviewSection";
 import Specifications from "../Specifications/Specifications";
 import { ResponseContext } from "@/app/login/ResponseContext";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 import "./shopDetails1.css";
 import ReviewForm from "./ReviewForm";
@@ -20,11 +22,12 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 export default function ShopDetails1() {
   const { cart, addToCart, updateCart } = useContext(ResponseContext);
   const [data, setData] = useState(null);
+  // console.log(data,"data single pro..")
   const [loading, setLoading] = useState(false);
   const [bodyColor, setBodyColor] = useState(false);
   const [cartProducts, setCartProducts] = useState({});
-  const [selectedColor, setSelectedColor] = useState(null);  // New state for color
-  const [selectedSize, setSelectedSize] = useState(null);    // New state for size
+  const [selectedColor, setSelectedColor] = useState("");  // New state for color
+  const [selectedSize, setSelectedSize] = useState("");    // New state for size
   const { id } = useParams();
 
   useEffect(() => {
@@ -63,17 +66,17 @@ export default function ShopDetails1() {
   };
 
   const handleAddToCart = () => {
-    if (data && selectedColor && selectedSize) {
+    const selectedColorValue = selectedColor || ""; // Default to empty string if not selected
+  const selectedSizeValue = selectedSize || "";
+    if (data) {
       const quantity = cartProducts[data.id] || 1;  // Default to 1 if no quantity is selected
-      console.log("Data being added to cart:", {
-        ...data,
-        quantity,
-        color: selectedColor,   // Add color
-        size: selectedSize,     // Add size
-      });
-      addToCart({ ...data, quantity, color: selectedColor, size: selectedSize }, quantity);
-    } else {
-      alert("Please select color and size before adding to cart.");
+      // console.log("Data being added to cart:", {
+      //   ...data,
+      //   quantity,
+      //   color: selectedColorValue,   // Add color
+      //   size: selectedSizeValue,     // Add size
+      // });
+      addToCart({ ...data, quantity, color: selectedColorValue, size: selectedSizeValue }, quantity);
     }
   };
 
@@ -102,7 +105,38 @@ export default function ShopDetails1() {
   }, []);
 
   return loading ? (
-    <p>loading...</p>
+    <article className="product type-product single product-single py-2 lg:py-2 xl:py-2">
+    <div className="container single_product">
+      <div className="row child-cols-12 lg:child-cols-6 gy-4 gx-4 md:gx-6 xl:gx-8">
+        <div>
+          <Skeleton height={400} />
+        </div>
+        <div>
+          <div className="product-details sticky-element panel vstack gap-1 xl:gap-2">
+            <Skeleton height={30} width={250} />
+            <Skeleton height={20} width={100} />
+            <Skeleton count={2} />
+            <Skeleton height={40} width={150} />
+            <Skeleton height={100} />
+            <div className="box-container">
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} width={30} height={30} circle />
+              ))}
+            </div>
+            <div className="box-container mt-2">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} width={50} height={30} />
+              ))}
+            </div>
+            <div className="product-actions hstack gap-1 xl:mt-2">
+              <Skeleton width={100} height={40} />
+              <Skeleton width={40} height={40} circle />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
   ) : (
     <article className="product type-product single product-single py-2 lg:py-2 xl:py-2">
       <div className={`container single_product ${bodyColor ? "bg_color_gray" : ""}`}>
@@ -147,19 +181,19 @@ export default function ShopDetails1() {
 
                 <p id="color_word">Color</p>
                 <div className="box-container">
-                  {data?.colors?.map((color) => (
+                  {data && data?.colors ? data?.colors?.map((color) => (
                     <div
                       key={color}
                       className={`box ${selectedColor === color ? "selected" : ""}`}
                       style={{ background: color }}
                       onClick={() => setSelectedColor(color)}  // Set the selected color
                     ></div>
-                  ))}
+                  )): ("")}
                 </div>
 
                 <p id="color_word" className="mt-2">Size</p>
                 <div className="box-container">
-                  {data?.sizes?.map((size) => (
+                  {data && data?.sizes ? data?.sizes?.map((size) => (
                     <div
                       key={size}
                       className={`box size ${selectedSize === size ? "selected" : ""}`}
@@ -167,7 +201,7 @@ export default function ShopDetails1() {
                     >
                       {size}
                     </div>
-                  ))}
+                  )): ("")}
                 </div>
 
                 <div className="product-actions hstack gap-1 xl:mt-2">

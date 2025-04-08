@@ -8,8 +8,9 @@ import { useSearchParams } from "next/navigation";
 
 export default function Dropdown() {
   const { filters, setFilters } = useContext(ResponseContext);
-    const searchParams = useSearchParams();
-    const category = searchParams.get("category");
+  const [loading, setLoading] = useState();
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
   console.log(category, "cateeeee..,..,")
   // console.log(filters, "filters pro..,,,,.,.,")
 
@@ -38,6 +39,7 @@ export default function Dropdown() {
   // Fetch categories from API
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true);
       try {
         const response = await fetch("https://foundation.alphalive.pro/api/front/categories");
         const data = await response.json();
@@ -48,6 +50,8 @@ export default function Dropdown() {
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,38 +62,38 @@ export default function Dropdown() {
   const [hasInitializedFromUrl, setHasInitializedFromUrl] = useState(false);
 
   useEffect(() => {
-      const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.location.search);
 
-      const category_name = params.get("category_name") || category || "Electronic";
-      const color = params.get("color") || "";
-      const size = params.get("size") || "S";
-      const min_price = parseInt(params.get("min_price") || 20);
-      const max_price = parseInt(params.get("max_price") || 10000);
+    const category_name = params.get("category_name") || category || "Electronic";
+    const color = params.get("color") || "";
+    const size = params.get("size") || "S";
+    const min_price = parseInt(params.get("min_price") || 20);
+    const max_price = parseInt(params.get("max_price") || 10000);
 
-      setSelectedCategory(category_name);
-      setSelectedColor(color);
-      setSelectedSize(size);
-      setPriceRange([min_price, max_price]);
-      setHasInitializedFromUrl(true); // ✅ Set flag to true when done
+    setSelectedCategory(category_name);
+    setSelectedColor(color);
+    setSelectedSize(size);
+    setPriceRange([min_price, max_price]);
+    setHasInitializedFromUrl(true); // ✅ Set flag to true when done
   }, []);
 
 
   useEffect(() => {
     if (!hasInitializedFromUrl) return;
 
-      const updatedFilters = {
-        category_name: selectedCategory || category, 
-        color: selectedColor,
-        size: selectedSize,
-        min_price: priceRange[0],
-        max_price: priceRange[1],
-      };
-  
-      setFilters(updatedFilters);
-  
-      const queryParams = new URLSearchParams(updatedFilters).toString();
-      window.history.pushState({}, "", `?${queryParams}`);
-    
+    const updatedFilters = {
+      category_name: selectedCategory || category || "Electronic",
+      color: selectedColor,
+      size: selectedSize,
+      min_price: priceRange[0],
+      max_price: priceRange[1],
+    };
+
+    setFilters(updatedFilters);
+
+    const queryParams = new URLSearchParams(updatedFilters).toString();
+    window.history.pushState({}, "", `?${queryParams}`);
+
   }, [selectedCategory, selectedColor, selectedSize, priceRange, hasInitializedFromUrl]);
 
 
@@ -103,18 +107,36 @@ export default function Dropdown() {
 
       {categoriesOpen && (
         <ul>
-          {(showAllCategories ? categories : categories.slice(0, 10)).map((category) => (
-            <li key={category.id}>
-              <input
-                type="radio"
-                id={category.name}
-                name="category"
-                checked={selectedCategory === category.name}
-                onChange={() => setSelectedCategory(category.name)}
-              />
-              <label htmlFor={category.name}>{category.name}</label>
-            </li>
-          ))}
+          {loading ? (
+            // Show 10 skeleton items while loading
+            [...Array(10)].map((_, index) => (
+              <li key={index}>
+                <div
+                  className="skeleton-line"
+                  style={{
+                    height: "18px",
+                    width: "80%",
+                    borderRadius: "4px",
+                    marginBottom: "8px",
+                    background: "#e0e0e0",
+                  }}
+                ></div>
+              </li>
+            ))
+          ) : (
+            (showAllCategories ? categories : categories.slice(0, 10)).map((category) => (
+              <li key={category.id}>
+                <input
+                  type="radio"
+                  id={category.name}
+                  name="category"
+                  checked={selectedCategory === category.name}
+                  onChange={() => setSelectedCategory(category.name)}
+                />
+                <label htmlFor={category.name}>{category.name}</label>
+              </li>
+            ))
+          )}
 
           {categories.length > 10 && (
             <button

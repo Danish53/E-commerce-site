@@ -65,7 +65,7 @@ export default function AllProduct() {
     products.forEach((product) => {
       const productId = product.id;
       const isFav = wishlist.some((item) => item.id === productId);
-      console.log(`Product ID ${productId} favorite status: ${isFav}`);
+      // console.log(`Product ID ${productId} favorite status: ${isFav}`);
     });
   }, [wishlist, products]);
 
@@ -87,12 +87,8 @@ export default function AllProduct() {
 
 
   useEffect(() => {
-    if (category) {
       fetchProducts();
-    } else if (filters) {
-      fetchFilteredProducts();
-    }
-  }, [category, subcategory, JSON.stringify(filters)]);
+  }, [category, subcategory]);
 
   const displayProducts = category ? productss : products;
 
@@ -109,7 +105,7 @@ export default function AllProduct() {
         <div className="results">
           <div className="img_div">
             <img src="/assets/images/common/showing.png" />
-            <img src="/assets/images/common/results.png" />
+            {/* <img src="/assets/images/common/results.png" /> */}
           </div>
           <p>{`Showing page ${currentPage} of ${totalPages}`}</p>
         </div>
@@ -119,9 +115,33 @@ export default function AllProduct() {
         </div>
       </div>
 
-      {loading ? <SkeletonLoader /> : (
+      {loading ? (
+        // Skeleton Loader
         <div className="all_product_parent_div">
-          {displayedProducts?.map((product, index) => {
+          {[...Array(6)].map((_, index) => (
+            <section key={index} className="AllProduct pro_item mb-3">
+              <div className="img_div skeleton-box" style={{ height: "200px", width: "100%", borderRadius: "10px" }}></div>
+              <div className="skeleton-line mt-2" style={{ width: "80%", height: "20px", borderRadius: "4px" }}></div>
+              <div className="skeleton-line mt-1" style={{ width: "60%", height: "16px", borderRadius: "4px" }}></div>
+              <div className="price_div">
+                <div className="skeleton-line" style={{ width: "40%", height: "16px", borderRadius: "4px" }}></div>
+                <div className="skeleton-line" style={{ width: "30%", height: "16px", borderRadius: "4px" }}></div>
+              </div>
+              <div className="btn_div mt-2">
+                <div className="skeleton-box" style={{ height: "30px", width: "100px", borderRadius: "20px" }}></div>
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : displayedProducts?.length === 0 ? (
+        // Message if no products available
+        <div className="text-center my-5">
+          <h3>No products available</h3>
+        </div>
+      ) : (
+        // Display Products
+        <div className="all_product_parent_div">
+          {displayedProducts.map((product, index) => {
             const productId = product.id;
             const isFavorite = wishlist.some((item) => item.id === productId);
 
@@ -142,13 +162,21 @@ export default function AllProduct() {
                     alt="product"
                   />
                   {isLoggedIn ? (
-                    <div>{isFavorite ? (
-                      <FaHeart className="icon_size" onClick={toggleFavorite} />
-                    ) : (
-                      <FaRegHeart className="icon_size" onClick={toggleFavorite} />
-                    )}</div>
-                  ) : (<Link href={'/login'}><FaRegHeart className="icon_size" /></Link>)}
-                  <h2 className="mt-1">{product.title.split(" ").slice(0, 10).join(" ")}...</h2>
+                    <div>
+                      {isFavorite ? (
+                        <FaHeart className="icon_size" onClick={toggleFavorite} />
+                      ) : (
+                        <FaRegHeart className="icon_size" onClick={toggleFavorite} />
+                      )}
+                    </div>
+                  ) : (
+                    <Link href="/login">
+                      <FaRegHeart className="icon_size" />
+                    </Link>
+                  )}
+                  <h2 className="mt-1">
+                    {product.title.split(" ").slice(0, 10).join(" ")}...
+                  </h2>
                   <p className="detail">{product.category_name}</p>
                   <div className="price_div">
                     <p className="price">{`$${product.current_price}`}</p>
@@ -165,6 +193,8 @@ export default function AllProduct() {
           })}
         </div>
       )}
+
+
 
       <div className="pagination mt-5 mb-5">
         <FaArrowLeft
