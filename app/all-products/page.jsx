@@ -17,11 +17,13 @@ export default function Page() {
       <div className="container margin_top" style={{ paddingTop: "100px" }}>
         <div className="row">
           <div className="col-md-12 col-lg-3">
-            <Dropdown />
+            <Suspense fallback={<SkeletonLoader />}>
+              <Dropdown />
+            </Suspense>
           </div>
           <div className="col-md-12 col-lg-9">
             <Suspense fallback={<SkeletonLoader />}>
-              <AllProduct  />
+              <AllProduct />
             </Suspense>
           </div>
         </div>
