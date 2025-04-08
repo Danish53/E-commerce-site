@@ -4,9 +4,12 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import "./dropdown.css";
 import { ResponseContext } from "@/app/login/ResponseContext";
 import Slider from "@mui/material/Slider";
+import { useSearchParams } from "next/navigation";
 
 export default function Dropdown() {
-  const { filters, setFilters, category } = useContext(ResponseContext);
+  const { filters, setFilters } = useContext(ResponseContext);
+    const searchParams = useSearchParams();
+    const category = searchParams.get("category");
   console.log(category, "cateeeee..,..,")
   // console.log(filters, "filters pro..,,,,.,.,")
 
@@ -18,7 +21,7 @@ export default function Dropdown() {
   const [filterBySize, setFilterBySize] = useState(true);
 
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Electronic");
+  const [selectedCategory, setSelectedCategory] = useState(category || "Electronic");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedSize, setSelectedSize] = useState("S");
   const [priceRange, setPriceRange] = useState([20, 10000]);
@@ -55,36 +58,38 @@ export default function Dropdown() {
   const [hasInitializedFromUrl, setHasInitializedFromUrl] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
 
-    const category = params.get("category_name") || "Electronic";
-    const color = params.get("color") || "";
-    const size = params.get("size") || "S";
-    const min_price = parseInt(params.get("min_price") || 20);
-    const max_price = parseInt(params.get("max_price") || 10000);
+      const category_name = params.get("category_name") || category || "Electronic";
+      const color = params.get("color") || "";
+      const size = params.get("size") || "S";
+      const min_price = parseInt(params.get("min_price") || 20);
+      const max_price = parseInt(params.get("max_price") || 10000);
 
-    setSelectedCategory(category);
-    setSelectedColor(color);
-    setSelectedSize(size);
-    setPriceRange([min_price, max_price]);
-    setHasInitializedFromUrl(true); // ✅ Set flag to true when done
+      setSelectedCategory(category_name);
+      setSelectedColor(color);
+      setSelectedSize(size);
+      setPriceRange([min_price, max_price]);
+      setHasInitializedFromUrl(true); // ✅ Set flag to true when done
   }, []);
+
 
   useEffect(() => {
     if (!hasInitializedFromUrl) return;
 
-    const updatedFilters = {
-      category_name: selectedCategory,
-      color: selectedColor,
-      size: selectedSize,
-      min_price: priceRange[0],
-      max_price: priceRange[1],
-    };
-
-    setFilters(updatedFilters);
-
-    const queryParams = new URLSearchParams(updatedFilters).toString();
-    window.history.pushState({}, "", `?${queryParams}`);
+      const updatedFilters = {
+        category_name: selectedCategory || category, 
+        color: selectedColor,
+        size: selectedSize,
+        min_price: priceRange[0],
+        max_price: priceRange[1],
+      };
+  
+      setFilters(updatedFilters);
+  
+      const queryParams = new URLSearchParams(updatedFilters).toString();
+      window.history.pushState({}, "", `?${queryParams}`);
+    
   }, [selectedCategory, selectedColor, selectedSize, priceRange, hasInitializedFromUrl]);
 
 

@@ -2,7 +2,6 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
 
 export const ResponseContext = createContext();
 
@@ -196,9 +195,9 @@ export const ResponseProvider = ({ children }) => {
   });
 
   // Fetch filtered products when filters change
-  useEffect(() => {
-    fetchFilteredProducts();
-  }, [JSON.stringify(filters)]);
+  // useEffect(() => {
+  //   fetchFilteredProducts();
+  // }, [JSON.stringify(filters)]);
 
   async function fetchFilteredProducts() {
     setLoading(true);
@@ -303,50 +302,11 @@ export const ResponseProvider = ({ children }) => {
       setDiscountAmount(discount);
       setCouponError(res.data.error);
     } catch (err) {
-      setCouponError('Invalid coupon code');
+      setCouponError('Invalid coupon code'); 
       setCouponCode('');
       setDiscountAmount(0);
     }
   };
-
-
-  // filter category
-  const searchParams = useSearchParams();
-  const category = searchParams.get('category');
-  const subcategory = searchParams.get('subcategory');
-
-  const [productsCategory, setProductsCategory] = useState([]);
-
-  useEffect(() => {
-    if (!category) return;
-
-    const fetchProducts = async () => {
-      setLoading(true);
-      let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
-      if (subcategory) {
-        apiUrl += `?subcategory=${subcategory}`;
-      }
-
-      try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        console.log(data, 'API Response');
-
-        if (data.status && Array.isArray(data.data)) {
-          setProductsCategory(data.data);
-        } else {
-          setProductsCategory([]);
-          throw new Error('Invalid API response structure');
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [category, subcategory]);
 
   return (
     <ResponseContext.Provider value={{
@@ -363,8 +323,7 @@ export const ResponseProvider = ({ children }) => {
       applyCoupon,
       couponCode,
       couponError,
-      productsCategory,
-      category
+      fetchFilteredProducts
     }}>
       {children}
     </ResponseContext.Provider>

@@ -1,4 +1,5 @@
 "use client";
+// export const dynamic = 'force-dynamic'
 import React, { useEffect, useState } from "react";
 import "../../../public/assets/css/theme/main.css";
 import Header2 from "@/components/headers/Header2";

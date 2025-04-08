@@ -8,20 +8,47 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 import SkeletonLoader from "./SkeletonLoader";
 import Link from "next/link";
 
-export default function AllProduct({ productsFilter }) {
+export default function AllProduct() {
   // console.log(productsFilter, "page filters??????");
   // const { products } = useContext(ResponseContext);
-  
+
 
   // const [showPopup, setShowPopup] = useState(false);
-  const { addToCart, productsCategory, category } = useContext(ResponseContext);
-  
+  const { addToCart, productsCategory, products, loading, fetchFilteredProducts, filters } = useContext(ResponseContext);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category");
+  const subcategory = searchParams.get("subcategory");
+
+  const [productss, setProducts] = useState([]);
+  // console.log(productss, "Fetched products... mega menue");
+
+
+  const fetchProducts = async () => {
+    let apiUrl = `https://foundation.alphalive.pro/api/front/products/category/${category}`;
+    if (subcategory) {
+      apiUrl += `?subcategory=${subcategory}`; // Correct query param format
+    }
+
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      console.log(data, "API Response");
+
+      if (data.status && Array.isArray(data.data)) {
+        setProducts(data.data);
+      } else {
+        throw new Error("Invalid API response structure");
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
 
-  const { products, loading } = useAllProducts(currentPage);
+  // const { products, loading } = useAllProducts(currentPage);
   const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
 
   console.log(wishlist, "Wishlist items");
@@ -58,13 +85,22 @@ export default function AllProduct({ productsFilter }) {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
 
-  // **Determine which products to display**
-  const displayProducts = category ? productsCategory : productsFilter;
-  const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
+
+  useEffect(() => {
+    if (category) {
+      fetchProducts();
+    } else if (filters) {
+      fetchFilteredProducts();
+    }
+  }, [category, subcategory, JSON.stringify(filters)]);
+
+  const displayProducts = category ? productss : products;
+
+  const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
   const displayedProducts = displayProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  );
+  );
 
 
   return (
@@ -105,13 +141,13 @@ export default function AllProduct({ productsFilter }) {
                     onClick={() => handleNavigation(productId)}
                     alt="product"
                   />
-                  { isLoggedIn ? (
+                  {isLoggedIn ? (
                     <div>{isFavorite ? (
                       <FaHeart className="icon_size" onClick={toggleFavorite} />
                     ) : (
                       <FaRegHeart className="icon_size" onClick={toggleFavorite} />
                     )}</div>
-                  ) : (<Link href={'/login'}><FaRegHeart className="icon_size"  /></Link>)}
+                  ) : (<Link href={'/login'}><FaRegHeart className="icon_size" /></Link>)}
                   <h2 className="mt-1">{product.title.split(" ").slice(0, 10).join(" ")}...</h2>
                   <p className="detail">{product.category_name}</p>
                   <div className="price_div">
