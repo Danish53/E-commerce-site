@@ -6,11 +6,12 @@ import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useRouter } from "next/navigation";
 import { ResponseContext } from "@/app/login/ResponseContext";
 import Link from "next/link";
+import { CiShoppingCart } from "react-icons/ci";
 
 export default function Page() {
   const router = useRouter();
   const { cart, removeFromCart } = useContext(ResponseContext);
-  // console.log(cart, '......cart aa hai na')
+  console.log(cart, '......cart aa hai na')
   const [isPopupOpen, setIsPopupOpen] = useState(true);
 
   const handleCheckout = () => {
@@ -24,7 +25,7 @@ export default function Page() {
   return (
     <div>
       {isPopupOpen && (
-        <div className={`pop_up show`} style={{ width: "320px"}}>
+        <div className={`pop_up show`} style={{ width: "320px" }}>
           <div className="close_div">
             <p id="total_item">
               {cart?.length > 0 ? `You have ${cart.length} items in your cart` : ""}
@@ -35,23 +36,28 @@ export default function Page() {
           {cart?.length > 0 ? (
             cart.map((item) => (
               <div className="pop_up_parent_div mt-3 pb-2" key={item.id}>
-                <div className="img_div" style={{width:"35%"}}>
+                <div className="img_div" style={{ width: "35%" }}>
                   <img width={"100%"} src={item?.thumbnail || "/assets/images/products/checkout_pic.png"} alt="Product" />
                 </div>
-                <div className="content_div"  style={{width:"65%"}} >
+                <div className="content_div" style={{ width: "65%" }} >
                   <p className="prod_title">{item?.title}</p>
-                  <p className="prod_quantity">
-                  {item?.quantity} x ${Number(item?.current_price || 0).toFixed(2)}
+                  <p className="prod_quantity p-0 m-0">Quantity: {item?.quantity || "N/A"}</p>
+                  <p className="prod_quantity p-0 m-0">
+                    1 x ${Number(item?.current_price || 0).toFixed(2)}
                   </p>
                   <div className="delete_div">
-                    <p className="sizes">Size: {item?.size || "N/A"}</p>
+                    <div>
+                    <p className="sizes">Size: {item?.size[0] || "N/A"}</p>
+                    <p className="sizes">Color: {item?.color[0] || "N/A"}</p>
+                    </div>
                     <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <div className="pop_up_parent_div mt-3 pb-2" style={{width: "220px"}}>
+            <div className="pop_up_parent_div mt-3 pb-2 flex-column w-100" style={{ width: "220px" }}>
+              <CiShoppingCart style={{width:"30%", height:"30%", color:"lightgray"}} />
               <p style={{ margin: "20px auto" }}>Your Cart is empty!</p>
             </div>
           )}
@@ -64,10 +70,10 @@ export default function Page() {
               </div>
               <div className="w-100 mt-2">
                 {/* <button id="view_cart">View Cart</button> */}
-                <Link href="/shop-cart" id="view_cart" ><button style={{background:"transparent", width:"100%", borderRadius:"6px", padding:"10px", color:"black"}}>
-                View Cart
+                <Link href="/shop-cart" id="view_cart" ><button style={{ background: "transparent", width: "100%", borderRadius: "6px", padding: "10px", color: "black" }}>
+                  View Cart
                 </button></Link>
-                <Link href="/shipping-address"><button id="checkout"  style={{background:"black", width:"100%", borderRadius:"6px", color:"white",  padding:"10px", marginTop:"10px"}} onClick={handleCheckout}>
+                <Link href="/shipping-address"><button id="checkout" style={{ background: "black", width: "100%", borderRadius: "6px", color: "white", padding: "10px", marginTop: "10px" }} onClick={handleCheckout}>
                   Checkout
                 </button></Link>
               </div>

@@ -82,14 +82,15 @@ export default function Cart1() {
   return (
     <div className="section ">
       <div className="container">
-        <div className="panel vstack gap-4 lg:gap-6 xl:gap-8">
+        <div className="panel vstack gap-3 lg:gap-3 xl:gap-4">
           <header className="shop-header panel vstack  gap-2 lg:gap-4 ">
             <div className="panel">
               <h1 className="mt-3 check">Checkout</h1>
             </div>
           </header>
-          <div className="panel cart-details row">
+          <div className="panel cart-details row mb-5">
             <div className="col-lg-8">
+              <div className="card px-3" style={{boxShadow:"1px 0px 5px lightgray"}}>
               <form
                 onSubmit={(e) => e.preventDefault()}
                 className="panel max-h-sm overflow-auto "
@@ -145,8 +146,8 @@ export default function Cart1() {
                                     {/* {elm.name} */}
                                   </Link>
                                 </h5>
-                                <p>Size: {elm?.size}</p>
-                                <span>Color: {elm?.color}</span>
+                                <p>Size: {elm?.size[0]}</p>
+                                <span>Color: {elm?.color[0]}</span>
                               </div>
                             </div>
                           </td>
@@ -181,16 +182,18 @@ export default function Cart1() {
                       ))}
                     </tbody>
                   </table>) : (
-                  <p className="alert alert-warning" hidden="">
+                  <p className="alert alert-warning m-3" hidden="">
                     Your cart empty!
                   </p>
                 )
                 }
               </form>
+              </div>
             </div>
 
             <div className="col-lg-4"> 
-            <table className="table table_border table-borderless pb-3">
+            <div className="card px-3" style={{boxShadow:"1px 0px 5px lightgray"}}>
+            <table className="table table-borderless pb-3">
       <tbody className="mb-3">
         <tr className="sub_total border_bottom">
           <th className="ft-tertiary text-black font_family">
@@ -277,6 +280,7 @@ export default function Cart1() {
         </tr>
       </tbody>
     </table>
+            </div>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ export const ResponseProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  const [showPopup, setShowPopup] = useState(false);
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
@@ -34,8 +35,12 @@ export const ResponseProvider = ({ children }) => {
       }
     });
 
-    toast.success(`${product.title} added to cart!`);
-    console.log("Updated cart:", cart);
+    // toast.success(`${product.title} added to cart!`);
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
+    // console.log("Updated cart:", cart);
   };
 
   const removeFromCart = (productId) => {
@@ -79,6 +84,7 @@ export const ResponseProvider = ({ children }) => {
 
   // Wishlist
   const [wishlist, setWishlist] = useState([]);
+  const [animateWishlist, setAnimateWishlist] = useState(false);
 
   var userId = response_Context?.user?.id || "No ID available";
 
@@ -103,7 +109,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      console.log(data.data, "get wishlists...")
+      // console.log(data.data, "get wishlists...")
 
       if (data.status) {
         setWishlist(data.data);
@@ -132,13 +138,14 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      console.log(data.data.product, "add wishlist");
+      // console.log(data.data.product, "add wishlist");
 
       if (data.status) {
         const updatedWishlist = [...wishlist, data.data.product];
         setWishlist(updatedWishlist);
+        setAnimateWishlist(true);
         localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Save to localStorage
-        toast.success("Added to wishlist!");
+        // toast.success("Added to wishlist!");
       }
     } catch (error) {
       console.error("Error adding to wishlist:", error);
@@ -168,8 +175,9 @@ export const ResponseProvider = ({ children }) => {
       if (data.status) {
         const updatedWishlist = wishlist.filter((item) => item.id !== productId);
         setWishlist(updatedWishlist);
+        setAnimateWishlist(true);
         localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Update localStorage
-        toast.success("Removed from wishlist!");
+        // toast.success("Removed from wishlist!");
       }
     } catch (error) {
       console.error("Error removing from wishlist:", error);
@@ -308,6 +316,9 @@ export const ResponseProvider = ({ children }) => {
     }
   };
 
+  // header search
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <ResponseContext.Provider value={{
       response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart, addToWishlist, removeFromWishlist, wishlist, products, filters, setFilters, loading, error, addresses,
@@ -323,7 +334,13 @@ export const ResponseProvider = ({ children }) => {
       applyCoupon,
       couponCode,
       couponError,
-      fetchFilteredProducts
+      fetchFilteredProducts,
+      searchQuery,
+      setSearchQuery,
+      showPopup,
+      setShowPopup,
+      animateWishlist,
+      setAnimateWishlist
     }}>
       {children}
     </ResponseContext.Provider>

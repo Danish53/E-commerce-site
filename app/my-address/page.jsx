@@ -97,7 +97,7 @@ export default function Page() {
               <MyProfile />
             </div>
           </div>
-          <div className="col-md-8 second_div">
+          <div className="col-md-8 second_div mt-5">
             <p id="btn" className="mb-3" onClick={handleAddNewClick}>
               + Add New Address
             </p>
@@ -136,7 +136,9 @@ export default function Page() {
                 </div>
               ))
             ) : (
-              <h2>No Address Found</h2>
+              <p className="alert alert-warning" hidden="">
+              No Addresses Found!
+            </p>
             )}
           </div>
         </div>

@@ -77,6 +77,7 @@ export default function ShopDetails1() {
       //   size: selectedSizeValue,     // Add size
       // });
       addToCart({ ...data, quantity, color: selectedColorValue, size: selectedSizeValue }, quantity);
+      
     }
   };
 

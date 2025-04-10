@@ -35,7 +35,7 @@ export default function page() {
             </div>
           </div>
           <div className="col-lg-8 margin_top">
-            <div className="first_main_div mb-5">
+            <div className="first_main_div mt-5 mb-5">
               <h1></h1>
               <div className="input_search_div">
                 <input type="text" placeholder="Search" />

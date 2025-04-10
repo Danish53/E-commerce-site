@@ -64,7 +64,7 @@ const useAuth = () => {
       );
 
       const data = await res.json();
-      console.log(data, "login data??>>>>>")
+      // console.log(data, "login data??>>>>>")
 
       if (!res.ok) {
         throw new Error(data.message || "Login failed");
@@ -93,6 +93,7 @@ const useAuth = () => {
     }
   };
 
+  // const [profileData, setProfileData] = useState();
   // ✅ Update User Profile Without Refresh
   const updateProfile = async (formDataToSend) => {
     setLoading(true);
@@ -112,6 +113,7 @@ const useAuth = () => {
       );
   
       const data = await res.json();
+      // setProfileData(data.data);
       console.log("API Response profile:", data);
   
       if (!res.ok) {
@@ -120,9 +122,9 @@ const useAuth = () => {
   
       if (data.status === true) {
         toast.success("Profile Updated Successfully!");
-        return data.user;
+        return data.data;
       } else {
-        throw new Error(data?.error || "Profile update failed.");
+        throw new Error(data?.error?.email || "Profile update failed.");
       }
     } catch (err) {
       setError(err?.message);
@@ -133,8 +135,6 @@ const useAuth = () => {
     }
   };
   
-  
-
 
   const fetchDataOrder = async (userId) => {
     setLoading(true);

@@ -23,7 +23,7 @@ export default function PaymentMethod() {
     e.preventDefault();
   };
   const handleNavigation = () => {
-    router.push("/review-order");
+    router.push("/orders");
   };
   return (
     <div>
@@ -34,7 +34,7 @@ export default function PaymentMethod() {
         <div className="container ">
           <div className="my-container">
             <div className="row">
-              <h1>Payment Method</h1>
+              <h3>Payment Method</h3>
 
               <div className="col-lg-8">
                 <div className="check_radio_btn_div">
@@ -47,10 +47,10 @@ export default function PaymentMethod() {
                       <CiHome className="icon_size_shiping " />
                     </div>
                     <div className="icon active">
-                      <BsCreditCard2Back className="icon_size_shiping" />
+                    <MdOutlineRateReview className="icon_size_shiping" />
                     </div>
-                    <div className="icon">
-                      <MdOutlineRateReview className="icon_size_shiping" />
+                    <div className="icon active">
+                    <BsCreditCard2Back className="icon_size_shiping " />
                     </div>
                   </div>
                   <hr />
@@ -58,7 +58,8 @@ export default function PaymentMethod() {
                 <div className="mt-3">
                   <h4>Select a Payment Method</h4>
                   <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
+                    <div className="row">
+                    <div className="col-lg-6 mb-3">
                       <label htmlFor="name" className="form-label">
                         Card Number
                       </label>
@@ -70,7 +71,7 @@ export default function PaymentMethod() {
                       />
                     </div>
 
-                    <div className="mb-3">
+                    <div className="col-lg-6 mb-3">
                       <label htmlFor="mobile" className="form-label">
                         Card Holder Name
                       </label>
@@ -82,8 +83,7 @@ export default function PaymentMethod() {
                       />
                     </div>
 
-                    <div className="row mb-5">
-                      <div className="col">
+                      <div className="col-lg-6 ">
                         <label>Expiry Date</label>
                         <input
                           type="text"
@@ -91,7 +91,7 @@ export default function PaymentMethod() {
                           placeholder="First name"
                         />
                       </div>
-                      <div className="col">
+                      <div className="col-lg-6 ">
                         <label>CVV</label>
 
                         <input
@@ -102,7 +102,7 @@ export default function PaymentMethod() {
                       </div>
                     </div>
 
-                    <button type="submit" className="btn  w-100">
+                    <button type="submit" className="btn w-100 mt-3">
                       Add Card
                     </button>
 
@@ -114,10 +114,10 @@ export default function PaymentMethod() {
                       <input type="radio" />
                       <p>Paypal</p>
                     </div>
-                    <div className="check_radio_btn_div border_botom">
+                    {/* <div className="check_radio_btn_div border_botom">
                       <input type="radio" />
                       <p>Cash on Delivery</p>
-                    </div>
+                    </div> */}
                     <button
                       type="submit"
                       className="btn  w-100 mt-3 mb-3"

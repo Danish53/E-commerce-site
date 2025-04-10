@@ -7,13 +7,16 @@ import { FaRegUser } from "react-icons/fa6";
 import { FaBorderAll } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
 import { IoLocationOutline } from "react-icons/io5";
-import { CiSettings } from "react-icons/ci"; 
+import { CiSettings } from "react-icons/ci";
 import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function profile() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const handleDashboardNavigation = () => {
+    router.push("/dashboard");
+  };
   const handlePersonalNavigation = () => {
     router.push("/personal-info");
   };
@@ -42,10 +45,12 @@ export default function profile() {
 
   return (
     <>
-      <h1 className="profile_heading">My Profile</h1>
+      {/* <h1 className="profile_heading">My Profile</h1> */}
 
-      <section className="myProfile_parent_div">
-        <div className="myProfile ">
+      <section className="myProfile_parent_div mt-5">
+        <h4>My Account</h4>
+        <hr className="w-100" />
+        {/* <div className="myProfile ">
           <div className="img_div">
             <img width={20} height={20} src={response_Context? response_Context.user?.propic : "/assets/images/common/profile_pic.png"} alt="profile" />
           </div>
@@ -53,38 +58,41 @@ export default function profile() {
             <p>{response_Context? response_Context.user?.full_name : "User Name"}</p>
             <h6>{response_Context? response_Context.user?.email : "user email"}</h6>
           </div>
-        </div>
-        <div className="user_info ">
+        </div> */}
+        <div className="user_info">
           <div
-            className={`user flex_props ${
-              pathname === "/personal-info" ? "bottom_border" : ""
-            }`}
+            className={`user flex_props ${pathname === "/dashboard" ? "bottom_border" : ""
+              }`}
           >
-            <FaRegUser />
+            {/* <FaRegUser /> */}
+            <p onClick={handleDashboardNavigation}>Dashboard</p>
+          </div>
+          <div
+            className={`user flex_props ${pathname === "/personal-info" ? "bottom_border" : ""
+              }`}
+          >
+            {/* <FaRegUser /> */}
             <p onClick={handlePersonalNavigation}>Personal Information</p>
           </div>
           <div
-            className={`user flex_props ${
-              pathname === "/orders" ? "bottom_border" : ""
-            }`}
+            className={`user flex_props ${pathname === "/orders" ? "bottom_border" : ""
+              }`}
           >
-            <FaBorderAll />
+            {/* <FaBorderAll /> */}
             <p onClick={handleOrders}>My Orders</p>
           </div>
           <div
-            className={`user flex_props ${
-              pathname === "/my-wishlist" ? "bottom_border" : ""
-            }`}
+            className={`user flex_props ${pathname === "/my-wishlist" ? "bottom_border" : ""
+              }`}
           >
-            <CiHeart />
+            {/* <CiHeart /> */}
             <p onClick={handleWishlist}>My Wishlist</p>
           </div>
           <div
-            className={`user flex_props ${
-              pathname === "/my-address" ? "bottom_border" : ""
-            }`}
+            className={`user flex_props ${pathname === "/my-address" ? "bottom_border" : ""
+              }`}
           >
-            <IoLocationOutline />
+            {/* <IoLocationOutline /> */}
             <p onClick={handleAddress}>Manage Addresses</p>
           </div>
           {/* <div
@@ -104,11 +112,10 @@ export default function profile() {
             <p onClick={handleNotifications}>Notifications</p>
           </div> */}
           <div
-            className={`user flex_props ${
-              pathname === "/settings" ? "bottom_border" : ""
-            }`}
+            className={`user flex_props ${pathname === "/settings" ? "bottom_border" : ""
+              }`}
           >
-            <CiSettings />
+            {/* <CiSettings /> */}
             <p onClick={handleSetting}>Settings</p>
           </div>
         </div>

@@ -49,7 +49,7 @@ export default function AllProduct() {
   const itemsPerPage = 9;
 
   // const { products, loading } = useAllProducts(currentPage);
-  const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
+  const { addToWishlist, removeFromWishlist, wishlist, searchQuery  } = useContext(ResponseContext);
 
   console.log(wishlist, "Wishlist items");
 
@@ -91,9 +91,11 @@ export default function AllProduct() {
   }, [category, subcategory]);
 
   const displayProducts = category ? productss : products;
-
+  const filteredProducts = displayProducts.filter((product) =>
+    product.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
-  const displayedProducts = displayProducts.slice(
+  const displayedProducts = filteredProducts.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -134,12 +136,10 @@ export default function AllProduct() {
           ))}
         </div>
       ) : displayedProducts?.length === 0 ? (
-        // Message if no products available
         <div className="text-center my-5">
           <h3>No products available</h3>
         </div>
       ) : (
-        // Display Products
         <div className="all_product_parent_div">
           {displayedProducts.map((product, index) => {
             const productId = product.id;
@@ -157,7 +157,7 @@ export default function AllProduct() {
               <section key={index} id="AllProduct" className="AllProduct pro_item mb-3">
                 <div className="img_div">
                   <img
-                    src={product.thumbnail || "fallback-image-url.jpg"}
+                    src={product.thumbnail || "https://skala.or.id/wp-content/uploads/2024/01/dummy-post-square-1-1.jpg"}
                     onClick={() => handleNavigation(productId)}
                     alt="product"
                   />
@@ -180,7 +180,7 @@ export default function AllProduct() {
                   <p className="detail">{product.category_name}</p>
                   <div className="price_div">
                     <p className="price">{`$${product.current_price}`}</p>
-                    <p className="old_price">{`$${product.previous_price}`}</p>
+                    <p className="old_price">{product?.previous_price ? `$${product.previous_price}` : ""}</p>
                   </div>
                   <div className="btn_div">
                     <button className="cart mt-1" onClick={() => addToCart(product)}>

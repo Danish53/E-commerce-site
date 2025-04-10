@@ -23,7 +23,7 @@ export default function Page() {
           <div className="col-md-4">
             <MyProfile />
           </div>
-          <div className="col-md-8 second_row">
+          <div className="col-md-8 second_row mt-5">
             <div className="parent_flex_div pb-2 mb-2">
               <div className="left_main_div mt-3">
                 <div className="content_div">

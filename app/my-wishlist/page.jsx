@@ -25,7 +25,7 @@ export default function page() {
             </div>
           </div>
           <div className="col-lg-8">
-            <div className="product_grid_main_div">
+            <div className="product_grid_main_div mt-5">
               {wishlist && wishlist.length > 0 ? wishlist.map((item, index) => {
                 return (
                   <div className="product_parent_div mb-2" key={index}>
@@ -44,7 +44,9 @@ export default function page() {
                     </div>
                   </div>
                 );
-              }) : <p>Empty my wishlist</p>}
+              }) : <p className="alert alert-warning" hidden="">
+              Empty my wishlist!
+            </p>}
             </div>
           </div>
           <div className="mt-3">

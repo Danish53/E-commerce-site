@@ -12,7 +12,9 @@ import { useRouter } from "next/navigation";
 
 export default function Page() {
   const { response_Context, setResponse_Context } = useContext(ResponseContext);
-  console.log(response_Context, "response id prof");
+  
+  // console.log(response_Context.user, "updated profile data");
+  // console.log(response_Context, "response id prof");
   const { updateProfile, loading } = useAuth();
 
   const router = useRouter();
@@ -20,7 +22,7 @@ export default function Page() {
     const [data, setData] = useState();
     // console.log(data?.user, "order wala")
     var userId = response_Context?.user_id || "No ID available";
-    console.log(userId, "id aa prof")
+    // console.log(userId, "id aa prof")
   
     // useEffect(() => {
     //   const fetchData = async () => {
@@ -36,15 +38,14 @@ export default function Page() {
     first_name: data?.user?.first_name || "",
     last_name: data?.user?.last_name || "",
     // phone: data?.user?.phone || "",
-    email: data?.user?.email || "",
-    address: data?.user?.address || "",
+    email: response_Context.user.email || "",
+    address: response_Context.user.address || "",
     photo: null, // New field for photo
     user_id: userId
   });
 
-  console.log(formData, "form data....")
 
-  console.log(formData.first_name, "formdata")
+  // console.log(formData.first_name, "formdata")
 
   const [previewphoto, setPreviewphoto] = useState(
     data?.user?.photo || "/assets/images/common/persona_img.png"
@@ -102,6 +103,8 @@ export default function Page() {
     // Call updateProfile API function
     const updatedUser = await updateProfile(formDataToSend);
     
+    // console.log(updatedUser, "updated profile data.");
+    
   
     if (updatedUser) {
       // Update context with new user data
@@ -132,8 +135,10 @@ export default function Page() {
               <MyProfile />
             </div>
           </div>
-          <div className="col-lg-8">
-            <div className="first_flex_div">
+          <div className="col-lg-8 mt-5">
+            <div className="row">
+              <div className="col-lg-8">
+              <div className="first_flex_div mt-5">
               <div className="img_div">
                 <img src={previewphoto} alt="Profile Preview" />
                 <label className="edit_icon">
@@ -146,10 +151,10 @@ export default function Page() {
                   />
                 </label>
               </div>
-              <div className="edit_btn">
+              {/* <div className="edit_btn">
                 <FaRegEdit />
                 <p>Edit Profile</p>
-              </div>
+              </div> */}
             </div>
 
             {/* Form for updating user profile */}
@@ -228,6 +233,20 @@ export default function Page() {
                   )}
               </button>
             </form>
+              </div>
+              <div className="col-lg-4 mt-2">
+                <div className="card p-3">
+                  <div className="text-center">
+                    <img src={response_Context?.user?.propic} style={{borderRadius:"100%", border:"2px solid #000", width:"100px", height:"100px"}} alt="profile" />
+                    <div className="mt-3">
+                      <p>{response_Context?.user?.full_name || "User name"}</p>
+                      <span className="mt-3">{response_Context?.user?.email}</span>
+                    </div>
+                    <p className="py-3">{response_Context?.user?.address}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

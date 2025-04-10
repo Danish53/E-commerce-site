@@ -13,7 +13,7 @@ const useCategories = () => {
       );
     //   console.log(res, "res cate ka")
       const data = await res.json();
-    //   console.log(data, "res cate ka")
+      console.log(data, "res cate ka")
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);

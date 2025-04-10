@@ -31,7 +31,7 @@ h1.check {
 .title_size {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1px;
 }
 .title_size h5 {
   font-size: 20px !important;

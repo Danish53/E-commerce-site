@@ -1,12 +1,90 @@
 "use client";
-// export const dynamic = 'force-dynamic'
 import React, { useEffect, useState } from "react";
 import "../../../public/assets/css/theme/main.css";
 import Header2 from "@/components/headers/Header2";
 import Footer2 from "@/components/footers/Footer2";
 import { useParams } from "next/navigation";
 import "../../my-blog/myblog.css";
-// import "./myblog.css";
+import Related_blogs from "@/components/popular_products/Related_blogs";
+import Link from "next/link";
+
+// 🦴 Skeleton Loader Component
+function BlogSkeletonLoader() {
+    return (
+        <div className="container pt-4">
+            <div className="row">
+                <div className="col-lg-9">
+                    <div className="text-center mb-4">
+                        <div className="skeleton-btn mb-3"></div>
+                        <div className="skeleton-title mb-2"></div>
+                        <div className="skeleton-meta mb-4"></div>
+                    </div>
+                    <div className="skeleton-image mb-4"></div>
+                    <div className="skeleton-content"></div>
+                </div>
+                <div className="col-lg-3">
+                    <div className="skeleton-sidebar mb-3"></div>
+                    <div className="skeleton-related-post mb-2"></div>
+                    <div className="skeleton-related-post mb-2"></div>
+                </div>
+            </div>
+
+            <style jsx>{`
+        .skeleton-btn {
+          width: 150px;
+          height: 35px;
+          background: #ddd;
+          border-radius: 5px;
+          margin: auto;
+        }
+
+        .skeleton-title {
+          height: 30px;
+          width: 60%;
+          background: #ccc;
+          border-radius: 6px;
+          margin: auto;
+        }
+
+        .skeleton-meta {
+          height: 18px;
+          width: 40%;
+          background: #e0e0e0;
+          margin: auto;
+          border-radius: 4px;
+        }
+
+        .skeleton-image {
+          width: 100%;
+          height: 300px;
+          background: #ddd;
+          border-radius: 12px;
+        }
+
+        .skeleton-content {
+          width: 100%;
+          height: 200px;
+          background: #eee;
+          border-radius: 8px;
+        }
+
+        .skeleton-sidebar {
+          width: 100%;
+          height: 180px;
+          background: #eee;
+          border-radius: 6px;
+        }
+
+        .skeleton-related-post {
+          width: 100%;
+          height: 60px;
+          background: #ddd;
+          border-radius: 6px;
+        }
+      `}</style>
+        </div>
+    );
+}
 
 export default function Page() {
     const { id } = useParams();
@@ -15,11 +93,11 @@ export default function Page() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchBlog = async () => { 
-            setLoading(true)
+        const fetchBlog = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(
-                    `https://foundation.alphalive.pro/api/front/blog/${id}` // Assuming ID is 9
+                    `https://foundation.alphalive.pro/api/front/blog/${id}`
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch blog details");
@@ -35,27 +113,71 @@ export default function Page() {
         fetchBlog();
     }, []);
 
-
-    if (loading) return <div className="loading">Loading...</div>;
-    if (error) return <div className="error">Error: {error}</div>;
-    if (!blog) return <div className="no-data">No blog found</div>;
-
     return (
         <>
-            <section className="blog_section">
+            <section className="">
                 <div className="heading_div">
                     <Header2 />
                 </div>
-                <div className="blog-detail-section main_div py-5 pt-5">
-                    <div className="container">
-                        <h1 className="blog-title">{blog.title}</h1>
-                        <p className="blog-meta text-muted">Published on: {blog.created_at}</p>
-                        <img src={blog.photo} alt={blog.title} width={'500'} className="blog-image" />
-                        <p className="blog-description text-muted">{blog.meta_description}</p>
-                        <div className="blog-content mt-4" dangerouslySetInnerHTML={{ __html: blog.details }}></div>
-                        <p className="blog-source mt-3">Source: <a href={blog.source} target="_blank" rel="noopener noreferrer">{blog.source}</a></p>
-                    </div>
+
+                <div className="blog-detail-section main_div">
+                    {loading ? (
+                        <BlogSkeletonLoader />
+                    ) : (
+                        <div className="container pt-4">
+                            <div className="row">
+                                <div className="col-lg-9">
+                                    <div>
+                                        <div className="text-center">
+                                            <button className="btn btn-dark mb-2 text-uppercase">design trends</button>
+                                            <h1 className="blog-title">{blog?.title}</h1>
+                                            <p className="blog-meta text-muted my-2">Published on: {blog?.created_at}</p>
+                                        </div>
+                                        <img
+                                            src={blog?.photo}
+                                            alt={blog?.title}
+                                            width="100%"
+                                            style={{ borderRadius: "12px" }}
+                                            className="blog-image"
+                                        />
+                                        <div className="blog-content mt-4" dangerouslySetInnerHTML={{ __html: blog?.details }}></div>
+                                    </div>
+                                    <Related_blogs />
+                                </div>
+
+                                <div className="col-lg-3 right_sec">
+                                    <ul style={{ listStyle: "none" }} className="p-0">
+                                        <li><h5>Categories</h5></li>
+                                        <li><Link href={"/"}>decoration</Link></li>
+                                        <li><Link href={"/"}>trends</Link></li>
+                                        <li><Link href={"/"}>acooreate</Link></li>
+                                        <li><Link href={"/"}>Wooden accessories</Link></li>
+                                    </ul>
+                                    <hr className="w-100" />
+                                    <h5>Related Posts</h5>
+                                    <div>
+                                        <div className="d-flex gap-2 mb-2">
+                                            <img src="https://foundation.alphalive.pro/assets/images/blogs/16454339504png.png" width={60} height={60} style={{ borderRadius: "6px" }} alt="title" />
+                                            <div>
+                                                <p>title</p>
+                                                <span>90 may 2033</span>
+                                            </div>
+                                        </div>
+                                        <div className="d-flex gap-2 mb-2">
+                                            <img src="https://foundation.alphalive.pro/assets/images/blogs/16454339504png.png" width={60} height={60} style={{ borderRadius: "6px" }} alt="title" />
+                                            <div>
+                                                <p>title</p>
+                                                <span>90 may 2033</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr className="w-100" />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
+
                 <Footer2 />
             </section>
         </>

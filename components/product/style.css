@@ -30,8 +30,8 @@
 .all_product_parent_div {
   width: 100%;
   display: flex;
-  gap: 1rem;
-  justify-content: space-between;
+  gap: 1.7rem;
+  /* justify-content: space-between; */
   align-items: center;
   flex-wrap: wrap;
   position: relative;

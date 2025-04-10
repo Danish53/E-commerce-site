@@ -18,7 +18,7 @@ export default function ShippingAddress() {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push("/payment-method");
+    router.push("/review-order");
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -31,6 +31,14 @@ export default function ShippingAddress() {
       setIsLoggedIn(true);
     }
   }, []);
+
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+  };
 
   return (
     <section className="page_address mt-3 ">
@@ -47,16 +55,16 @@ export default function ShippingAddress() {
                   <CiHome className="icon_size_shiping " />
                 </div>
                 <div className="icon">
-                  <BsCreditCard2Back className="icon_size_shiping " />
+                <MdOutlineRateReview className="icon_size_shiping" />
                 </div>
                 <div className="icon">
-                  <MdOutlineRateReview className="icon_size_shiping" />
+                <BsCreditCard2Back className="icon_size_shiping " />
                 </div>
               </div>
               <hr />
             </div>
 
-            {
+            {/* {
               isLoggedIn ? (
                 <><div className="mt-5 mb-3">
                   <h3 className="mt-5">Select a Delivery Address</h3>
@@ -118,141 +126,249 @@ export default function ShippingAddress() {
                     </div>
                   </div></>
               ) : ("")
-            }
+            } */}
 
             <div className="mt-3">
-              
               <h6>Personal Information</h6>
               <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    placeholder="Enter Name"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="Enter Email"
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="name" className="form-label">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    placeholder="Enter Password"
-                  />
-                </div>
-
-                <h6>Add New Address</h6>
-                <div className="mb-3">
-                  <label htmlFor="mobile" className="form-label">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="mobile"
-                    placeholder="Enter Mobile Number"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="address" className="form-label">
-                    Street No.
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    placeholder="Enter Street No."
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="address" className="form-label">
-                    Apartment No.
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    placeholder="Enter Apartment No."
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="address" className="form-label">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    placeholder="Enter Address"
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label htmlFor="address" className="form-label">
-                    Zip Code
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    placeholder="Enter Zip Code"
-                  />
-                </div>
-
-                {/* <div className="mb-3">
-                  <div className="mb-3 select_div">
-                    <label className="mb-1">City</label>
-                    <select>
-                      <option>Select City</option>
-                      <option>New York</option>
-                      <option>London</option>
-                      <option>Karachi</option>
+                <div className="row">
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="name" className="form-label">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      placeholder="Enter Name"
+                    />
+                  </div>
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="name" className="form-label">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      placeholder="Enter Email"
+                    />
+                  </div>
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="name" className="form-label">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                      placeholder="Enter Password"
+                    />
+                  </div>
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="name" className="form-label">
+                      For Customers
+                    </label>
+                    <select
+                      id="forCustomers"
+                      className="form-control"
+                      value={selectedOption}
+                      onChange={(e) => setSelectedOption(e.target.value)}
+                    >
+                      <option value="" style={{ color: "#898989" }}>
+                        Select for customers
+                      </option>
+                      <option value="0">Receipt</option>
+                      <option value="1">Invoice</option>
                     </select>
                   </div>
-                </div> */}
+                  {selectedOption === "0" && (
+                    <>
+                      <h6>Receipt</h6>
+                      <div className="col-lg-12 mb-3">
+                        <label htmlFor="receiptNumber" className="form-label">
+                          Tax Code
+                        </label>
+                        <input
+                          type="text"
+                          id="receiptNumber"
+                          className="form-control w-100" style={{ width: "100%", maxWidth: "100%" }}
+                          placeholder="16-character limit. (e.g., dots, dashes, or spaces)"
+                        />
+                      </div>
+                    </>
+                  )}
 
-                {/* <div className="mb-3">
-                  <label htmlFor="pincode" className="form-label">
-                    Pin Code
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="pincode"
-                    placeholder="Enter Pin Code"
-                  />
-                </div> */}
+                  {/* Show if Invoice is selected */}
+                  {selectedOption === "1" && (
+                    <>
+                      <h6>Invoice</h6>
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="companyname" className="form-label">
+                          Company Name
+                        </label>
+                        <input
+                          type="text"
+                          id="companyname"
+                          className="form-control"
+                          placeholder="Company Name"
+                        />
+                      </div>
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="number" className="form-label">
+                          VAT Number (Partita IVA)
+                        </label>
+                        <input
+                          type="text"
+                          id="number"
+                          className="form-control"
+                          placeholder="VAT Number (Partita IVA)"
+                        />
+                      </div>
+                    </>
+                  )}
+                  <h6>Billing Address</h6>
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="mobile" className="form-label">
+                      Street Address
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="mobile"
+                      placeholder="Street Address"
+                    />
+                  </div>
 
-                {/* <div className="mb-2 select_div">
-                  <label>Suite</label>
-                  <select>
-                    <option selected>Select Suite</option>
-                    <option value="1">Suite 1</option>
-                    <option value="2">Suite 2</option>
-                    <option value="3">Suite 3</option>
-                  </select>
-                </div> */}
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="City" className="form-label">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="City"
+                      placeholder="Enter City"
+                    />
+                  </div>
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="address" className="form-label">
+                      Postal Code
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="address"
+                      placeholder="Enter Postal Code"
+                    />
+                  </div>
 
-                <div className="mb-2 select_div ">
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="Country" className="form-label">
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="Country"
+                      placeholder="Enter Country"
+                    />
+                  </div>
+
+                  <div className="col-lg-6 mb-3">
+                    <label htmlFor="address" className="form-label">
+                      Phone Number (optional but recommended)
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="address"
+                      placeholder="Enter Phone Number"
+                    />
+                  </div>
+
+                  <div className="checkbox_div mb-2">
+                    <input
+                      type="checkbox"
+                      className=""
+                      id="defaultAddress"
+                      checked={isChecked}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="defaultAddress"
+                    >
+                      Same as billing address
+                    </label>
+                  </div>
+
+                  {!isChecked && (
+                    <>
+                      <h6 className="mt-3">Shipping Address</h6>
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="mobile" className="form-label">
+                          Street Address
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="mobile"
+                          placeholder="Street Address"
+                        />
+                      </div>
+
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="City" className="form-label">
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="City"
+                          placeholder="Enter City"
+                        />
+                      </div>
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="address" className="form-label">
+                          Postal Code
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="address"
+                          placeholder="Enter Postal Code"
+                        />
+                      </div>
+
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="Country" className="form-label">
+                          Country
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="Country"
+                          placeholder="Enter Country"
+                        />
+                      </div>
+
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="address" className="form-label">
+                          Phone Number (optional but recommended)
+                        </label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="address"
+                          placeholder="Enter Phone Number"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                </div>
+                {/* <div className="mb-2 select_div ">
                   <div className="checkbox_div">
                     <input type="checkbox" className="" id="defaultAddress" />
                     <label
@@ -262,8 +378,7 @@ export default function ShippingAddress() {
                       Use as my default address
                     </label>
                   </div>
-                </div>
-
+                </div> */}
                 <button
                   type="submit"
                   onClick={handleClick}

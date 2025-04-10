@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 import Nav from "./component/Nav";
@@ -17,11 +17,12 @@ import { toast, Toaster } from "react-hot-toast"
 import { FaSearch } from "react-icons/fa";
 import { ResponseContext } from "@/app/login/ResponseContext";
 import { FaPerson } from "react-icons/fa6";
+import "./navbar.css";
 
 export default function Header2() {
   const [showSearch, setShowSearch] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const { cart } = useContext(ResponseContext);
+  // const [showPopup, setShowPopup] = useState(false);
+  const { cart, showPopup, setShowPopup, animateWishlist, setAnimateWishlist } = useContext(ResponseContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,8 +31,15 @@ export default function Header2() {
     }
   }, []);
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
+  // const togglePopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
+  const handleMouseEnter = () => {
+    setShowPopup(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowPopup(false);
   };
 
   const handleAuth = () => {
@@ -67,7 +75,29 @@ export default function Header2() {
     };
   }, [prevScrollPos]);
 
-  const { wishlist } = useContext(ResponseContext);
+  const { wishlist, setSearchQuery } = useContext(ResponseContext);
+
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+
+  useEffect(() => {
+    if (animateWishlist) {
+      const timer = setTimeout(() => setAnimateWishlist(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [animateWishlist]);
 
   return (
     <>
@@ -113,10 +143,28 @@ export default function Header2() {
                 </ul>
               </div>
               <div className="uc-navbar-right">
+                <div className="account-wrapper" ref={dropdownRef}>
+                  {isLoggedIn ? <p className="account-label" onClick={() => setOpen(!open)}>
+                    My Account
+                  </p> : <Link className="text-none fw-medium " href={`/login`}><p className="account-label">
+                    Login
+                  </p></Link>}
+                  {open && (
+                    <div className="account-dropdown">
+                      <Link href="/dashboard">Dashboard</Link>
+                      <Link href="/personal-info">Personal Information</Link>
+                      <Link href="/orders">Orders</Link>
+                      <Link href="/my-wishlist">Wishlist</Link>
+                      <Link href="/my-address">Addresses</Link>
+                      <Link href="/settings">Settings</Link>
+                      <Link href="/login" onClick={handleAuth}>Logout</Link>
+                    </div>
+                  )}
+                </div>
                 <div className="icon_div_main">
                   <div className="icons">
                     <CiSearch
-                      className="icon_size cursor-pointer"
+                      className="icon_size icon_size_none cursor-pointer"
                       onClick={toggleSearch}
                     />
 
@@ -126,24 +174,33 @@ export default function Header2() {
                         type="text"
                         placeholder="Search..."
                         className="search_input"
+                        onChange={(e) => setSearchQuery(e.target.value)}
                       />
                     </div>
 
-                    {isLoggedIn? (<Link href="/personal-info">
+                    {/* {isLoggedIn? (<Link href="/personal-info">
                       <img className="icon_size cursor-pointer" style={{ marginLeft: "0px", width: "22px", height: "22px" }} src="/assets/images/user.png" alt="" />
-                    </Link>) : ("")}
+                    </Link>) : ("")} */}
 
-                    
-                    {isLoggedIn? (<Link href="/my-wishlist" >
-                      <CiHeart className="icon_size cursor-pointer" style={{position:"relative"}} />
-                      <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span>
+
+                    {isLoggedIn ? (<Link href="/my-wishlist" >
+                      {/* <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
+                      <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
+                      <div className="relative">
+                        <CiHeart
+                          className={`icon_size cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-125 text-pink-500" : ""
+                            }`}
+                        />
+                        {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
+                      </div>
                     </Link>) : (<Link href="/login" >
-                      <CiHeart className="icon_size cursor-pointer" style={{position:"relative"}} />
-                      <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span>
+                      <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
+                      {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
                     </Link>)}
 
                   </div>
-                  <div className={`img_div `} onClick={togglePopup}>
+                  <div className={`img_div `} onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}>
                     <img
                       className="icon_size"
                       src="/assets/images/add-button.png"
@@ -159,15 +216,14 @@ export default function Header2() {
                   </div>
                 </div>
 
-                <div className="d-none lg:d-block" onClick={handleAuth}>
+                {/* <div className="d-none lg:d-block" onClick={handleAuth}>
                   <Link className="text-none fw-medium " href={`/login`}>
-                    {/* href={`/login`} */}
+                    
                     <span className="btn_black">
-                      {/* Log in */}
                       {isLoggedIn ? "Logout" : "Login"}
                     </span>
                   </Link>
-                </div>
+                </div> */}
 
                 <a
                   className="d-block lg:d-none uc-icon uc-navbar-toggle-icon"
