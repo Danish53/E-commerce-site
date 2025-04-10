@@ -108,9 +108,7 @@
   background-color: black;
   margin: 0 auto;
 }
-.btn_div {
-  /* position: relative; */
-}
+
 .pagination {
   display: flex;
   align-items: center;

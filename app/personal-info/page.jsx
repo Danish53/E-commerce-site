@@ -38,8 +38,8 @@ export default function Page() {
     first_name: data?.user?.first_name || "",
     last_name: data?.user?.last_name || "",
     // phone: data?.user?.phone || "",
-    email: response_Context.user.email || "",
-    address: response_Context.user.address || "",
+    email: response_Context?.user?.email || "",
+    address: response_Context?.user?.address || "",
     photo: null, // New field for photo
     user_id: userId
   });
