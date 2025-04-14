@@ -1,6 +1,6 @@
 "use client";
 import "./footer.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../public/assets/css/theme/main.css";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,9 +18,10 @@ import { LuTwitter } from "react-icons/lu";
 import { MdOutlineEmail } from "react-icons/md";
 import { CiLocationOn } from "react-icons/ci";
 import toast from "react-hot-toast";
+import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function Footer2() {
-
+  const { setting } = useContext(ResponseContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -78,7 +79,7 @@ export default function Footer2() {
           <div className="row pb-3 border_bottom">
             <div className="col-lg-3 col-md-6 parent_div">
               <img
-                src="/assets/images/common/logo_footer.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_URL}${setting?.logo || "/assets/images/common/logo_main.png"}`}
                 id="logo_footer"
               />
               <div className="single_div">
@@ -95,7 +96,7 @@ export default function Footer2() {
                   <MdOutlineEmail className="icon_size" />
                 </div>
                 <div className="text_div">
-                  <p>krist@gmail.com</p>
+                  <p>{setting?.from_email}</p>
                 </div>
               </div>
 
@@ -179,7 +180,7 @@ export default function Footer2() {
               <img src="/assets/images/google-pay.png" style={{ width: "55px", height: "55px" }} alt="card" />
               <img src="/assets/images/paypal.png" style={{ width: "60px", height: "60px" }} alt="card" />
             </div>
-            <p>2025 Krist All Rights are reserved</p>
+            <p>{setting?.copyright}</p>
             <div className="icon_div">
               <LiaFacebookSquare className="social_icon_size" />
               <FaInstagram className="social_icon_size" />

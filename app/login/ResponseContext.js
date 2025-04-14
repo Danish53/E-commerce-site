@@ -109,7 +109,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      // console.log(data.data, "get wishlists...")
+      console.log(data.data, "get wishlists...")
 
       if (data.status) {
         setWishlist(data.data);
@@ -138,7 +138,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      // console.log(data.data.product, "add wishlist");
+      console.log(data.data.product, "add wishlist");
 
       if (data.status) {
         const updatedWishlist = [...wishlist, data.data.product];
@@ -310,7 +310,7 @@ export const ResponseProvider = ({ children }) => {
       setDiscountAmount(discount);
       setCouponError(res.data.error);
     } catch (err) {
-      setCouponError('Invalid coupon code'); 
+      setCouponError('Invalid coupon code');
       setCouponCode('');
       setDiscountAmount(0);
     }
@@ -318,6 +318,35 @@ export const ResponseProvider = ({ children }) => {
 
   // header search
   const [searchQuery, setSearchQuery] = useState("");
+
+
+  // general settings
+  const [setting, setSettings] = useState();
+  const generalSettings = async () => {
+    try {
+      const response = await fetch(
+        "https://foundation.alphalive.pro/api/front/general-settings", // Parameters in URL",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      // console.log(data, "setting data");
+      setSettings(data.data);
+      // return data.data;
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+    }
+  };
+
+  useEffect(() => {
+    generalSettings();
+  }), [];
+
 
   return (
     <ResponseContext.Provider value={{
@@ -340,7 +369,8 @@ export const ResponseProvider = ({ children }) => {
       showPopup,
       setShowPopup,
       animateWishlist,
-      setAnimateWishlist
+      setAnimateWishlist,
+      setting
     }}>
       {children}
     </ResponseContext.Provider>

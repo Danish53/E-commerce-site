@@ -1,28 +1,38 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./Popular_Products2.css";
-import { fetchPopularProducts } from "../popular_products/fetchPopularProducts";
-import useCategories from "../headers/categories";
+// import { fetchPopularProducts } from "../popular_products/fetchPopularProducts";
+// import useCategories from "../headers/categories";
 
 export default function Popular_Products2() {
   const [loading, setLoading] = useState();
-    const { latestCategories } = useCategories();
     const [categories, setCategories] = useState([]);
     console.log(categories, "cateiiiii")
   
-    useEffect(() => {
-      const fetchCategories = async () => {
-        const data = await latestCategories();
-        console.log(data, "datatatatatat.....") // Call function and wait for data
-        if (data.status && Array.isArray(data.data)) {
-          setCategories(data.data); // ✅ Store categories in state
-        } else {
-          throw new Error("Invalid API response structure");
+      // general settings
+  const popularCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://foundation.alphalive.pro/api/front/popular/categories", // Parameters in URL",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      };
-  
-      fetchCategories();
-    }, []);
+      );
+
+      const data = await response.json();
+      setCategories(data.data)
+      // console.log(data, "catego poplar data");
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+    }
+  };
+
+  useEffect(() => {
+    popularCategories();
+  }), [];
 
     
 
@@ -41,7 +51,7 @@ export default function Popular_Products2() {
                     <img src={item?.image} />
                     <div className="info_div">
                       <h4>{item?.name}</h4>
-                      <p>{item?.subs[0]?.name}</p>
+                      {/* <p>{item?.subs[0]?.name}</p> */}
                     </div>
                   </div>
                 );

@@ -89,6 +89,7 @@ function BlogSkeletonLoader() {
 export default function Page() {
     const { id } = useParams();
     const [blog, setBlog] = useState(null);
+    console.log(blog, "blog detail.....")
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -129,47 +130,56 @@ export default function Page() {
                                 <div className="col-lg-9">
                                     <div>
                                         <div className="text-center">
-                                            <button className="btn btn-dark mb-2 text-uppercase">design trends</button>
-                                            <h1 className="blog-title">{blog?.title}</h1>
-                                            <p className="blog-meta text-muted my-2">Published on: {blog?.created_at}</p>
+                                            <button className="btn btn-dark mb-2 text-uppercase">{blog?.blog?.category}</button>
+                                            <h1 className="blog-title">{blog?.blog?.title}</h1>
+                                            <p className="blog-meta text-muted my-2">Published on: {blog?.blog?.created_at}</p>
                                         </div>
                                         <img
-                                            src={blog?.photo}
-                                            alt={blog?.title}
+                                            src={blog?.blog?.photo}
+                                            alt={blog?.blog?.title}
                                             width="100%"
                                             style={{ borderRadius: "12px" }}
                                             className="blog-image"
                                         />
-                                        <div className="blog-content mt-4" dangerouslySetInnerHTML={{ __html: blog?.details }}></div>
+                                        <div className="blog-content mt-4" dangerouslySetInnerHTML={{ __html: blog?.blog?.details }}></div>
                                     </div>
-                                    <Related_blogs />
+                                    <Related_blogs blog={blog} />
                                 </div>
 
                                 <div className="col-lg-3 right_sec">
                                     <ul style={{ listStyle: "none" }} className="p-0">
                                         <li><h5>Categories</h5></li>
-                                        <li><Link href={"/"}>decoration</Link></li>
-                                        <li><Link href={"/"}>trends</Link></li>
-                                        <li><Link href={"/"}>acooreate</Link></li>
-                                        <li><Link href={"/"}>Wooden accessories</Link></li>
+                                        {
+                                            blog?.categories && blog?.categories?.map((category, index) => (
+                                                <li key={index}>
+                                                    <Link href={`/my-blog?slug=${category?.slug}`} >{category?.name}</Link>
+                                                </li>
+                                            ))
+                                        }
+
                                     </ul>
                                     <hr className="w-100" />
                                     <h5>Related Posts</h5>
                                     <div>
-                                        <div className="d-flex gap-2 mb-2">
-                                            <img src="https://foundation.alphalive.pro/assets/images/blogs/16454339504png.png" width={60} height={60} style={{ borderRadius: "6px" }} alt="title" />
-                                            <div>
-                                                <p>title</p>
-                                                <span>90 may 2033</span>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex gap-2 mb-2">
-                                            <img src="https://foundation.alphalive.pro/assets/images/blogs/16454339504png.png" width={60} height={60} style={{ borderRadius: "6px" }} alt="title" />
-                                            <div>
-                                                <p>title</p>
-                                                <span>90 may 2033</span>
-                                            </div>
-                                        </div>
+                                        {
+                                            blog?.relatedBlogs?.slice(0, 3)?.map((item, index) => {
+                                                return (
+                                                    <div className="d-flex gap-2 mb-2" key={index}>
+                                                        <img
+                                                            src={item?.photo}
+                                                            width={60}
+                                                            height={60}
+                                                            style={{ borderRadius: "6px" }}
+                                                            alt={item?.title}
+                                                        />
+                                                        <div>
+                                                            <p>{item?.title}</p>
+                                                            <span>{item?.created_at}</span>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })
+                                        }
                                     </div>
                                     <hr className="w-100" />
                                 </div>

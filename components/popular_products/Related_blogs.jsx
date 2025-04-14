@@ -10,7 +10,7 @@ import { fetchPopularProducts } from "./fetchPopularProducts";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Related_blogs() {
+export default function Related_blogs({ blog }) {
     const [counter, setCounter] = useState(1);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -72,26 +72,6 @@ export default function Related_blogs() {
 
     // if (error) return <p>Error: {error}</p>;
 
-    const posts = [
-        {
-            id: 1,
-            title: "Blogs added",
-            photo: "",
-            detail: "detailsss......"
-        },
-        {
-            id: 2,
-            title: "Blogs added",
-            photo: "",
-            detail: "detailsss......"
-        },
-        {
-            id: 3,
-            title: "Blogs added",
-            photo: "",
-            detail: "detailsss......"
-        }
-    ]
 
     return (
         <>
@@ -120,17 +100,17 @@ export default function Related_blogs() {
                             <h2 className="p-0">Related Posts</h2>
                             <div className="popular_products pb-3">
                                 <Slider {...settings}>
-                                    {posts?.map((item, index) => (
-                                        <div className="card gap-3" key={item.id}>
+                                    {blog?.relatedBlogs?.map((item, index) => (
+                                        <div className="card gap-3" key={index}>
                                             <div className="single_card" >
                                                 <Link href={`/my-blog/${item.id}`}>
-                                                    <img src={item.photo} alt={item.title} loading="lazy" />
+                                                    <img src={item?.photo} alt={item?.title} loading="lazy" />
                                                 </Link>
                                                 <div className="p-2">
-                                                    <span>Category / 09 May 2025</span>
-                                                    <h3>{item.title}</h3>
-                                                    <p> {item.detail}
-                                                        <Link href={"/my-blog"} className="read-more">
+                                                    <span>{item?.category} / {item?.created_at}</span>
+                                                    <h3>{item?.title}</h3>
+                                                    <p> {item?.detail}
+                                                        <Link href={`/my-blog/${item.id}`} className="read-more">
                                                             Continue reading
                                                         </Link>
                                                     </p>

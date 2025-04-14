@@ -16,23 +16,23 @@ export default function Page() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editAddress, setEditAddress] = useState(null);
 
-  const { addresses, deleteAddress, addAddress, updateAddress, loading, setAddresses, response_Context , fetchAddresses} =
+  const { addresses, deleteAddress, addAddress, updateAddress, loading, setAddresses, response_Context, fetchAddresses } =
     useContext(ResponseContext);
-    const userId = response_Context?.user?.id || "No ID available";
-    
-    console.log(addresses, userId, "addresessss")
+  const userId = response_Context?.user?.id || "No ID available";
+
+  console.log(addresses, userId, "addresessss")
 
   const [newAddress, setNewAddress] = useState({
     user_id: userId,
     name: "",
     phone: "",
-    address1: "",
-    address2: "",
-    address3: "",
-    zipcode: "",
+    address: "",
+    country: "",
+    city: "",
+    zipcode: "", 
     isdefault: false,
   });
-  console.log(newAddress, "ho gia id")
+  // console.log(newAddress, "ho gia id");
 
   useEffect(() => {
     document.body.style.backgroundColor = isFormVisible ? "#f4f4f4" : "#ffffff";
@@ -69,9 +69,9 @@ export default function Page() {
       user_id: userId,
       name: "",
       phone: "",
-      address1: "",
-      address2: "",
-      address3: "",
+      address: "",
+      country: "",
+      city: "",
       zipcode: "",
       isdefault: false,
     });
@@ -80,7 +80,7 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if(userId){
+    if (userId) {
       fetchAddresses(userId);
     }
   }, [userId]);
@@ -137,8 +137,8 @@ export default function Page() {
               ))
             ) : (
               <p className="alert alert-warning" hidden="">
-              No Addresses Found!
-            </p>
+                No Addresses Found!
+              </p>
             )}
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function Page() {
               />
             </div>
             <div className="mb-3 mt-3">
-              <label>Name</label>
+              <label>Full Name</label>
               <input
                 type="text"
                 name="name"
@@ -181,33 +181,34 @@ export default function Page() {
             </div>
 
             <div className="mb-3">
-              <label>Street No.</label>
-              <input
-                type="text"
-                name="address1"
-                value={newAddress.address1}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Apartment No.</label>
-              <input
-                type="text"
-                name="address2"
-                value={newAddress.address2}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
-
-            <div className="mb-3">
               <label>Address</label>
+              <textarea
+                name="address3"
+                cols={'10'}
+                value={newAddress.address}
+                onChange={handleChange}
+                className="form-control"
+              />
+            </div>
+
+
+            <div className="mb-3">
+              <label>Country</label>
               <input
                 type="text"
-                name="address3"
-                value={newAddress.address3}
+                name="country"
+                value={newAddress.country}
+                onChange={handleChange}
+                className="form-control"
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={newAddress.city}
                 onChange={handleChange}
                 className="form-control"
               />

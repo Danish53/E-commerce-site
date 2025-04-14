@@ -71,8 +71,8 @@ export default function Nav() {
                     {category?.subs.length > 0 ? (
                       category?.subs.map((sub) => (
                         <li key={sub.id}>
-                          <Link href={`/all-products?category=${encodeURIComponent(category.name)}&subcategory=${encodeURIComponent(sub.name)}`}>
-                            {sub.name}
+                          <Link href={`/all-products?category=${encodeURIComponent(sub?.name)}`}>
+                            {sub?.name}
                           </Link>
                         </li>
                       ))

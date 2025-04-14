@@ -9,7 +9,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function Cart1() {
   const router = useRouter();
-  const { cart, removeFromCart, updateCart, discountAmount, applyCoupon, couponCode, couponError } = useContext(ResponseContext);
+  const { cart, removeFromCart, updateCart, discountAmount, applyCoupon, couponCode, couponError, setting } = useContext(ResponseContext);
   console.log(cart, "cart data done???")
   const [loading, setLoading] = useState(false);
 
@@ -66,18 +66,19 @@ export default function Cart1() {
     router.push("/shipping-address");
   }
 
-  const [inputCode, setInputCode] = useState("");
-  console.log(inputCode, "code input.,.,.,")
-  const subtotal = getTotalAmount();
-  const deliveryFee = 5;
-  const grandtotalPrice = subtotal - discountAmount + deliveryFee;
+  // const [inputCode, setInputCode] = useState("");
+  // console.log(inputCode, "code input.,.,.,")
+  const subtotal = getTotalAmount() || 0;
+const deliveryFee = setting?.shipping_cost || 0;
+const grandtotalPrice = subtotal;
+// console.log(typeof(grandtotalPrice));
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true)
-    applyCoupon(inputCode, subtotal);
-    setLoading(false)
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setLoading(true)
+  //   applyCoupon(inputCode, subtotal);
+  //   setLoading(false)
+  // };
 
   return (
     <div className="section ">
@@ -172,7 +173,7 @@ export default function Cart1() {
                           </td>
                           <td>
                             <span className="subtotal">
-                              ${getTotalAmount()}
+                            {(elm?.quantity * elm?.current_price)}
                             </span>
                           </td>
                           <td>
@@ -202,7 +203,7 @@ export default function Cart1() {
           <td className="text_align_right">${subtotal}</td>
         </tr>
 
-        {discountAmount > 0 && (
+        {/* {discountAmount > 0 && (
           <tr className="sub_total border_bottom">
             <th className="ft-tertiary text-success font_family">
               Discount ({couponCode})
@@ -211,9 +212,9 @@ export default function Cart1() {
               -${discountAmount.toFixed(2)}
             </td>
           </tr>
-        )}
+        )} */}
 
-        <tr>
+        {/* <tr>
           <td colSpan="2" className="p-3">
             <form onSubmit={handleSubmit}>
               <label>Enter Discount Code</label>
@@ -232,7 +233,7 @@ export default function Cart1() {
               )}
             </form>
           </td>
-        </tr>
+        </tr> */}
 
         <tr className="border_bottom">
           <th className="ft-tertiary text-black delivery_charges ">
@@ -240,7 +241,7 @@ export default function Cart1() {
           </th>
           <td className="text_align_right">
             <span className="total font_family delivery_charges">
-              ${deliveryFee.toFixed(2)}
+              ${deliveryFee}
             </span>
           </td>
         </tr>
@@ -251,7 +252,7 @@ export default function Cart1() {
           </th>
           <td className="text_align_right">
             <span className="total  grand_total font_family ">
-              ${grandtotalPrice.toFixed(2)}
+              ${grandtotalPrice}
             </span>
           </td>
         </tr>

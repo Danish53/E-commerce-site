@@ -12,7 +12,7 @@ export default function Popular_Card({ img_src, productName, price, rating, prod
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
-    setFavorite(wishlist.some((item) => item.id === productId));
+    setFavorite(wishlist.some((item) => item.id == productId));
   }, [wishlist, productId]);
 
   const toggleFavorite = () => {

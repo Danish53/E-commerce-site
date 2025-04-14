@@ -46,3 +46,52 @@ input::placeholder {
 .small_form .deliver_div {
   border-bottom: 1px solid #b8b9b9;
 }
+
+
+
+
+.single_product .pop_up p {
+  margin-top: 0 !important;
+}
+.single_product .pop_up p#total_item {
+  font-size: 14px;
+  font-weight: 500;
+  color: #626665;
+}
+.single_product .pop_up img {
+  width: 125px;
+  height: 75px;
+}
+ .pop_up_parent_div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #c5c5c5;
+}
+ .content_div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px !important;
+}
+ .prod_title {
+  font-size: 12px;
+  font-weight: 400;
+}
+ .prod_quantity {
+  font-size: 12px;
+  font-weight: 600;
+}
+ .sizes {
+  font-size: 10px;
+  font-weight: 400;
+}
+ .delete_div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.delete_div .icon_prop {
+  font-size: 15px;
+  color: #ff5c5e;
+  cursor: pointer;
+}

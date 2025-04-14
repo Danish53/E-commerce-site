@@ -1,6 +1,6 @@
 
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import "../../public/assets/css/theme/main.css";
 import "./myblog.css";
@@ -28,12 +28,17 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const blogsPerPage = 8;
+  const searchParams = useSearchParams();
+  const slug = searchParams.get('slug');
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch("https://foundation.alphalive.pro/api/front/blogs");
+        const baseUrl = "https://foundation.alphalive.pro/api/front/blogs";
+        const url = slug ? `${baseUrl}?slug=${slug}` : baseUrl;
+
+        const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -49,7 +54,8 @@ export default function Page() {
     };
 
     fetchData();
-  }, []);
+  }, [slug]);
+
 
   const handleNavigation = (id) => {
     router.push(`/my-blog/${id}`);
@@ -66,7 +72,7 @@ export default function Page() {
 
   return (
     <>
-      <section className="blog_section" style={{backgroundColor: "lightgray"}}>
+      <section className="blog_section" style={{ backgroundColor: "lightgray" }}>
         <div className="heading_div">
           <Header2 />
         </div>
@@ -77,7 +83,7 @@ export default function Page() {
               [...Array(8)].map((_, index) => <SkeletonLoader key={index} />)  // Adjust the array length as per your needs
             ) : (
               // Map over actual data once loaded, but only show the current page's blogs
-              currentBlogs.map((card, index) => {
+              currentBlogs.length > 0 ? currentBlogs?.map((card, index) => {
                 const words = card.details.split(" ");
                 const shortDetails =
                   words.length > 30
@@ -90,7 +96,7 @@ export default function Page() {
                       <img src={card.photo} alt={card.title} loading="lazy" />
                     </Link>
                     <div className="p-2">
-                      <span>Category / 09 May 2025</span>
+                      <span>{card?.category} / {card?.created_at}</span>
                       <h3>{card.title}</h3>
                       <p onClick={() => handleNavigation(card?.id)}>
                         {shortDetails} <br />
@@ -103,7 +109,7 @@ export default function Page() {
                     </div>
                   </div>
                 );
-              })
+              })  : ( <p className="alert alert-warning" hidden="">No Blogs Found</p>)
             )}
           </div>
 

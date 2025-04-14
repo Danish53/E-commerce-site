@@ -22,7 +22,7 @@ import "./navbar.css";
 export default function Header2() {
   const [showSearch, setShowSearch] = useState(false);
   // const [showPopup, setShowPopup] = useState(false);
-  const { cart, showPopup, setShowPopup, animateWishlist, setAnimateWishlist } = useContext(ResponseContext);
+  const { cart, showPopup, setShowPopup, animateWishlist, setAnimateWishlist, setting } = useContext(ResponseContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -132,7 +132,7 @@ export default function Header2() {
                     <Image
                       className="dark:d-none"
                       alt="Lexend"
-                      src="/assets/images/common/logo_main.png"
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL}${setting?.logo || "/assets/images/common/logo_main.png"}`}
                       width="117"
                       height="40"
                     />
