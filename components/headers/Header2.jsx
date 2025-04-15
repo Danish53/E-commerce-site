@@ -132,7 +132,7 @@ export default function Header2() {
                     <Image
                       className="dark:d-none"
                       alt="Lexend"
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL}${setting?.logo || "/assets/images/common/logo_main.png"}`}
+                      src={`${setting?.logo || "/assets/images/common/logo_main.png"}`}
                       width="117"
                       height="40"
                     />

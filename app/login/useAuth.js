@@ -47,6 +47,7 @@ const useAuth = () => {
     }
   };
 
+  
   // ✅ Login User and Store in Context
   const login = async (email, password) => {
     setLoading(true);
