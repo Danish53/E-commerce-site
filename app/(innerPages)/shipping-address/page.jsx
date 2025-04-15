@@ -18,17 +18,17 @@ export default function ShippingAddress() {
   const router = useRouter();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [same_as, setSame_as] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: response_Context?.user?.full_name || "",
     email: response_Context?.user?.email || "",
     password: "",
     customer_type: "",
-    taxCode: "",
-    companyName: "",
-    vatNumber: "",
-    isChecked,
+    tax_code: "",
+    company_name: "",
+    vat_number: "",
+    same_as,
     billing_street: response_Context?.user?.address || "",
     billing_city: response_Context?.user?.city || "",
     billing_postal_code: response_Context?.user?.zip_code || "",
@@ -57,7 +57,7 @@ export default function ShippingAddress() {
   };
 
   const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
+    setSame_as(e.target.checked == true);
   };
 
   const handleSubmit = (e) => {
@@ -65,11 +65,11 @@ export default function ShippingAddress() {
 
     const finalData = {
       ...formData,
-      shipping_street: isChecked ? formData.billing_street : formData.shipping_street,
-      shipping_city: isChecked ? formData.billing_city : formData.shipping_city,
-      shipping_postal_code: isChecked ? formData.billing_postal_code : formData.shipping_postal_code,
-      shipping_country: isChecked ? formData.billing_country : formData.shipping_country,
-      shipping_phone: isChecked ? formData.billing_phone : formData.shipping_phone,
+      shipping_street: same_as ? formData.billing_street : formData.shipping_street,
+      shipping_city: same_as ? formData.billing_city : formData.shipping_city,
+      shipping_postal_code: same_as ? formData.billing_postal_code : formData.shipping_postal_code,
+      shipping_country: same_as ? formData.billing_country : formData.shipping_country,
+      shipping_phone: same_as ? formData.billing_phone : formData.shipping_phone,
     };
 
     setFormDataCheckout((prev) => ({
@@ -171,11 +171,11 @@ export default function ShippingAddress() {
                 </div>
 
                 <div className="checkbox_div mb-2">
-                  <input type="checkbox" id="sameAsBilling" checked={isChecked} onChange={handleCheckboxChange} />
+                  <input type="checkbox" id="sameAsBilling" checked={same_as} onChange={handleCheckboxChange} />
                   <label htmlFor="sameAsBilling">Same as billing address</label>
                 </div>
 
-                {!isChecked && (
+                {!same_as && (
                   <>
                     <h6 className="mt-3">Shipping Address</h6>
                     <div className="col-lg-6 mb-3">

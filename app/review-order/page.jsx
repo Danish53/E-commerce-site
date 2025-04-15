@@ -48,7 +48,7 @@ export default function ReviewOrder() {
   const handleNavigation = () => {
     setFormDataCheckout((prev) => ({
       ...prev,
-      checkCartData: cart
+      items : cart
     }));
     router.push("/payment-method");
   };

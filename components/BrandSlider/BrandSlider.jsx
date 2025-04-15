@@ -68,7 +68,7 @@ export default function BrandSlider() {
             })}
           </Slider>
         </div>
-        <hr />
+        {/* <hr /> */}
       </div>
     </section>
   );

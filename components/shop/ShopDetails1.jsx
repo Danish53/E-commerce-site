@@ -245,7 +245,7 @@ export default function ShopDetails1() {
           <p className="details_p">{data?.details}</p>
         </div>
 
-        <Specifications />
+        {/* <Specifications /> */}
         <ReviewSection product_review={data} />
         <div className="add_review_form mt-2">
           <ReviewForm />

@@ -2,6 +2,7 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
+import { AiOutlineBorderlessTable } from "react-icons/ai";
 
 export const ResponseContext = createContext();
 
@@ -109,7 +110,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      console.log(data.data, "get wishlists...")
+      // console.log(data.data, "get wishlists...")
 
       if (data.status) {
         setWishlist(data.data);
@@ -138,7 +139,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      console.log(data.data.product, "add wishlist");
+      // console.log(data.data.product, "add wishlist");
 
       if (data.status) {
         const updatedWishlist = [...wishlist, data.data.product];
@@ -242,7 +243,7 @@ export const ResponseProvider = ({ children }) => {
   const addAddress = async (newAddress) => {
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
-      console.log(response, "response address ka");
+      // console.log(response, "response address ka");
       setAddresses((prev) => [...prev, response.data.data]);
     } catch (error) {
       console.error("Error adding address:", error);
@@ -279,6 +280,7 @@ export const ResponseProvider = ({ children }) => {
   const orders = async (userId) => {
     try {
       const response = await axios.get(`https://foundation.alphalive.pro/api/user/dashboard/${userId}`);
+      // console.log(response, "AiOutlineBorderlessTable.s.s,s,s,s,s,s,")
       setOrdersData(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -352,7 +354,7 @@ export const ResponseProvider = ({ children }) => {
   const [showStripeForm, setShowStripeForm] = useState(false);
   const [formDataCheckout, setFormDataCheckout] = useState({
     address: {},
-    checkCartData: {},
+    items: [],
     paymentData: {}
   });
   // console.log(formDataCheckout, "in context page...,.,,,")
