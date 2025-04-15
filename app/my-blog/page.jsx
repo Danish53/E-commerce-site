@@ -1,7 +1,7 @@
 
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import "../../public/assets/css/theme/main.css";
 import "./myblog.css";
 import Link from "next/link";
@@ -71,6 +71,7 @@ export default function Page() {
   // if (error) return <div className="error">Error: {error}</div>;
 
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <>
       <section className="blog_section" style={{ backgroundColor: "lightgray" }}>
         <div className="heading_div">
@@ -196,5 +197,6 @@ export default function Page() {
         }
       `}</style>
     </>
+    </Suspense>
   );
 }

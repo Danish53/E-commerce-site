@@ -242,7 +242,7 @@ export const ResponseProvider = ({ children }) => {
   const addAddress = async (newAddress) => {
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
-      // console.log(response, "response ad ka")
+      console.log(response, "response address ka");
       setAddresses((prev) => [...prev, response.data.data]);
     } catch (error) {
       console.error("Error adding address:", error);
@@ -348,6 +348,15 @@ export const ResponseProvider = ({ children }) => {
   }), [];
 
 
+  // stripe
+  const [showStripeForm, setShowStripeForm] = useState(false);
+  const [formDataCheckout, setFormDataCheckout] = useState({
+    address: {},
+    checkCartData: {},
+    paymentData: {}
+  });
+  // console.log(formDataCheckout, "in context page...,.,,,")
+
   return (
     <ResponseContext.Provider value={{
       response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart, addToWishlist, removeFromWishlist, wishlist, products, filters, setFilters, loading, error, addresses,
@@ -370,7 +379,11 @@ export const ResponseProvider = ({ children }) => {
       setShowPopup,
       animateWishlist,
       setAnimateWishlist,
-      setting
+      setting,
+      showStripeForm,
+      setShowStripeForm,
+      formDataCheckout,
+      setFormDataCheckout
     }}>
       {children}
     </ResponseContext.Provider>

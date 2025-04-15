@@ -66,8 +66,8 @@ export default function SmallForm() {
               </p>
               <div className="delete_div">
                 <div>
-                  <p className="sizes">Size: {item?.size[0] || "N/A"}</p>
-                  <p className="sizes">Color: {item?.color[0] || "N/A"}</p>
+                  <p className="sizes">Size: {item?.size || "N/A"}</p>
+                  <p className="sizes">Color: {item?.color || "N/A"}</p>
                 </div>
                 <RiDeleteBin5Fill
                   className="icon_prop"

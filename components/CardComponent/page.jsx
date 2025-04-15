@@ -11,7 +11,7 @@ import { CiShoppingCart } from "react-icons/ci";
 export default function Page() {
   const router = useRouter();
   const { cart, removeFromCart } = useContext(ResponseContext);
-  console.log(cart, '......cart aa hai na')
+  // console.log(cart, '......cart aa hai na')
   const [isPopupOpen, setIsPopupOpen] = useState(true);
 
   const handleCheckout = () => {
@@ -47,8 +47,8 @@ export default function Page() {
                   </p>
                   <div className="delete_div">
                     <div>
-                    <p className="sizes">Size: {item?.size[0] || "N/A"}</p>
-                    <p className="sizes">Color: {item?.color[0] || "N/A"}</p>
+                    <p className="sizes">Size: {item?.size || "N/A"}</p>
+                    <p className="sizes">Color: {item?.color || "N/A"}</p>
                     </div>
                     <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
                   </div>

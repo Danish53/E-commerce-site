@@ -20,13 +20,11 @@ export default function Page() {
     useContext(ResponseContext);
   const userId = response_Context?.user?.id || "No ID available";
 
-  console.log(addresses, userId, "addresessss")
-
   const [newAddress, setNewAddress] = useState({
     user_id: userId,
     name: "",
     phone: "",
-    address: "",
+    street_address: "",
     country: "",
     city: "",
     zipcode: "", 
@@ -69,7 +67,7 @@ export default function Page() {
       user_id: userId,
       name: "",
       phone: "",
-      address: "",
+      street_address: "",
       country: "",
       city: "",
       zipcode: "",
@@ -108,13 +106,14 @@ export default function Page() {
                   <div className="address_div">
                     <div className="flex_div">
                       <p>
-                        {addr.address1}, {addr.address2}, {addr.address3},{" "}
-                        {addr.zipcode}
+                        {addr.street_address}, 
+                         { addr.zipcode}
                       </p>
                       <div className="phone_div">
                         <FiPhone className="icon_size" />
                         <p>{addr.phone}</p>
                       </div>
+                      <p>{addr?.city}, {addr?.country}</p>
                     </div>
                     <div className="btn_div">
                       <button
@@ -183,11 +182,11 @@ export default function Page() {
             <div className="mb-3">
               <label>Address</label>
               <textarea
-                name="address3"
-                cols={'10'}
-                value={newAddress.address}
+                name="street_address"
+                value={newAddress.street_address}
                 onChange={handleChange}
                 className="form-control"
+                style={{color:"#000 !important"}}
               />
             </div>
 

@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../../public/assets/css/theme/main.css";
 import SmallForm from "@/components/SmallForm/SmallForm";
 import { MdOutlineRateReview } from "react-icons/md";
@@ -16,8 +16,11 @@ import { BsCreditCard2Back } from "react-icons/bs";
 import "./review.css";
 import Header2 from "@/components/headers/Header2";
 import Footer2 from "@/components/footers/Footer2";
+import { ResponseContext } from "../login/ResponseContext";
 
 export default function ReviewOrder() {
+  const { cart, formDataCheckout, setFormDataCheckout } = useContext(ResponseContext);
+  // console.log(formDataCheckout.address, "data checked....")
   // const [show, setShow] = useState(false);
   const router = useRouter();
 
@@ -43,11 +46,15 @@ export default function ReviewOrder() {
   // };
 
   const handleNavigation = () => {
+    setFormDataCheckout((prev) => ({
+      ...prev,
+      checkCartData: cart
+    }));
     router.push("/payment-method");
   };
-  const handleHome = () => {
-    router.push("/");
-  };
+  // const handleHome = () => {
+  //   router.push("/");
+  // };
 
   return (
     <div>
@@ -66,18 +73,15 @@ export default function ReviewOrder() {
                     <CiHome className="icon_size_shiping " />
                   </div>
                   <div className="icon active">
-                  <MdOutlineRateReview className="icon_size_shiping" />
+                    <MdOutlineRateReview className="icon_size_shiping" />
                   </div>
                   <div className="icon">
-                  <BsCreditCard2Back className="icon_size_shiping " />
+                    <BsCreditCard2Back className="icon_size_shiping " />
                   </div>
                 </div>
                 <hr />
               </div>
-              <div className="mt-3 mb-3">
-                <h4 className="mt-3 mb-5">Estimated delivery: 22 Feb 2025</h4>
-              </div>
-              <div className="item_products pb-2 mt-3">
+              {/* <div className="item_products pb-2 mt-3">
                 <div className="img_div_flex d-flex gap-3">
                   <img
                     src="/assets/images/products/review.png"
@@ -91,47 +95,52 @@ export default function ReviewOrder() {
                     <p id="item_size">Size: S</p>
                   </div>
                 </div>
-              </div>
-              <div className="item_products pb-2 mt-3">
-                <div className="img_div_flex d-flex gap-3">
-                  <img
-                    src="/assets/images/products/review.png"
-                    height={71}
-                    width={69}
-                    alt="slected product image"
-                  />
-                  <div className="item_details">
-                    <p id="item_name">Girls Pink Moana Printed Dress</p>
-                    <p id="item_price">$80.00</p>
-                    <p id="item_size">Size: S</p>
+              </div> */}
+              {cart.map((item) => (
+                <div
+                  className="pop_up_parent_div d-flex p-2"
+                  key={item.id}
+                >
+                  <div className="img_div">
+                    <img
+                      height={90}
+                      width={90}
+                      src={
+                        item?.thumbnail ||
+                        "/assets/images/products/checkout_pic.png"
+                      }
+                      alt="Product"
+                    />
+                  </div>
+                  <div className="content_div" style={{ width: "65%" }}>
+                    <p className="prod_title">{item?.title}</p>
+                    <p className="prod_quantity p-0 m-0">
+                      Quantity: {item?.quantity || "N/A"}
+                    </p>
+                    <p className="prod_quantity p-0 m-0">
+                      {item?.quantity} × ${Number(item?.current_price).toFixed(2)} = $
+                      {(item?.quantity * item?.current_price).toFixed(2)}
+                    </p>
+                    <div className="delete_div">
+                      <div>
+                        <p className="sizes">Size: {item?.size || "N/A"}</p>
+                        <p className="sizes">Color: {item?.color || "N/A"}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="item_products pb-2 mt-3">
-                <div className="img_div_flex d-flex gap-3">
-                  <img
-                    src="/assets/images/products/review.png"
-                    height={71}
-                    width={69}
-                    alt="slected product image"
-                  />
-                  <div className="item_details">
-                    <p id="item_name">Girls Pink Moana Printed Dress</p>
-                    <p id="item_price">$80.00</p>
-                    <p id="item_size">Size: S</p>
-                  </div>
-                </div>
-              </div>
+              ))}
               <div className="address_section mt-5">
                 <h4>Shipping Address</h4>
                 <div className="name_parent_div pb-2 mb-3">
                   <div className="name_edit ">
-                    <h5>Robert Fox</h5>
+                    <h5>{formDataCheckout?.address?.full_name}</h5>
                     {/* <FaRegEdit /> */}
                   </div>
                   <p id="home_add">
-                    4517 Washington Ave, Manchester Kentucky 39495
+                    {formDataCheckout?.address?.shipping_street}
                   </p>
+                  <p>{formDataCheckout?.address?.shipping_city}, { formDataCheckout?.address?.shipping_country}</p>
                 </div>
                 {/* <div className="name_parent_div pb-2">
                   <div className="name_edit ">
@@ -152,7 +161,7 @@ export default function ReviewOrder() {
               <SmallForm />
             </div>
           </div>
-          
+
         </div>
         <Footer2 />
       </section>

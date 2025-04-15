@@ -147,8 +147,8 @@ const grandtotalPrice = subtotal;
                                     {/* {elm.name} */}
                                   </Link>
                                 </h5>
-                                <p>Size: {elm?.size[0]}</p>
-                                <span>Color: {elm?.color[0]}</span>
+                                <p>Size: {elm?.size}</p>
+                                <span>Color: {elm?.color}</span>
                               </div>
                             </div>
                           </td>

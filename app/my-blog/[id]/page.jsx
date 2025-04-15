@@ -89,7 +89,7 @@ function BlogSkeletonLoader() {
 export default function Page() {
     const { id } = useParams();
     const [blog, setBlog] = useState(null);
-    console.log(blog, "blog detail.....")
+    // console.log(blog, "blog detail.....")
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
