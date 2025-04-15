@@ -80,7 +80,7 @@ export default function Footer2() {
             <div className="col-lg-3 col-md-6 parent_div">
               <img
                 // src={`${process.env.NEXT_PUBLIC_BASE_URL}${setting?.logo || "/assets/images/common/logo_main.png"}`}
-                src="/assets/images/common/logo_main.png"
+                src="/assets/images/common/logo_footer.png"
                 id="logo_footer"
               />
               <div className="single_div">

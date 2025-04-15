@@ -120,7 +120,7 @@ function StripeForm() {
         } else {
           toast.error(data?.message || "Payment failed.");
         }
-        // console.log("Payment Response:", data);
+        console.log("Payment Response:", data);
       }
     } catch (err) {
       // console.error("Checkout error:", err);
