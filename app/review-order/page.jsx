@@ -48,13 +48,14 @@ export default function ReviewOrder() {
   const handleNavigation = () => {
     setFormDataCheckout((prev) => ({
       ...prev,
-      items : cart
+      items: cart
     }));
     router.push("/payment-method");
   };
-  // const handleHome = () => {
-  //   router.push("/");
-  // };
+
+  const handleBack = () => {
+    router.back();
+  };
 
   return (
     <div>
@@ -65,7 +66,9 @@ export default function ReviewOrder() {
         <div className="container mar_top">
           <div className="row mt-3">
             <h1>Review Your Order</h1>
-
+            <p onClick={handleBack} style={{ cursor: 'pointer' }}>
+              <span>&lt;</span> Back
+            </p>
             <div className="col-lg-8">
               <div className="icons_parent_div mb-3">
                 <div className="icons_div mt-3 mb-5">
@@ -140,7 +143,7 @@ export default function ReviewOrder() {
                   <p id="home_add">
                     {formDataCheckout?.address?.shipping_street}
                   </p>
-                  <p>{formDataCheckout?.address?.shipping_city}, { formDataCheckout?.address?.shipping_country}</p>
+                  <p>{formDataCheckout?.address?.shipping_city}, {formDataCheckout?.address?.shipping_country}</p>
                 </div>
                 {/* <div className="name_parent_div pb-2">
                   <div className="name_edit ">

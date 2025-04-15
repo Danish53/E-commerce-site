@@ -231,7 +231,7 @@ export default function ShopDetails1() {
                       <FaRegHeart className="icon_size" onClick={toggleFavorite} />
                     )}</div>
                   ) : (
-                    <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+                    <div>
                       <Link href={'/login'}><FaRegHeart className="icon_size" /></Link>
                     </div>
                   )}

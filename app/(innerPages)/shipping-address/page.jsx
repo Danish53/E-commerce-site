@@ -41,7 +41,7 @@ export default function ShippingAddress() {
     shipping_phone: response_Context?.user?.phone || "", 
   });
 
-  console.log(formData, "form data...,,a,,a,a,a,a,");
+  // console.log(formData, "form data...,,a,,a,a,a,a,");
 
   useEffect(() => {
     const token = localStorage.getItem("token");

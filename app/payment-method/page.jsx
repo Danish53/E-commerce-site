@@ -159,6 +159,10 @@ export default function PaymentMethod() {
   const router = useRouter();
   const { showStripeForm, setShowStripeForm } = useContext(ResponseContext);
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <div>
       <section className="page_address mt-3 mb-3 pb-3">
@@ -170,6 +174,9 @@ export default function PaymentMethod() {
             <div className="row">
               <h3>Payment Method</h3>
 
+              <p onClick={handleBack} style={{ cursor: 'pointer' }}>
+                    <span>&lt;</span> Back
+                  </p>
               <div className="col-lg-8">
                 {/* <div className="check_radio_btn_div">
                   <input type="radio" />
@@ -191,7 +198,6 @@ export default function PaymentMethod() {
                 </div>
                 <div className="mt-3">
                   <h4>Select a Payment Method</h4>
-
                   <div>
                     <div className="check_radio_btn_div my-3">
                       <input
