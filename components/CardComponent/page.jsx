@@ -47,8 +47,12 @@ export default function Page() {
                   </p>
                   <div className="delete_div">
                     <div>
-                    <p className="sizes">Size: {item?.size || "N/A"}</p>
-                    <p className="sizes">Color: {item?.color || "N/A"}</p>
+                      <p className="sizes">
+                        Size: {Array.isArray(item?.size) ? item.size[0] : item?.size || "N/A"}
+                      </p>
+                      <p className="sizes">
+                        Color: {Array.isArray(item?.color) ? item.color[0] : item?.color || "N/A"}
+                      </p>
                     </div>
                     <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
                   </div>
@@ -57,7 +61,7 @@ export default function Page() {
             ))
           ) : (
             <div className="pop_up_parent_div mt-3 pb-2 flex-column w-100" style={{ width: "220px" }}>
-              <CiShoppingCart style={{width:"30%", height:"30%", color:"lightgray"}} />
+              <CiShoppingCart style={{ width: "30%", height: "30%", color: "lightgray" }} />
               <p style={{ margin: "20px auto" }}>Your Cart is empty!</p>
             </div>
           )}

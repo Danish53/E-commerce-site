@@ -16,16 +16,36 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function ShippingAddress() {
   const { response_Context, setFormDataCheckout, addresses, fetchAddresses } = useContext(ResponseContext);
-  // console.log(addresses, "dlldldldldldlldld")
+  console.log(addresses, "dlldldldldldlldld")
   const router = useRouter();
   const userId = response_Context?.user?.id || "No ID available";
+
+  const firstAddress = addresses && addresses.length > 0 ? addresses[0] : {};
+  useEffect(() => {
+    if (addresses && addresses.length > 0) {
+      const firstAddress = addresses[0];
+      setFormData((prev) => ({
+        ...prev,
+        billing_street: firstAddress.street_address || "",
+        billing_city: firstAddress.city || "",
+        billing_postal_code: firstAddress.zipcode || "",
+        billing_country: firstAddress.country || "",
+        billing_phone: firstAddress.phone || "",
+        shipping_street: firstAddress.street_address || "",
+        shipping_city: firstAddress.city || "",
+        shipping_postal_code: firstAddress.zipcode || "",
+        shipping_country: firstAddress.country || "",
+        shipping_phone: firstAddress.phone || "",
+      }));
+    }
+  }, [addresses]);
+  
+
   useEffect(() => {
     if (userId) {
       fetchAddresses(userId);
     }
   }, [userId]);
-  
-  const firstAddress = addresses && addresses.length > 0 ? addresses[0] : {};
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [same_as, setSame_as] = useState(false);

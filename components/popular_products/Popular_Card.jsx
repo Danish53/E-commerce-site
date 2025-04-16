@@ -8,12 +8,16 @@ import Link from "next/link";
 
 export default function Popular_Card({ img_src, productName, price, rating, productId, onClick }) {
   const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
-  // console.log(wishlist, "wishlist add ed")
+  // console.log(wishlist, ",,,,,,,,,,,,,,,,,")
+
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
-    setFavorite(wishlist.some((item) => item.id == productId));
+    if (wishlist && productId) {
+      setFavorite(wishlist.some((item) => item?.id == productId));
+    }
   }, [wishlist, productId]);
+
 
   const toggleFavorite = () => {
     if (favorite) {
@@ -47,7 +51,7 @@ export default function Popular_Card({ img_src, productName, price, rating, prod
               <FaRegHeart className="icon_size" onClick={toggleFavorite} />
             )}</div>
           ) : (<div style={{ position: "absolute", top: "10px", right: "10px" }}>
-            <Link href={'/login'}><FaRegHeart className="icon_size"  /></Link>
+            <Link href={'/login'}><FaRegHeart className="icon_size" /></Link>
           </div>)}
           <p>{productName}</p>
           <div className="review_div">

@@ -140,3 +140,52 @@ img.icon_size {
   opacity: 1;
 }
 
+
+
+.heart-container {
+  position: relative;
+  /* width: 50px;
+  height: 50px; */
+}
+
+.orbit-dots {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: orbit 2s linear infinite;
+}
+
+.dot1 { top: 0; left: 50%; background-color: #ff7171; animation-delay: 0s; }
+.dot2 { top: 14.64%; left: 85.36%; background-color: #377b37; animation-delay: 0.25s; }
+.dot3 { top: 50%; left: 100%; background-color: #afaf29; animation-delay: 0.5s; }
+.dot4 { top: 85.36%; left: 85.36%; background-color: #7a5afb; animation-delay: 0.75s; }
+.dot5 { top: 100%; left: 50%; background-color: #e62575; animation-delay: 1s; }
+.dot6 { top: 85.36%; left: 14.64%; background-color: #967e77; animation-delay: 1.25s; }
+.dot7 { top: 50%; left: 0; background-color: #d432c7; animation-delay: 1.5s; }
+.dot8 { top: 14.64%; left: 14.64%; background-color: #00bcd4; animation-delay: 1.75s; }
+
+@keyframes orbit {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

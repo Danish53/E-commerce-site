@@ -187,13 +187,20 @@ export default function Header2() {
                     {isLoggedIn ? (<Link href="/my-wishlist" >
                       {/* <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
                       <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
-                      <div className="relative">
+                      <div className="relative heart-container">
                         <CiHeart
                           className={`icon_size cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-150 text-pink-700 fill-blue-500" : ""
                             }`}
                         />
-                        {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
+                        {animateWishlist && (
+                          <div className="orbit-dots">
+                            {[...Array(8)].map((_, i) => (
+                              <span key={i} className={`dot dot${i + 1}`}></span>
+                            ))}
+                          </div>
+                        )}
                       </div>
+
                     </Link>) : (<Link href="/login" >
                       <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
                       {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}

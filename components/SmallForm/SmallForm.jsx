@@ -73,8 +73,12 @@ export default function SmallForm() {
               </p>
               <div className="delete_div">
                 <div>
-                  <p className="sizes">Size: {item?.size || "N/A"}</p>
-                  <p className="sizes">Color: {item?.color || "N/A"}</p>
+                  <p className="sizes">
+                    Size: {Array.isArray(item?.size) ? item.size[0] : item?.size || "N/A"}
+                  </p>
+                  <p className="sizes">
+                    Color: {Array.isArray(item?.color) ? item.color[0] : item?.color || "N/A"}
+                  </p>
                 </div>
                 <RiDeleteBin5Fill
                   className="icon_prop"
@@ -95,7 +99,7 @@ export default function SmallForm() {
           <span id="subtotal">${subtotal.toFixed(2)}</span>
         </div>
 
-        
+
         <div className="mb-3 d-flex space_between deliver_div pb-3">
           <label
             htmlFor="deliveryCharges"

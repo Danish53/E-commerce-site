@@ -88,6 +88,7 @@ export const ResponseProvider = ({ children }) => {
   const [animateWishlist, setAnimateWishlist] = useState(false);
 
   var userId = response_Context?.user?.id || "No ID available";
+  // console.log(userId, ";;;..llllkkkkkk");
 
   // Fetch Wishlist
   const fetchWishlist = async () => {
@@ -156,7 +157,7 @@ export const ResponseProvider = ({ children }) => {
   // Remove from Wishlist
   const removeFromWishlist = async (productId) => {
     try {
-      const wishlistItem = wishlist.find((item) => item.id === productId);
+      const wishlistItem = wishlist.find((item) => item.id == productId);
       if (!wishlistItem) {
         console.error("Wishlist item not found!");
         return;
@@ -238,6 +239,7 @@ export const ResponseProvider = ({ children }) => {
     }
     setLoading(false);
   };
+
 
   // Add new address
   const addAddress = async (newAddress) => {

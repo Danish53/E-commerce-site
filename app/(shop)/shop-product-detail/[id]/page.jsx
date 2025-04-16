@@ -9,7 +9,7 @@ import ReviewSection from "@/components/ReviewSection/ReviewSection";
 import "./shop_details.css";
 export const metadata = {
   title:
-    "Shop Details 1 || Lexend - Full-featured, professional-looking software, saas and startup nextjs template.",
+    "Shop Details",
   description:
     "Lexend - Full-featured, professional-looking software, saas and startup nextjs template.",
 };

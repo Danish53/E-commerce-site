@@ -85,7 +85,9 @@ export default function ShopDetails1() {
   const [favorite, setFavorite] = useState(false);
 
   useEffect(() => {
-    setFavorite(wishlist.some((item) => item.id == id));
+    if (wishlist && id) {
+      setFavorite(wishlist.some((item) => item?.id == id));
+    }
   }, [wishlist, id]);
 
   const toggleFavorite = () => {
