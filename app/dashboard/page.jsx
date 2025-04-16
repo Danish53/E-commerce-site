@@ -8,9 +8,29 @@ import { FaFileAlt } from "react-icons/fa";
 import { IoLocationOutline, IoPersonOutline } from "react-icons/io5";
 import { CiHeart, CiSettings } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
 
+    const router = useRouter();
+    
+      const handlePersonalNavigation = () => {
+        router.push("/personal-info");
+      };
+      const handleWishlist = () => {
+        router.push("/my-wishlist");
+      };
+      const handleAddress = () => {
+        router.push("/my-address");
+      };
+    
+      const handleSetting = () => {
+        router.push("/settings");
+      };
+    
+      const handleOrders = () => {
+        router.push("/orders");
+      };
 
     return (
         <section className="persoal_info">
@@ -30,31 +50,31 @@ export default function Page() {
                         <div className="first_flex_div mt-5">
                             <div className="row">
                                 <div className="col-lg-4">
-                                    <div className="card card_dash">
+                                    <div className="card card_dash" onClick={handleOrders}>
                                         <FaFileAlt style={{ color: "#767676", fontSize: "32px" }} />
                                         <p>Orders</p>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
-                                    <div className="card card_dash">
+                                    <div className="card card_dash" onClick={handlePersonalNavigation}>
                                         <IoPersonOutline style={{ color: "#767676", fontSize: "32px" }} />
                                         <p>Personal Information</p>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
-                                    <div className="card card_dash">
+                                    <div className="card card_dash" onClick={handleWishlist}>
                                         <CiHeart style={{ color: "#767676", fontSize: "32px" }} />
                                         <p>Wishlist</p>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
-                                    <div className="card card_dash">
+                                    <div className="card card_dash" onClick={handleAddress}>
                                         <IoLocationOutline style={{ color: "#767676", fontSize: "32px" }} />
                                         <p>Addresses</p>
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
-                                    <div className="card card_dash">
+                                    <div className="card card_dash" onClick={handleSetting}>
                                         <CiSettings style={{ color: "#767676", fontSize: "32px" }} />
                                         <p>Settings</p>
                                     </div>

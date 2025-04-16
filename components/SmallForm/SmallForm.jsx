@@ -131,9 +131,9 @@ export default function SmallForm() {
 
         {showDiscountInput && (
           <>
-            <label htmlFor="discount" id="discount">
+            {/* <label htmlFor="discount" id="discount">
               Enter Discount Code
-            </label>
+            </label> */}
             <div className="input-group input_div mb-3">
               <input
                 type="text"

@@ -243,8 +243,9 @@ export const ResponseProvider = ({ children }) => {
   const addAddress = async (newAddress) => {
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
-      // console.log(response, "response address ka");
+      // console.log(response, "response address ka");  
       setAddresses((prev) => [...prev, response.data.data]);
+      toast.success("Address add successfully!")
     } catch (error) {
       console.error("Error adding address:", error);
     }
@@ -257,6 +258,7 @@ export const ResponseProvider = ({ children }) => {
       setAddresses((prev) =>
         prev.map((addr) => (addr.id === address_id ? { ...addr, ...updatedData } : addr))
       );
+      toast.success("Address updated successfully!")
     } catch (error) {
       console.error("Error updating address:", error);
     }

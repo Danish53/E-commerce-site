@@ -14,19 +14,19 @@
   font-weight: 700;
 }
 .small_form .input_div {
-  max-height: 41px !important;
+  max-height: 25px !important;
   max-width: 300px !important;
   display: flex !important;
 }
 .small_form .input_div input {
   width: calc(100% - 90px);
-  max-height: 41px;
+  max-height: 25px;
   border-right: none !important;
 }
 
 .small_form .input_div button {
   max-width: 73px !important;
-  max-height: 41px !important;
+  max-height: 33px !important;
 }
 
 #discount {
