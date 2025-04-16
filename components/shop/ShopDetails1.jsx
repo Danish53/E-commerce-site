@@ -54,20 +54,20 @@ export default function ShopDetails1() {
     if (newQuantity < 1 || newQuantity > 99) return; // Prevent invalid quantities
     setCartProducts((prev) => ({ ...prev, [productId]: newQuantity }));
   };
-  
+
   const handleDecrease = (productId) => {
     if (cartProducts[productId] > 1) {
       updateCartQuantity(productId, cartProducts[productId] - 1); // Decrease the quantity
     }
   };
-  
+
   const handleIncrease = (productId) => {
     updateCartQuantity(productId, (cartProducts[productId] || 1) + 1); // Increase the quantity
   };
 
   const handleAddToCart = () => {
     const selectedColorValue = selectedColor || ""; // Default to empty string if not selected
-  const selectedSizeValue = selectedSize || "";
+    const selectedSizeValue = selectedSize || "";
     if (data) {
       const quantity = cartProducts[data.id] || 1;  // Default to 1 if no quantity is selected
       // console.log("Data being added to cart:", {
@@ -77,7 +77,7 @@ export default function ShopDetails1() {
       //   size: selectedSizeValue,     // Add size
       // });
       addToCart({ ...data, quantity, color: selectedColorValue, size: selectedSizeValue }, quantity);
-      
+
     }
   };
 
@@ -107,37 +107,37 @@ export default function ShopDetails1() {
 
   return loading ? (
     <article className="product type-product single product-single py-2 lg:py-2 xl:py-2">
-    <div className="container single_product">
-      <div className="row child-cols-12 lg:child-cols-6 gy-4 gx-4 md:gx-6 xl:gx-8">
-        <div>
-          <Skeleton height={400} />
-        </div>
-        <div>
-          <div className="product-details sticky-element panel vstack gap-1 xl:gap-2">
-            <Skeleton height={30} width={250} />
-            <Skeleton height={20} width={100} />
-            <Skeleton count={2} />
-            <Skeleton height={40} width={150} />
-            <Skeleton height={100} />
-            <div className="box-container">
-              {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} width={30} height={30} circle />
-              ))}
-            </div>
-            <div className="box-container mt-2">
-              {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} width={50} height={30} />
-              ))}
-            </div>
-            <div className="product-actions hstack gap-1 xl:mt-2">
-              <Skeleton width={100} height={40} />
-              <Skeleton width={40} height={40} circle />
+      <div className="container single_product">
+        <div className="row child-cols-12 lg:child-cols-6 gy-4 gx-4 md:gx-6 xl:gx-8">
+          <div>
+            <Skeleton height={400} />
+          </div>
+          <div>
+            <div className="product-details sticky-element panel vstack gap-1 xl:gap-2">
+              <Skeleton height={30} width={250} />
+              <Skeleton height={20} width={100} />
+              <Skeleton count={2} />
+              <Skeleton height={40} width={150} />
+              <Skeleton height={100} />
+              <div className="box-container">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} width={30} height={30} circle />
+                ))}
+              </div>
+              <div className="box-container mt-2">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} width={50} height={30} />
+                ))}
+              </div>
+              <div className="product-actions hstack gap-1 xl:mt-2">
+                <Skeleton width={100} height={40} />
+                <Skeleton width={40} height={40} circle />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </article>
+    </article>
   ) : (
     <article className="product type-product single product-single py-2 lg:py-2 xl:py-2">
       <div className={`container single_product ${bodyColor ? "bg_color_gray" : ""}`}>
@@ -189,7 +189,7 @@ export default function ShopDetails1() {
                       style={{ background: color }}
                       onClick={() => setSelectedColor(color)}  // Set the selected color
                     ></div>
-                  )): ("")}
+                  )) : ("")}
                 </div>
 
                 <p id="color_word" className="mt-2">Size</p>
@@ -202,7 +202,7 @@ export default function ShopDetails1() {
                     >
                       {size}
                     </div>
-                  )): ("")}
+                  )) : ("")}
                 </div>
 
                 <div className="product-actions hstack gap-1 xl:mt-2">
@@ -221,7 +221,7 @@ export default function ShopDetails1() {
                       autoComplete="off"
                     />
                     <FiPlus className="quantity_icon" onClick={() => handleIncrease(data?.id)} />
-                  </div> 
+                  </div>
 
                   <button className="addCart" onClick={handleAddToCart}>Add to Cart</button>
                   {isLoggedIn ? (
@@ -246,12 +246,16 @@ export default function ShopDetails1() {
         </div>
 
         {/* <Specifications /> */}
-        <ReviewSection product_review={data} />
-        <div className="add_review_form mt-2">
-          <ReviewForm />
-        </div>
+        {/* <ReviewSection product_review={data} /> */}
+        {
+          isLoggedIn ? (
+            <div className="add_review_form mt-2">
+              <ReviewForm />
+            </div>
+          ) : ("")
+        }
 
-        <FeaturedProducts category={data?.category}/>
+        <FeaturedProducts category={data?.category} />
         <div className="features_sec mt-3 "></div>
       </div>
     </article>

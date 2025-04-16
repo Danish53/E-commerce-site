@@ -37,7 +37,7 @@ export default function Contact() {
             });
 
             const data = await response.json();
-            console.log(data, "contact uss....")
+            // console.log(data, "contact uss....")
             if (response.ok) {
                 toast.success("Message sent successfully!");
                 setFormData({ name: "", email: "", phone: "", message: "" }); // Reset form
@@ -55,7 +55,7 @@ export default function Contact() {
         <>
             <section>
                 <Header2 />
-                <div className="main_div mb-5" style={{ paddingTop: "120px" }}>
+                <div className=" mb-5" style={{ paddingTop: "120px" }}>
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-lg-6">

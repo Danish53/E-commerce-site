@@ -15,6 +15,13 @@ export default function SmallForm() {
     couponError,
   } = useContext(ResponseContext);
 
+  const [showDiscountInput, setShowDiscountInput] = useState(false);
+  const handleToggleDiscountInput = () => {
+    setShowDiscountInput(prevState => !prevState);
+  };
+
+
+
   const getTotalAmount = () => {
     return cart?.reduce(
       (total, item) => total + item.current_price * item.quantity,
@@ -88,36 +95,7 @@ export default function SmallForm() {
           <span id="subtotal">${subtotal.toFixed(2)}</span>
         </div>
 
-        {discountAmount > 0 && (
-          <div className="sub_total border_bottom d-flex justify-content-between">
-            <span className="text-success fw-bold">
-              Discount ({couponCode})
-            </span>
-            <span className="text-success">-${discountAmount.toFixed(2)}</span>
-          </div>
-        )}
-
-        <label htmlFor="discount" id="discount">
-          Enter Discount Code
-        </label>
-        <div className="input-group input_div mb-3">
-          <input
-            type="text"
-            id="discountCode"
-            value={inputCode}
-            onChange={(e) => setInputCode(e.target.value)}
-            placeholder="Enter Discount Code"
-            className="form-control"
-            aria-label="Discount Code"
-          />
-          <button type="submit" className="btn btn-dark">
-            {loading ? "....." : "Apply"}
-          </button>
-        </div>
-        {couponError && (
-          <small className="text-danger mt-1 d-block">{couponError}</small>
-        )}
-
+        
         <div className="mb-3 d-flex space_between deliver_div pb-3">
           <label
             htmlFor="deliveryCharges"
@@ -128,6 +106,54 @@ export default function SmallForm() {
           </label>
           <span id="delivery">${deliveryFee.toFixed(2)}</span>
         </div>
+
+        {discountAmount > 0 && (
+          <div className="sub_total border_bottom d-flex justify-content-between">
+            <span className="text-success fw-bold">
+              Discount ({couponCode})
+            </span>
+            <span className="text-success">-${discountAmount.toFixed(2)}</span>
+          </div>
+        )}
+
+        <p
+          style={{
+            textAlign: "center",
+            color: "#000",
+            textDecoration: "underline",
+            cursor: "pointer"
+          }}
+          className="my-1"
+          onClick={handleToggleDiscountInput}
+        >
+          have a coupon code?
+        </p>
+
+        {showDiscountInput && (
+          <>
+            <label htmlFor="discount" id="discount">
+              Enter Discount Code
+            </label>
+            <div className="input-group input_div mb-3">
+              <input
+                type="text"
+                id="discountCode"
+                value={inputCode}
+                onChange={(e) => setInputCode(e.target.value)}
+                placeholder="Enter Discount Code"
+                className="form-control"
+                aria-label="Discount Code"
+              />
+              <button type="submit" className="btn btn-dark">
+                {loading ? "....." : "Apply"}
+              </button>
+            </div>
+            {couponError && (
+              <small className="text-danger mt-1 d-block">{couponError}</small>
+            )}
+          </>
+        )}
+
 
         <div className="d-flex space_between">
           <label htmlFor="grandTotal" className="form-label mb-0 fw-bold">
