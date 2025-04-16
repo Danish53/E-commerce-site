@@ -32,7 +32,7 @@ export default function page() {
                     <div className="img_div">
                       <img src={item?.thumbnail || "/assets/images/common/dress_pic.png"} alt="" />
                       <MdDelete className="delte_icon" onClick={()=>{removeFromWishlist(item?.id)}}/>
-                      <button className="mt-1 add_to_cart">Show Variety</button>
+                      {/* <button className="mt-1 add_to_cart">Show Variety</button> */}
                     </div>
                     <div className="content">
                       <h6>{item?.title}</h6>

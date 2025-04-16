@@ -189,7 +189,7 @@ export default function Header2() {
                       <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
                       <div className="relative">
                         <CiHeart
-                          className={`icon_size cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-125 text-pink-500" : ""
+                          className={`icon_size cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-150 text-pink-700" : ""
                             }`}
                         />
                         {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}

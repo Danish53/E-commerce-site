@@ -86,8 +86,10 @@ function StripeForm() {
           } else if (category) {
             finalCategoryName = category;
           }
+          const finalColor = Array.isArray(color) ? color.join(', ') : color;
+          const finalSize = Array.isArray(size) ? size.join(', ') : size;
           return {
-            id, title, current_price, previous_price, quantity, color, size, rating, thumbnail, created_at, updated_at,
+            id, title, current_price, previous_price, quantity, color: finalColor, size: finalSize, rating, thumbnail, created_at, updated_at,
             category_name: finalCategoryName
             // category_name: category_name || category?.category_name || category || '',
             // ...(category?.category_name && { category_name: category.category_name })
@@ -113,10 +115,11 @@ function StripeForm() {
         });
 
         const data = await res.json();
-        // toast.success(data?.data || "Prder placed!")
         if (res.ok) {
           toast.success(data?.data || "Order placed!");
-          router.push('/');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
         } else {
           toast.error(data?.message || "Payment failed.");
         }
@@ -175,8 +178,8 @@ export default function PaymentMethod() {
               <h3>Payment Method</h3>
 
               <p onClick={handleBack} style={{ cursor: 'pointer' }}>
-                    <span>&lt;</span> Back
-                  </p>
+                <span>&lt;</span> Back
+              </p>
               <div className="col-lg-8">
                 {/* <div className="check_radio_btn_div">
                   <input type="radio" />
