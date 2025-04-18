@@ -162,7 +162,7 @@ export default function ShippingAddress() {
         position="top-center"
         reverseOrder={false}
       />
-      <section className="page_address mt-3">
+      <section className="page_address">
         <div className="heading_div_2">
           <Header2 />
         </div>
@@ -224,11 +224,11 @@ export default function ShippingAddress() {
                     <>
                       <div className="col-lg-6 mb-3">
                         <label htmlFor="companyName">Company Name</label>
-                        <input type="text" id="companyName" className="form-control" value={formData.company_name} onChange={handleChange} />
+                        <input type="text" id="company_name" className="form-control" value={formData.company_name} onChange={handleChange} />
                       </div>
                       <div className="col-lg-6 mb-3">
                         <label htmlFor="vatNumber">VAT Number</label>
-                        <input type="text" id="vatNumber" className="form-control" value={formData.vat_number} onChange={handleChange} />
+                        <input type="text" id="vat_number" className="form-control" value={formData.vat_number} onChange={handleChange} />
                       </div>
                     </>
                   )}

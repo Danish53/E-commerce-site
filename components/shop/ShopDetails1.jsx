@@ -20,7 +20,7 @@ import "./shopDetails1.css";
 import ReviewForm from "./ReviewForm";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 export default function ShopDetails1() {
-  const { cart, addToCart, updateCart } = useContext(ResponseContext);
+  const { cart, addToCart, updateCart, currency } = useContext(ResponseContext);
   const [data, setData] = useState(null);
   // console.log(data,"data single pro..")
   const [loading, setLoading] = useState(false);
@@ -171,9 +171,9 @@ export default function ShopDetails1() {
 
                 <div className="hstack justify-between items-center gap-2">
                   <div className="product-price hstack gap-1 fs-5 xl:fs-4">
-                    <span className="price">${data?.current_price}</span>
+                    <span className="price">{currency?.sign}{data?.current_price}</span>
                     <span className="price-old text-line-through opacity-40">
-                      ${data?.previous_price}
+                    {currency?.sign}{data?.previous_price}
                     </span>
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export default function ShopDetails1() {
           ) : ("")
         }
 
-        <FeaturedProducts category={data?.category} />
+        <FeaturedProducts category={data?.category} currency={currency} />
         <div className="features_sec mt-3 "></div>
       </div>
     </article>

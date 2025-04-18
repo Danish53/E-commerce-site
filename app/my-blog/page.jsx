@@ -274,6 +274,13 @@ function BlogPageContent() {
           <Header2 />
         </div>
         <div className="container main_div py-3 mb-3">
+          <div className="text-center">
+            {slug && (
+              <button className="btn btn-dark mb-2 text-uppercase">
+                {slug.replace(/-/g, ' ')}
+              </button>
+            )}
+          </div>
           <div className="blogs_row mt-3">
             {loading
               ? [...Array(8)].map((_, index) => <SkeletonLoader key={index} />)
@@ -281,8 +288,8 @@ function BlogPageContent() {
                 ? currentBlogs.map((card, index) => {
                   const words = card.details.split(" ");
                   const shortDetails =
-                    words.length > 30
-                      ? words.slice(0, 30).join(" ")
+                    words.length > 20
+                      ? words.slice(0, 20).join(" ")
                       : card.details;
 
                   return (
@@ -292,12 +299,12 @@ function BlogPageContent() {
                       </Link>
                       <div className="p-2">
                         <span>
-                          {card?.category} / {card?.created_at}
+                          {card?.category} / {card?.created_at && new Date(card.created_at).toLocaleDateString("en-GB")}
                         </span>
                         <h3>{card.title}</h3>
                         <p onClick={() => handleNavigation(card?.id)}>
                           {shortDetails} <br />
-                          {words.length > 30 && (
+                          {words.length > 20 && (
                             <Link href={"/my-blog"} className="read-more">
                               Continue reading
                             </Link>

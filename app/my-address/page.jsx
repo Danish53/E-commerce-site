@@ -27,7 +27,7 @@ export default function Page() {
     street_address: "",
     country: "",
     city: "",
-    zipcode: "", 
+    zipcode: "",
     isdefault: false,
   });
   // console.log(newAddress, "ho gia id");
@@ -106,8 +106,8 @@ export default function Page() {
                   <div className="address_div">
                     <div className="flex_div">
                       <p>
-                        {addr.street_address}, 
-                         { addr.zipcode}
+                        {addr.street_address},
+                        {addr.zipcode}
                       </p>
                       <div className="phone_div">
                         <FiPhone className="icon_size" />
@@ -146,7 +146,6 @@ export default function Page() {
           <form
             className="edit_form active"
             onSubmit={handleSubmit}
-            style={{ width: "320px" }}
           >
             <div className="address_div">
               <h3>{isEditMode ? "Update Address" : "Add a New Address"}</h3>
@@ -155,88 +154,92 @@ export default function Page() {
                 onClick={() => setIsFormVisible(false)}
               />
             </div>
-            <div className="mb-3 mt-3">
-              <label>Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={newAddress.name}
-                onChange={handleChange}
-                className="form-control"
-                placeholder="Enter Name"
-              />
-            </div>
+            <div className="row">
+              <div className="col-lg-6 mt-3">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newAddress.name}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter Name"
+                />
+              </div>
 
-            <div className="mb-3">
-              <label>Mobile Number</label>
-              <input
-                type="text"
-                name="phone"
-                value={newAddress.phone}
-                onChange={handleChange}
-                className="form-control"
-                placeholder="Enter Mobile Number"
-              />
-            </div>
+              <div className="col-lg-6 mt-3">
+                <label>Mobile Number</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={newAddress.phone}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter Mobile Number"
+                />
+              </div>
 
-            <div className="mb-3">
-              <label>Address</label>
-              <textarea
-                name="street_address"
-                value={newAddress.street_address}
-                onChange={handleChange}
-                className="form-control"
-                style={{color:"#000 !important"}}
-              />
-            </div>
+              <div className="col-lg-12 mt-3">
+                <label>Address</label>
+                <textarea
+                  name="street_address"
+                  value={newAddress.street_address}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Address"
+                  style={{ color: "#000 !important", height:"60px" }}
+                />
+              </div>
 
+              <div className="col-lg-6 mt-3">
+                <label>Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={newAddress.country}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="country"
+                />
+              </div>
 
-            <div className="mb-3">
-              <label>Country</label>
-              <input
-                type="text"
-                name="country"
-                value={newAddress.country}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
+              <div className="col-lg-6 mt-3">
+                <label>City</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={newAddress.city}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="city"
+                />
+              </div>
 
-            <div className="mb-3">
-              <label>City</label>
-              <input
-                type="text"
-                name="city"
-                value={newAddress.city}
-                onChange={handleChange}
-                className="form-control"
-              />
-            </div>
+              <div className="col-lg-6 mt-3">
+                <label>Zip Code</label>
+                <input
+                  type="text"
+                  name="zipcode"
+                  value={newAddress.zipcode}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Enter Zip Code"
+                />
+              </div>
 
-            <div className="mb-3">
-              <label>Zip Code</label>
-              <input
-                type="text"
-                name="zipcode"
-                value={newAddress.zipcode}
-                onChange={handleChange}
-                className="form-control"
-                placeholder="Enter Zip Code"
-              />
-            </div>
-
-            <div className="mb-3 form_check">
-              <input
-                type="checkbox"
-                id="check_box"
-                checked={newAddress.isdefault}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, isdefault: e.target.checked })
-                }
-              />
-              <label className="form-check-label" htmlFor="check_box">
-                Use as my default address
-              </label>
+              <div className="mb-3 form_check mt-3">
+                <input
+                  type="checkbox"
+                  id="check_box"
+                  checked={newAddress.isdefault}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, isdefault: e.target.checked })
+                  }
+                />
+                <label className="form-check-label" htmlFor="check_box">
+                  Use as my default address
+                </label>
+              </div>
             </div>
 
             <div className="btn_div">

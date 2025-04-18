@@ -10,7 +10,7 @@ import { MdDelete } from "react-icons/md";
 import { ResponseContext } from "../login/ResponseContext";
 
 export default function page() {
-  const { removeFromWishlist, wishlist } = useContext(ResponseContext);
+  const { removeFromWishlist, wishlist, currency } = useContext(ResponseContext);
   console.log(wishlist)
   return (
     <section className="my_wishlist">
@@ -38,8 +38,8 @@ export default function page() {
                       <h6>{item?.title}</h6>
                       <p id="color_gray">{item?.category_name}</p>
                       <div className="price_div">
-                        <p id="newPrice">${item?.current_price}</p>
-                        <p id="old_Price">${item?.previous_price}</p>
+                        <p id="newPrice">{currency?.sign}{item?.current_price}</p>
+                        <p id="old_Price" >{currency?.sign}{item?.previous_price}</p>
                       </div>
                     </div>
                   </div>

@@ -1,6 +1,6 @@
 "use client";
 import { redirect, useRouter } from "next/navigation";
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import "./payment_method.css";
 import "../../public/assets/css/theme/main.css";
 import SmallForm from "@/components/SmallForm/SmallForm";
@@ -14,14 +14,21 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 import { ResponseContext } from "../login/ResponseContext";
 import toast, { Toaster } from "react-hot-toast";
 
-const stripePromise = loadStripe("pk_test_51P9nOyBFIC31oQQ9z2NYl6wOYe2zKX9ScrgJTYBzD4Uyu7scr1NyULhFSv7RFZqLMKxD2HGqBUK91CPXiDCqnXrN000Em3qcXx");
+// const stripePromise = loadStripe("pk_test_51P9nOyBFIC31oQQ9z2NYl6wOYe2zKX9ScrgJTYBzD4Uyu7scr1NyULhFSv7RFZqLMKxD2HGqBUK91CPXiDCqnXrN000Em3qcXx");
 
 function StripeForm() {
   const router = useRouter();
-  const { setFormDataCheckout, formDataCheckout, discountAmount, cart, setting } = useContext(ResponseContext);
+
+  const { setFormDataCheckout, formDataCheckout, discountAmount, cart, setting, stripekey } = useContext(ResponseContext);
+
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+
+  // const stripePromise = useMemo(() => {
+  //   if (!setting?.stripe_public_key) return null;
+  //   return loadStripe(setting.stripe_public_key);
+  // }, [setting?.stripe_public_key]);
 
   const CARD_OPTIONS = {
     style: {
@@ -48,7 +55,8 @@ function StripeForm() {
   };
   const subtotal = getTotalAmount();
   const deliveryFee = Number(setting?.shipping_cost || 0);
-  const grandTotal = subtotal - discountAmount + deliveryFee;
+  // {(Number(subtotal * 0.22) + Number(grandTotal)).toFixed(2)}
+  const grandTotal = subtotal - discountAmount + (subtotal * 0.22) + deliveryFee;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +70,7 @@ function StripeForm() {
       if (error) {
         console.error(error.message);
       } else {
-        console.log("Stripe Token:", token);
+        // console.log("Stripe Token:", token);
         setFormDataCheckout(prev => ({
           ...prev,
           paymentData: {
@@ -148,10 +156,10 @@ function StripeForm() {
               role="status"
               aria-hidden="true"
             ></span>
-            Pay With Stripe...
+            Pay With Credit/Debit ....
           </>
         ) : (
-          "Pay With Stripe"
+          "Pay With Credit/Debit Card"
         )}</button>
       </form>
     </>
@@ -160,7 +168,12 @@ function StripeForm() {
 
 export default function PaymentMethod() {
   const router = useRouter();
-  const { showStripeForm, setShowStripeForm } = useContext(ResponseContext);
+  const { showStripeForm, setShowStripeForm, stripekey } = useContext(ResponseContext);
+
+  const stripePromise = useMemo(() => {
+    if (!stripekey) return null;
+    return loadStripe(stripekey);
+  }, [stripekey]);
 
   const handleBack = () => {
     router.back();
@@ -174,7 +187,7 @@ export default function PaymentMethod() {
         </div>
         <div className="container">
           <div className="my-container">
-            <div className="row">
+            <div className="row mb-4">
               <h3>Payment Method</h3>
 
               <p onClick={handleBack} style={{ cursor: 'pointer' }}>
@@ -224,7 +237,7 @@ export default function PaymentMethod() {
                 </div>
               </div>
 
-              <div className="col-lg-4">
+              <div className="col-lg-4 mb-5">
                 <SmallForm />
               </div>
             </div>

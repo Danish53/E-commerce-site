@@ -242,7 +242,7 @@ export const ResponseProvider = ({ children }) => {
 
 
   // Add new address
-  const addAddress = async (newAddress) => {
+  const addAddress = async (newAddress) => { 
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
       // console.log(response, "response address ka");  
@@ -351,7 +351,64 @@ export const ResponseProvider = ({ children }) => {
 
   useEffect(() => {
     generalSettings();
-  }), [];
+  }, []);
+
+  const [currency, setCurrency] = useState();
+  const Currency = async () => {
+    try {
+      const response = await fetch(
+        "https://foundation.alphalive.pro/api/front/system-currency", // Parameters in URL",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      setCurrency(data.data);
+    } catch (error) {
+      console.error("Error removing from wishlist:", error);
+    }
+  };
+
+  useEffect(() => {
+    Currency();
+  }, []);
+
+
+  const [stripekey, setStripeKey] = useState();
+  const StripeKeys = async () => {
+    try {
+      const response = await fetch(
+        "https://foundation.alphalive.pro/api/front/payment-gateways",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      const data = await response.json();
+  
+      const stripeData = data.data.find((item) => item.name === "Stripe");
+  
+      if (stripeData && stripeData.information) {
+        const info = JSON.parse(stripeData.information);
+        setStripeKey(info.key);
+      }
+  
+    } catch (error) {
+      console.error("Error fetching Stripe key:", error);
+    }
+  };
+  
+  useEffect(() => {
+    StripeKeys();
+  }, []);
+  
 
 
   // stripe
@@ -389,7 +446,9 @@ export const ResponseProvider = ({ children }) => {
       showStripeForm,
       setShowStripeForm,
       formDataCheckout,
-      setFormDataCheckout
+      setFormDataCheckout,
+      stripekey,
+      currency
     }}>
       {children}
     </ResponseContext.Provider>

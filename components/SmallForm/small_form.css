@@ -34,8 +34,8 @@
   font-weight: 400 !important;
 }
 #delivery {
-  font-size: 10px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 600 !important;
   color: black;
 }
 input::placeholder {
@@ -45,6 +45,10 @@ input::placeholder {
 }
 .small_form .deliver_div {
   border-bottom: 1px solid #b8b9b9;
+}
+
+.line-through {
+  text-decoration: line-through;
 }
 
 

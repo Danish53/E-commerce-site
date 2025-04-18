@@ -7,8 +7,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 import Link from "next/link";
 
 export default function Popular_Card({ img_src, productName, price, rating, productId, onClick }) {
-  const { addToWishlist, removeFromWishlist, wishlist } = useContext(ResponseContext);
-  // console.log(wishlist, ",,,,,,,,,,,,,,,,,")
+  const { addToWishlist, removeFromWishlist, wishlist, currency } = useContext(ResponseContext);
 
   const [favorite, setFavorite] = useState(false);
 
@@ -64,7 +63,7 @@ export default function Popular_Card({ img_src, productName, price, rating, prod
 
             <div className="price_div">
               <p>
-                <strong>${price}</strong>
+                <strong>{currency?.sign}{price}</strong>
               </p>
             </div>
           </div>

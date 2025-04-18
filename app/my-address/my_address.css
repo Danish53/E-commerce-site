@@ -107,7 +107,7 @@ p#btn {
   align-items: center;
 }
 .my_address .edit_form {
-  max-width: 418px;
+  /* max-width: 100%; */
   padding: 14px 20px;
   font-family: "Jost" !important ;
   position: absolute;
@@ -115,8 +115,10 @@ p#btn {
   top: -100%;
   z-index: 999;
   background-color: white;
+  color: #000;
   transition: 0.5s ease-in-out;
 }
+
 
 .my_address .active {
   display: block;
@@ -181,5 +183,11 @@ p#btn {
 @media screen and (max-width: 750px) {
   .my_address .second_div {
     margin-top: 30px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .my_address .edit_form {
+    width: 100%;
   }
 }

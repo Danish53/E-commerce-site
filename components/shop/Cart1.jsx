@@ -9,8 +9,8 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function Cart1() {
   const router = useRouter();
-  const { cart, removeFromCart, updateCart, discountAmount, applyCoupon, couponCode, couponError, setting } = useContext(ResponseContext);
-  console.log(cart, "cart data done???")
+  const { cart, removeFromCart, updateCart, setting, currency } = useContext(ResponseContext);
+  // console.log(cart, "cart data done???")
   const [loading, setLoading] = useState(false);
 
   console.log(cart, "chekout response and pass api...")
@@ -62,16 +62,16 @@ export default function Cart1() {
   //   }
   // };
 
-  const handleNavigate = ()=>{
+  const handleNavigate = () => {
     router.push("/shipping-address");
   }
 
   // const [inputCode, setInputCode] = useState("");
   // console.log(inputCode, "code input.,.,.,")
   const subtotal = getTotalAmount() || 0;
-const deliveryFee = setting?.shipping_cost || 0;
-const grandtotalPrice = subtotal;
-// console.log(typeof(grandtotalPrice));
+  const deliveryFee = setting?.shipping_cost || 0;
+  const grandtotalPrice = subtotal;
+  // console.log(typeof(grandtotalPrice));
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -91,27 +91,27 @@ const grandtotalPrice = subtotal;
           </header>
           <div className="panel cart-details row mb-5">
             <div className="col-lg-8">
-              <div className="card px-3" style={{boxShadow:"1px 0px 5px lightgray"}}>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="panel max-h-sm overflow-auto "
-              >
-                {cart.length > 0 ? (
-                  <table className="table table-container mb-3" id="table">
-                    <thead className="sticky-top ft-tertiary  dark:bg-gray-800 z-1">
-                      <tr>
-                        <th className="first-col">Products</th>
-                        <th className="other-cols">Price</th>
-                        <th className="other-cols">Quantity</th>
-                        <th className="other-cols">Subtotal</th>
-                        <th className="last-col ">Del</th>
-                      </tr>
-                    </thead>
+              <div className="card px-3" style={{ boxShadow: "1px 0px 5px lightgray" }}>
+                <form
+                  onSubmit={(e) => e.preventDefault()}
+                  className="panel max-h-sm overflow-auto "
+                >
+                  {cart.length > 0 ? (
+                    <table className="table table-container mb-3" id="table">
+                      <thead className="sticky-top ft-tertiary  dark:bg-gray-800 z-1">
+                        <tr>
+                          <th className="first-col">Products</th>
+                          <th className="other-cols">Price</th>
+                          <th className="other-cols">Quantity</th>
+                          <th className="other-cols">Subtotal</th>
+                          <th className="last-col ">Del</th>
+                        </tr>
+                      </thead>
 
-                    <tbody>
-                      {cart?.map((elm, i) => (
-                        <tr key={i}>
-                          {/* <td>
+                      <tbody>
+                        {cart?.map((elm, i) => (
+                          <tr key={i}>
+                            {/* <td>
                             <a
                               onClick={() => removeItem(elm.id)}
                               className="remove text-none"
@@ -119,169 +119,145 @@ const grandtotalPrice = subtotal;
                               <i className="icon icon-1 unicon-close" />
                             </a>
                           </td> */}
-                          <td>
-                            <div
-                              className="image panel  d-flex items-center gap-[30px]"
-                              style={{ gap: "10px" }}
-                            >
-                              <Image
-                                className=""
-                                alt="Laptop Cover"
-                                src={elm?.thumbnail}
-                                width="96"
-                                height="98"
-                              />
+                            <td>
+                              <div
+                                className="image panel  d-flex items-center gap-[30px]"
+                                style={{ gap: "10px" }}
+                              >
+                                <Image
+                                  className=""
+                                  alt="Laptop Cover"
+                                  src={elm?.thumbnail}
+                                  width="96"
+                                  height="98"
+                                />
 
-                              <Link
-                                href={`/shop-product-detail/${elm.id}`}
-                                className="position-cover"
-                                data-caption="Laptop Cover"
-                              ></Link>
-                              <div className="title_size ">
-                                <h5 className="title h6 m-0">
-                                  <Link
-                                    href={`/shop-product-detail/${elm.id}`}
-                                    className="text-none"
-                                  >
-                                    {elm?.title}
-                                    {/* {elm.name} */}
-                                  </Link>
-                                </h5>
-                                <p>Size: {elm?.size}</p>
-                                <span>Color: {elm?.color}</span>
+                                <Link
+                                  href={`/shop-product-detail/${elm.id}`}
+                                  className="position-cover"
+                                  data-caption="Laptop Cover"
+                                ></Link>
+                                <div className="title_size ">
+                                  <h5 className="title h6 m-0">
+                                    <Link
+                                      href={`/shop-product-detail/${elm.id}`}
+                                      className="text-none"
+                                    >
+                                      {elm?.title}
+                                      {/* {elm.name} */}
+                                    </Link>
+                                  </h5>
+                                  {elm?.size && elm?.size.length > 0 && (
+                                    <p className="sizes">
+                                      Size: {Array.isArray(elm.size) ? elm.size[0] : elm.size}
+                                    </p>
+                                  )}
+
+                                  {elm?.color && elm?.color.length > 0 && (
+                                    <p className="sizes">
+                                      Color: {Array.isArray(elm.color) ? elm.color[0] : elm.color}
+                                    </p>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                          <td>
-                            <span className="price">
-                              ${elm?.current_price}
-                            </span>
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              className="form-control form-control-xs w-64px lg:w-80px dark:bg-gray-100 dark:bg-opacity-5 dark:text-white dark:border-gray-800"
-                              step={1}
-                              min={1}
-                              max={99}
-                              name="quantity"
-                              value={elm?.quantity}
-                              onChange={(e) => updateCartQuantity(elm?.id, parseInt(e.target.value, 10))}
-                              title="Qty"
-                              autoComplete="off"
-                            />
-                          </td>
-                          <td>
-                            <span className="subtotal">
-                            {(elm?.quantity * elm?.current_price)}
-                            </span>
-                          </td>
-                          <td>
-                            <RiDeleteBin4Fill onClick={() => removeFromCart(elm.id)} className="delete_icon_table" />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>) : (
-                  <p className="alert alert-warning m-3" hidden="">
-                    Your cart empty!
-                  </p>
-                )
-                }
-              </form>
+                            </td>
+                            <td>
+                              <span className="price">
+                                {currency?.sign}{elm?.current_price}
+                              </span>
+                            </td>
+                            <td>
+                              <input
+                                type="number"
+                                className="form-control form-control-xs w-64px lg:w-80px dark:bg-gray-100 dark:bg-opacity-5 dark:text-white dark:border-gray-800"
+                                step={1}
+                                min={1}
+                                max={99}
+                                name="quantity"
+                                value={elm?.quantity}
+                                onChange={(e) => updateCartQuantity(elm?.id, parseInt(e.target.value, 10))}
+                                title="Qty"
+                                autoComplete="off"
+                              />
+                            </td>
+                            <td>
+                              <span className="subtotal">
+                                {currency?.sign}{(elm?.quantity * elm?.current_price)}
+                              </span>
+                            </td>
+                            <td>
+                              <RiDeleteBin4Fill onClick={() => removeFromCart(elm.id)} className="delete_icon_table" />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>) : (
+                    <p className="alert alert-warning m-3" hidden="">
+                      Your cart empty!
+                    </p>
+                  )
+                  }
+                </form>
               </div>
             </div>
 
-            <div className="col-lg-4"> 
-            <div className="card px-3" style={{boxShadow:"1px 0px 5px lightgray"}}>
-            <table className="table table-borderless pb-3">
-      <tbody className="mb-3">
-        <tr className="sub_total border_bottom">
-          <th className="ft-tertiary text-black font_family">
-            <span className="font_family">Subtotal</span>
-          </th>
-          <td className="text_align_right">${subtotal}</td>
-        </tr>
+            <div className="col-lg-4">
+              <div className="card px-3" style={{ boxShadow: "1px 0px 5px lightgray" }}>
+                <table className="table table-borderless pb-3">
+                  <tbody className="mb-3">
+                    <tr className="sub_total border_bottom">
+                      <th className="ft-tertiary text-black font_family">
+                        <span className="font_family">Subtotal</span>
+                      </th>
+                      <td className="text_align_right">{currency?.sign}{subtotal}</td>
+                    </tr>
 
-        {/* {discountAmount > 0 && (
-          <tr className="sub_total border_bottom">
-            <th className="ft-tertiary text-success font_family">
-              Discount ({couponCode})
-            </th>
-            <td className="text_align_right text-success">
-              -${discountAmount.toFixed(2)}
-            </td>
-          </tr>
-        )} */}
+                    <tr className="sub_total border_bottom">
+                      <th className="ft-tertiary text-black font_family">
+                        <span className="font_family">VAT 22%</span>
+                      </th>
+                      <td className="text_align_right">{currency?.sign}{(subtotal * 0.22).toFixed(2)}</td>
+                    </tr>
+                    <tr className="sub_total border_bottom">
+                      <th className="ft-tertiary text-black font_family">
+                        <span className="font_family">Delivery Charges</span>
+                      </th>
+                      <td className="text_align_right">
+                        {currency?.sign}{deliveryFee}</td>
+                    </tr>
+                    <tr className="sub_total border_bottom">
+                      <th className="ft-tertiary text-black font_family">
+                        <span className="font_family">Grand Total</span>
+                      </th>
+                      <td className="text_align_right">
+                      {currency?.sign}{(Number(deliveryFee) + (subtotal * 0.22) + Number(grandtotalPrice)).toFixed(2)}</td>
+                    </tr>
 
-        {/* <tr>
-          <td colSpan="2" className="p-3">
-            <form onSubmit={handleSubmit}>
-              <label>Enter Discount Code</label>
-              <div className="input_div d-flex justify-content-center align-items-center">
-                <input
-                  type="text"
-                  placeholder="Flat 50"
-                  value={inputCode}
-                  onChange={(e) => setInputCode(e.target.value)}
-                  className="cupon_input"
-                />
-                <button type="submit" className="apply">{loading? "....." : "Apply"}</button>
+                    <tr className="tr_row ft-tertiary">
+                      <td colSpan="2" className="checkout_td text-center">
+                        <button
+                          className="w-100 check_out_btn"
+                          onClick={handleNavigate}
+                          disabled={loading}
+                        >
+                          {loading ? (
+                            <>
+                              <span
+                                className="spinner-border spinner-border-sm me-2"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                              Proceed to checkout...
+                            </>
+                          ) : (
+                            "Proceed to checkout"
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              {couponError && (
-                <small className="text-danger mt-1 d-block">{couponError}</small>
-              )}
-            </form>
-          </td>
-        </tr> */}
-
-        <tr className="border_bottom">
-          <th className="ft-tertiary text-black delivery_charges ">
-            <span className="font_family">Delivery Charges</span>
-          </th>
-          <td className="text_align_right">
-            <span className="total font_family delivery_charges">
-              ${deliveryFee}
-            </span>
-          </td>
-        </tr>
-
-        <tr>
-          <th className="ft-tertiary text-black grand_total">
-            <span className="font_family">Grand Total</span>
-          </th>
-          <td className="text_align_right">
-            <span className="total  grand_total font_family ">
-              ${grandtotalPrice}
-            </span>
-          </td>
-        </tr>
-
-        <tr className="tr_row ft-tertiary">
-          <td colSpan="2" className="checkout_td text-center">
-            <button
-              className="w-100 check_out_btn"
-              onClick={handleNavigate}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                  Proceed to checkout...
-                </>
-              ) : (
-                "Proceed to checkout"
-              )}
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-            </div>
             </div>
           </div>
         </div>

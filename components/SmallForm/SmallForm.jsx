@@ -13,6 +13,7 @@ export default function SmallForm() {
     applyCoupon,
     couponCode,
     couponError,
+    currency
   } = useContext(ResponseContext);
 
   const [showDiscountInput, setShowDiscountInput] = useState(false);
@@ -64,21 +65,25 @@ export default function SmallForm() {
             </div>
             <div className="content_div" style={{ width: "65%" }}>
               <p className="prod_title">{item?.title}</p>
-              <p className="prod_quantity p-0 m-0">
+              <p className="prod_title p-0 m-0">
                 Quantity: {item?.quantity || "N/A"}
               </p>
-              <p className="prod_quantity p-0 m-0">
-                {item?.quantity} × ${Number(item?.current_price).toFixed(2)} = $
-                {(item?.quantity * item?.current_price).toFixed(2)}
+              <p className="prod_title p-0 m-0">
+                Price: {currency?.sign}{Number(item?.current_price).toFixed(2)}
               </p>
               <div className="delete_div">
                 <div>
-                  <p className="sizes">
-                    Size: {Array.isArray(item?.size) ? item.size[0] : item?.size || "N/A"}
-                  </p>
-                  <p className="sizes">
-                    Color: {Array.isArray(item?.color) ? item.color[0] : item?.color || "N/A"}
-                  </p>
+                  {item?.size && item?.size.length > 0 && (
+                    <p className="sizes">
+                      Size: {Array.isArray(item.size) ? item.size[0] : item.size}
+                    </p>
+                  )}
+
+                  {item?.color && item?.color.length > 0 && (
+                    <p className="sizes">
+                      Color: {Array.isArray(item.color) ? item.color[0] : item.color}
+                    </p>
+                  )}
                 </div>
                 <RiDeleteBin5Fill
                   className="icon_prop"
@@ -92,15 +97,26 @@ export default function SmallForm() {
 
       {/* Only one form should wrap the coupon input and summary */}
       <form className="border p-4 shadow-sm rounded" onSubmit={handleSubmit}>
-        <div className="mb-3 d-flex  space_between">
+        <div className="mb-3 d-flex space_between">
           <label htmlFor="subtotal" className="form-label mb-0 fw-bold">
             Subtotal
           </label>
-          <span id="subtotal">${subtotal.toFixed(2)}</span>
+          <div className="d-flex gap-1">
+            {discountAmount > 0 && (
+              <span style={{ textDecoration: "line-through" }}>
+                {currency?.sign}{discountAmount.toFixed(2)}
+              </span>)}
+            <span id="subtotal"> {currency?.sign}{subtotal.toFixed(2)}</span>
+          </div>
+        </div>
+        <div className="mb-3 d-flex space_between">
+          <label htmlFor="subtotal" className="form-label mb-0 fw-bold">
+            VAT 22%
+          </label>
+          <span id="subtotal">{currency?.sign}{(subtotal * 0.22).toFixed(2)}</span>
         </div>
 
-
-        <div className="mb-3 d-flex space_between deliver_div pb-3">
+        <div className="mb-3 d-flex space_between pb-3">
           <label
             htmlFor="deliveryCharges"
             className="form-label mb-0 fw-bold"
@@ -108,17 +124,17 @@ export default function SmallForm() {
           >
             Delivery Charges
           </label>
-          <span id="delivery">${deliveryFee.toFixed(2)}</span>
+          <span id="delivery">{currency?.sign}{deliveryFee.toFixed(2)}</span>
         </div>
 
-        {discountAmount > 0 && (
+        {/* {discountAmount > 0 && (
           <div className="sub_total border_bottom d-flex justify-content-between">
             <span className="text-success fw-bold">
               Discount ({couponCode})
             </span>
-            <span className="text-success">-${discountAmount.toFixed(2)}</span>
+            <span className="text-success">-{currency?.sign}{discountAmount.toFixed(2)}</span>
           </div>
-        )}
+        )} */}
 
         <p
           style={{
@@ -164,7 +180,7 @@ export default function SmallForm() {
             Grand Total
           </label>
           <span id="grandTotal" className="fw-bold">
-            ${grandTotal.toFixed(2)}
+            {currency?.sign}{(Number(subtotal * 0.22) + Number(grandTotal)).toFixed(2)}
           </span>
         </div>
       </form>

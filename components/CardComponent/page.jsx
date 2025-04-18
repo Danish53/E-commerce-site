@@ -10,7 +10,7 @@ import { CiShoppingCart } from "react-icons/ci";
 
 export default function Page() {
   const router = useRouter();
-  const { cart, removeFromCart } = useContext(ResponseContext);
+  const { cart, removeFromCart, currency } = useContext(ResponseContext);
   // console.log(cart, '......cart aa hai na')
   const [isPopupOpen, setIsPopupOpen] = useState(true);
 
@@ -41,18 +41,23 @@ export default function Page() {
                 </div>
                 <div className="content_div" style={{ width: "65%" }} >
                   <p className="prod_title">{item?.title}</p>
-                  <p className="prod_quantity p-0 m-0">Quantity: {item?.quantity || "N/A"}</p>
-                  <p className="prod_quantity p-0 m-0">
-                    1 x ${Number(item?.current_price || 0).toFixed(2)}
+                  <p className="prod_title p-0 m-0">Quantity: {item?.quantity || "N/A"}</p>
+                  <p className="prod_title p-0 m-0">
+                    Price: {currency?.sign}{Number(item?.current_price || 0).toFixed(2)}
                   </p>
                   <div className="delete_div">
                     <div>
-                      <p className="sizes">
-                        Size: {Array.isArray(item?.size) ? item.size[0] : item?.size || "N/A"}
-                      </p>
-                      <p className="sizes">
-                        Color: {Array.isArray(item?.color) ? item.color[0] : item?.color || "N/A"}
-                      </p>
+                      {item?.size && item?.size.length > 0 && (
+                        <p className="sizes">
+                          Size: {Array.isArray(item.size) ? item.size[0] : item.size}
+                        </p>
+                      )}
+
+                      {item?.color && item?.color.length > 0 && (
+                        <p className="sizes">
+                          Color: {Array.isArray(item.color) ? item.color[0] : item.color}
+                        </p>
+                      )}
                     </div>
                     <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
                   </div>
@@ -70,7 +75,7 @@ export default function Page() {
             <>
               <div className="total_div mt-1 mb-1">
                 <p className="sub_total">Subtotal</p>
-                <p className="total_amount">${getTotalAmount()}</p>
+                <p className="total_amount">{currency?.sign}{getTotalAmount()}</p>
               </div>
               <div className="w-100 mt-2">
                 {/* <button id="view_cart">View Cart</button> */}

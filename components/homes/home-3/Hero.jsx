@@ -20,7 +20,7 @@ import { ResponseContext } from "@/app/login/ResponseContext";
 export default function Hero() {
   const [counter, setCounter] = useState(1);
   const [products, setProducts] = useState([]);
-  const { addToCart } = useContext(ResponseContext);
+  const { addToCart, currency } = useContext(ResponseContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const sliderRef = useRef(null);
@@ -143,7 +143,7 @@ export default function Hero() {
                       <div className="tick_sec_parent">
                         <div className="tick_single">
                           <MdOutlineDone className="icon_size" />
-                          <p>$ {item?.current_price}</p>
+                          <p>{currency?.sign} {item?.current_price}</p>
                         </div>
                       </div>
                       <div

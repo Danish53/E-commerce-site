@@ -6,9 +6,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-export default function FeaturedProducts({category}) {
+export default function FeaturedProducts({category, currency}) {
   const [products, setProducts] = useState();
-  console.log(products, "relatd aa/////")
+  // console.log(products, "relatd aa/////")
 
   useEffect(() => {
       if (!category) return; // Skip API call if no category is selected
@@ -103,11 +103,11 @@ export default function FeaturedProducts({category}) {
                       <p className="description">{elm?.category_name}</p>
                       <div className="prices">
                         <div className="new_price">
-                          <p>{elm?.current_price}</p>
+                          <p>{currency?.sign}{elm?.current_price}</p>
                         </div>
                         <div className="old_price">
                           <p className="text-muted">
-                            <del>{elm?.previous_price}</del>
+                            <del>{currency?.sign}{elm?.previous_price}</del>
                           </p>
                         </div>
                       </div>

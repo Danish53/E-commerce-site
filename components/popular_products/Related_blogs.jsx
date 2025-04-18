@@ -99,15 +99,15 @@ export default function Related_blogs({ blog }) {
                         <div className="">
                             <h2 className="p-0">Related Posts</h2>
                             <div className="popular_products pb-3">
-                                <Slider {...settings}>
+                                <Slider {...settings} className="d-flex flex-column gap-3 me-3">
                                     {blog?.relatedBlogs?.map((item, index) => (
-                                        <div className="card gap-3" key={index}>
+                                        <div className=" d-flex flex-column gap-3 me-3" key={index}>
                                             <div className="single_card" >
                                                 <Link href={`/my-blog/${item.id}`}>
                                                     <img src={item?.photo} alt={item?.title} loading="lazy" />
                                                 </Link>
                                                 <div className="p-2">
-                                                    <span>{item?.category} / {item?.created_at}</span>
+                                                    <span>{item?.category} / {item?.created_at && new Date(item.created_at).toLocaleDateString("en-GB")}</span>
                                                     <h3>{item?.title}</h3>
                                                     <p> {item?.detail}
                                                         <Link href={`/my-blog/${item.id}`} className="read-more">

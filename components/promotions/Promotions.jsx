@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./promotions.css";
 import useCategories from "../headers/categories";
 import { useRouter } from "next/navigation";
+import { ResponseContext } from "@/app/login/ResponseContext";
 
 export default function Promotions() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function Promotions() {
   const { latestCategories } = useCategories();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { currency } = useContext(ResponseContext);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -230,7 +232,7 @@ export default function Promotions() {
                       </div>
                       <div className="price_div">
                         <p>
-                          <strong>${product?.current_price}</strong>
+                          <strong>{currency?.sign}{product?.current_price}</strong>
                         </p>
                       </div>
                     </div>

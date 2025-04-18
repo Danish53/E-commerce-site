@@ -43,3 +43,9 @@
     margin: auto;
   }
 }
+
+
+.slick-slide>div{
+  display: flex;
+  gap: 10px;
+}

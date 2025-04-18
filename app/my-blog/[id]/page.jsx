@@ -132,7 +132,7 @@ export default function Page() {
                                         <div className="text-center">
                                             <button className="btn btn-dark mb-2 text-uppercase">{blog?.blog?.category}</button>
                                             <h1 className="blog-title">{blog?.blog?.title}</h1>
-                                            <p className="blog-meta text-muted my-2">Published on: {blog?.blog?.created_at}</p>
+                                            <p className="blog-meta text-muted my-2">Published on: {blog?.blog?.created_at && new Date(blog?.blog?.created_at).toLocaleDateString("en-GB")}</p>
                                         </div>
                                         <img
                                             src={blog?.blog?.photo}

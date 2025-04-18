@@ -14,7 +14,7 @@ import { CiSearch } from "react-icons/ci";
 import { CiHeart } from "react-icons/ci";
 import CardComponent from "../CardComponent/page";
 import { toast, Toaster } from "react-hot-toast"
-import { FaSearch } from "react-icons/fa";
+import { FaHeart, FaSearch } from "react-icons/fa";
 import { ResponseContext } from "@/app/login/ResponseContext";
 import { FaPerson } from "react-icons/fa6";
 import "./navbar.css";
@@ -147,7 +147,7 @@ export default function Header2() {
                 <div className="account-wrapper" ref={dropdownRef}>
                   {isLoggedIn ? <p className="account-label" onClick={() => setOpen(!open)}>
                     My Account
-                  </p> : <Link className="text-none fw-medium " href={`/login`}><p className="account-label">
+                  </p> : <Link className="text-none fw-medium" href={`/login`}><p className="account-label">
                     Login
                   </p></Link>}
                   {open && (
@@ -164,12 +164,12 @@ export default function Header2() {
                 </div>
                 <div className="icon_div_main">
                   <div className="icons">
-                    <CiSearch
+                    {/* <CiSearch
                       className="icon_size icon_size_none cursor-pointer"
                       onClick={toggleSearch}
                     />
 
-                    <div className={`search_div ${showSearch ? "active" : ""}`}>
+                    <div className={`search_div`}>
                       <FaSearch className="search_icon" />
                       <input
                         type="text"
@@ -177,7 +177,17 @@ export default function Header2() {
                         className="search_input"
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
+                    </div> */}
+                    <div className="main_input_div">
+                      <input
+                        type="text"
+                        placeholder="Search..."
+                        className=""
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <FaSearch className="search_icon_div" />
                     </div>
+
 
                     {/* {isLoggedIn? (<Link href="/personal-info">
                       <img className="icon_size cursor-pointer" style={{ marginLeft: "0px", width: "22px", height: "22px" }} src="/assets/images/user.png" alt="" />
@@ -188,9 +198,9 @@ export default function Header2() {
                       {/* <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
                       <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
                       <div className="relative heart-container">
-                        <CiHeart
-                          className={`icon_size cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-150 text-pink-700 fill-blue-500" : ""
-                            }`}
+                        {/* <CiHeart
+                          className={`icon_size  cursor-pointer transition-transform duration-300 ${animateWishlist ? "scale-150 text-pink-700 fill-blue-500" : ""
+                            }`} style={{width: "40px", height:"40px"}}
                         />
                         {animateWishlist && (
                           <div className="orbit-dots">
@@ -198,11 +208,22 @@ export default function Header2() {
                               <span key={i} className={`dot dot${i + 1}`}></span>
                             ))}
                           </div>
+                        )} */}
+                        {animateWishlist ? (
+                          <FaHeart
+                            className="icon_size cursor-pointer transition-transform duration-300 scale-150 text-red-600"
+                            style={{ width: "40px", height: "40px" }}
+                          />
+                        ) : (
+                          <CiHeart
+                            className="icon_size cursor-pointer transition-transform duration-300"
+                            style={{ width: "40px", height: "40px" }}
+                          />
                         )}
                       </div>
 
                     </Link>) : (<Link href="/login" >
-                      <CiHeart className="icon_size cursor-pointer" style={{ position: "relative" }} />
+                      <CiHeart className="icon_size cursor-pointer" style={{ position: "relative", width: "40px", height: "40px" }} />
                       {/* <span className="cart_counter">{wishlist ? wishlist?.length : "0"}</span> */}
                     </Link>)}
 

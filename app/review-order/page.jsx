@@ -19,7 +19,7 @@ import Footer2 from "@/components/footers/Footer2";
 import { ResponseContext } from "../login/ResponseContext";
 
 export default function ReviewOrder() {
-  const { cart, formDataCheckout, setFormDataCheckout } = useContext(ResponseContext);
+  const { cart, formDataCheckout, setFormDataCheckout, currency } = useContext(ResponseContext);
   // console.log(formDataCheckout.address, "data checked....")
   // const [show, setShow] = useState(false);
   const router = useRouter();
@@ -59,7 +59,7 @@ export default function ReviewOrder() {
 
   return (
     <div>
-      <section className="page_address mt-3 mb-3 ">
+      <section className="page_address mb-3 ">
         <div className="heading_div">
           <Header2 />
         </div>
@@ -117,17 +117,25 @@ export default function ReviewOrder() {
                   </div>
                   <div className="content_div" style={{ width: "65%" }}>
                     <p className="prod_title">{item?.title}</p>
-                    <p className="prod_quantity p-0 m-0">
+                    <p className="prod_title p-0 m-0">
                       Quantity: {item?.quantity || "N/A"}
                     </p>
-                    <p className="prod_quantity p-0 m-0">
-                      {item?.quantity} × ${Number(item?.current_price).toFixed(2)} = $
-                      {(item?.quantity * item?.current_price).toFixed(2)}
+                    <p className="prod_title p-0 m-0">
+                      Price: {currency?.sign}{Number(item?.current_price).toFixed(2)}
                     </p>
                     <div className="delete_div">
                       <div>
-                        <p className="sizes">Size: {item?.size || "N/A"}</p>
-                        <p className="sizes">Color: {item?.color || "N/A"}</p>
+                        {item?.size && item?.size.length > 0 && (
+                          <p className="sizes">
+                            Size: {Array.isArray(item.size) ? item.size[0] : item.size}
+                          </p>
+                        )}
+
+                        {item?.color && item?.color.length > 0 && (
+                          <p className="sizes">
+                            Color: {Array.isArray(item.color) ? item.color[0] : item.color}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

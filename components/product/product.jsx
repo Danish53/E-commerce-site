@@ -14,7 +14,7 @@ export default function AllProduct() {
 
 
   // const [showPopup, setShowPopup] = useState(false);
-  const { addToCart, productsCategory, products, loading, fetchFilteredProducts, filters } = useContext(ResponseContext);
+  const { addToCart, products, loading, currency } = useContext(ResponseContext);
   const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
@@ -179,8 +179,8 @@ export default function AllProduct() {
                   </h2>
                   <p className="detail">{product.category_name}</p>
                   <div className="price_div">
-                    <p className="price">{`$${product.current_price}`}</p>
-                    <p className="old_price">{product?.previous_price ? `$${product.previous_price}` : ""}</p>
+                    <p className="price">{currency?.sign}{product.current_price}</p>
+                    <p className="old_price">{product?.previous_price ? `${currency?.sign}${product.previous_price}` : ""}</p>
                   </div>
                   <div className="btn_div">
                     <button className="cart mt-1" onClick={() => addToCart(product)}>
