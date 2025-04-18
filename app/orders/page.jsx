@@ -9,6 +9,7 @@ import Header2 from "@/components/headers/Header2";
 import Footer2 from "@/components/footers/Footer2";
 import { ResponseContext } from "../login/ResponseContext";
 import useAuth from "../login/useAuth";
+import Link from "next/link";
 
 export default function page() {
 
@@ -74,9 +75,12 @@ export default function page() {
                 </div>
               ))
             ) : (
+              <>
               <p className="alert alert-warning" hidden="">
                 No Orders Found!
               </p>
+              <Link href="/orders/11"><button className="btn btn-dark">Invoice</button></Link>
+              </>
             )}
 
           </div>

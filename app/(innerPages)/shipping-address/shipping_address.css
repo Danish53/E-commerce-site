@@ -59,9 +59,9 @@ hr {
   font-weight: 800;
 }
 .page_address input {
-  height: 59px;
+  /* height: 59px; */
   border-radius: 6px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   max-width: 669px;
 }
 .page_address input:focus {
