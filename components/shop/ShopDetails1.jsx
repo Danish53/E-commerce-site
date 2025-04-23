@@ -22,7 +22,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 export default function ShopDetails1() {
   const { cart, addToCart, updateCart, currency } = useContext(ResponseContext);
   const [data, setData] = useState(null);
-  // console.log(data,"data single pro..")
+  console.log(data, "data single pro..")
   const [loading, setLoading] = useState(false);
   const [bodyColor, setBodyColor] = useState(false);
   const [cartProducts, setCartProducts] = useState({});
@@ -70,7 +70,7 @@ export default function ShopDetails1() {
     const selectedSizeValue = selectedSize || "";
     if (data) {
       const quantity = cartProducts[data.id] || 1;  // Default to 1 if no quantity is selected
-      // console.log("Data being added to cart:", {
+      // console.log("Data being added to cart:", { 
       //   ...data,
       //   quantity,
       //   color: selectedColorValue,   // Add color
@@ -173,7 +173,7 @@ export default function ShopDetails1() {
                   <div className="product-price hstack gap-1 fs-5 xl:fs-4">
                     <span className="price">{currency?.sign}{data?.current_price}</span>
                     <span className="price-old text-line-through opacity-40">
-                    {currency?.sign}{data?.previous_price}
+                      {currency?.sign}{data?.previous_price}
                     </span>
                   </div>
                 </div>
@@ -182,30 +182,41 @@ export default function ShopDetails1() {
                   {data?.description || "No description available."}
                 </p>
 
-                <p id="color_word">Color</p>
-                <div className="box-container">
-                  {data && data?.colors ? data?.colors?.map((color) => (
-                    <div
-                      key={color}
-                      className={`box ${selectedColor === color ? "selected" : ""}`}
-                      style={{ background: color }}
-                      onClick={() => setSelectedColor(color)}  // Set the selected color
-                    ></div>
-                  )) : ("")}
-                </div>
-
-                <p id="color_word" className="mt-2">Size</p>
-                <div className="box-container">
-                  {data && data?.sizes ? data?.sizes?.map((size) => (
-                    <div
-                      key={size}
-                      className={`box size ${selectedSize === size ? "selected" : ""}`}
-                      onClick={() => setSelectedSize(size)}  // Set the selected size
-                    >
-                      {size}
+                {/* Color Selection */}
+                {data && data.colors?.length > 0 && (
+                  <>
+                    <p id="color_word">Color</p>
+                    <div className="box-container">
+                      {data.colors.map((color) => (
+                        <div
+                          key={color}
+                          className={`box ${selectedColor === color ? "selected" : ""}`}
+                          style={{ background: color }}
+                          onClick={() => setSelectedColor(color)}
+                        ></div>
+                      ))}
                     </div>
-                  )) : ("")}
-                </div>
+                  </>
+                )}
+
+                {/* Size Selection */}
+                {data && data.sizes?.length > 0 && (
+                  <>
+                    <p id="color_word" className="mt-2">Size</p>
+                    <div className="box-container">
+                      {data.sizes.map((size) => (
+                        <div
+                          key={size}
+                          className={`box size ${selectedSize === size ? "selected" : ""}`}
+                          onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+
 
                 <div className="product-actions hstack gap-1 xl:mt-2">
                   <div className="quantity_box_div">

@@ -87,7 +87,7 @@ export default function SmallForm() {
                 </div>
                 <RiDeleteBin5Fill
                   className="icon_prop"
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item?.id, item?.color, item?.size)}
                 />
               </div>
             </div>

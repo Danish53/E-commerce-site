@@ -186,7 +186,7 @@ export default function Cart1() {
                               </span>
                             </td>
                             <td>
-                              <RiDeleteBin4Fill onClick={() => removeFromCart(elm.id)} className="delete_icon_table" />
+                              <RiDeleteBin4Fill onClick={() => removeFromCart(elm?.id, elm?.color, elm?.size)} className="delete_icon_table" />
                             </td>
                           </tr>
                         ))}

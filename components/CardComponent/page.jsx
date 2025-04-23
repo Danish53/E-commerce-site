@@ -59,7 +59,7 @@ export default function Page() {
                         </p>
                       )}
                     </div>
-                    <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item.id)} />
+                    <RiDeleteBin5Fill className="icon_prop" onClick={() => removeFromCart(item?.id, item?.color, item?.size)} />
                   </div>
                 </div>
               </div>

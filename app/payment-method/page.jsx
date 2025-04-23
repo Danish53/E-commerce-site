@@ -1,114 +1,126 @@
 "use client";
+import React, { useContext, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import React, { useContext, useMemo, useState } from "react";
+import { ResponseContext } from "../login/ResponseContext";
+import Header2 from "@/components/headers/Header2";
+import toast, { Toaster } from "react-hot-toast";
 import "./payment_method.css";
 import "../../public/assets/css/theme/main.css";
 import SmallForm from "@/components/SmallForm/SmallForm";
-import { MdOutlineRateReview, MdPayment } from "react-icons/md";
 import { CiHome } from "react-icons/ci";
+import { MdOutlineRateReview } from "react-icons/md";
 import { BsCreditCard2Back } from "react-icons/bs";
-import Header2 from "@/components/headers/Header2";
 import Footer2 from "@/components/footers/Footer2";
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { ResponseContext } from "../login/ResponseContext";
-import toast, { Toaster } from "react-hot-toast";
 
-// const stripePromise = loadStripe("pk_test_51P9nOyBFIC31oQQ9z2NYl6wOYe2zKX9ScrgJTYBzD4Uyu7scr1NyULhFSv7RFZqLMKxD2HGqBUK91CPXiDCqnXrN000Em3qcXx");
-
-function StripeForm() {
+export default function PaymentMethod() {
   const router = useRouter();
+  const {
+    cart,
+    setting,
+    discountAmount,
+    formDataCheckout, // Make sure this is available in your context
+    setFormDataCheckout,
+    response_Context
+  } = useContext(ResponseContext);
+  const user_id = response_Context?.user?.id;
 
-  const { setFormDataCheckout, formDataCheckout, discountAmount, cart, setting, stripekey } = useContext(ResponseContext);
 
   const [loading, setLoading] = useState(false);
-  const stripe = useStripe();
-  const elements = useElements();
-
-  // const stripePromise = useMemo(() => {
-  //   if (!setting?.stripe_public_key) return null;
-  //   return loadStripe(setting.stripe_public_key);
-  // }, [setting?.stripe_public_key]);
-
-  const CARD_OPTIONS = {
-    style: {
-      base: {
-        iconColor: '#5469d4',
-        color: '#333',
-        fontWeight: '500',
-        fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
-        fontSize: '16px',
-        fontSmoothing: 'antialiased',
-        '::placeholder': {
-          color: '#a0aec0',
-        },
-      },
-      invalid: {
-        iconColor: '#e53e3e',
-        color: '#e53e3e',
-      },
-    },
-  };
 
   const getTotalAmount = () => {
-    return cart?.reduce((total, item) => total + item.current_price * item.quantity, 0).toFixed(2) || "0.00";
+    return (
+      cart?.reduce(
+        (total, item) => total + item.current_price * item.quantity,
+        0
+      ).toFixed(2) || "0.00"
+    );
   };
-  const subtotal = getTotalAmount();
+
+  const subtotal = parseFloat(getTotalAmount());
   const deliveryFee = Number(setting?.shipping_cost || 0);
-  // {(Number(subtotal * 0.22) + Number(grandTotal)).toFixed(2)}
-  const grandTotal = subtotal - discountAmount + (subtotal * 0.22) + deliveryFee;
+  const grandTotal =
+    subtotal - discountAmount + subtotal * 0.22 + deliveryFee;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements) return;
-
-    const cardElement = elements.getElement(CardElement);
+    setLoading(true);
     try {
-      setLoading(true);
-      const { token, error } = await stripe.createToken(cardElement);
+      const {
+        full_name,
+        email,
+        password,
+        billing_street,
+        billing_city,
+        billing_country,
+        billing_phone,
+        billing_postal_code,
+        shipping_street,
+        shipping_city,
+        shipping_country,
+        shipping_phone,
+        shipping_postal_code,
+        customer_type,
+        tax_code,
+        company_name,
+        vat_number,
+        same_as,
+      } = formDataCheckout.address;
 
-      if (error) {
-        console.error(error.message);
-      } else {
-        // console.log("Stripe Token:", token);
-        setFormDataCheckout(prev => ({
-          ...prev,
-          paymentData: {
-            ...prev.paymentData,
-            stripe_token: token.id,
-          },
-        }));
+      const transformedItems = formDataCheckout.items.map((item) => {
+        const {
+          id,
+          title,
+          current_price,
+          previous_price,
+          quantity,
+          category,
+          category_name,
+          color,
+          size,
+          rating,
+          thumbnail,
+          created_at,
+          updated_at,
+        } = item;
 
-        const { full_name, email, password, billing_street, billing_city, billing_country, billing_phone, billing_postal_code, shipping_street, shipping_city, shipping_country, shipping_phone, shipping_postal_code, customer_type,
-          tax_code,
-          company_name,
-          vat_number,
-          same_as, } = formDataCheckout.address;
+        const finalColor = Array.isArray(color) ? color.join(", ") : color;
+        const finalSize = Array.isArray(size) ? size.join(", ") : size;
+        const finalCategoryName = category_name || category || "";
 
-        const transformedItems = formDataCheckout.items.map(item => {
-          const { id, title, current_price, previous_price, quantity, category, category_name, color, size, rating, thumbnail, created_at, updated_at } = item;
-          let finalCategoryName = '';
+        return {
+          id,
+          title,
+          current_price,
+          previous_price,
+          quantity,
+          color: finalColor,
+          size: finalSize,
+          rating,
+          thumbnail,
+          created_at,
+          updated_at,
+          category_name: finalCategoryName,
+        };
+      });
 
-          if (category_name) {
-            finalCategoryName = category_name;
-          } else if (category) {
-            finalCategoryName = category;
-          }
-          const finalColor = Array.isArray(color) ? color.join(', ') : color;
-          const finalSize = Array.isArray(size) ? size.join(', ') : size;
-          return {
-            id, title, current_price, previous_price, quantity, color: finalColor, size: finalSize, rating, thumbnail, created_at, updated_at,
-            category_name: finalCategoryName
-            // category_name: category_name || category?.category_name || category || '',
-            // ...(category?.category_name && { category_name: category.category_name })
-          };
-        });
+      const totalQuantity = transformedItems.reduce((sum, item) => sum + item.quantity, 0);
+      console.log("Total Quantity:", totalQuantity);
 
-        const res = await fetch("https://foundation.alphalive.pro/api/front/checkout", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            full_name, email, password, billing_street, billing_city, billing_country, billing_phone, billing_postal_code, shipping_street, shipping_city, shipping_country, shipping_phone, shipping_postal_code, customer_type,
+      const item_o = {
+        full_name,
+            email,
+            password,
+            billing_street,
+            billing_city,
+            billing_country,
+            billing_phone,
+            billing_postal_code,
+            shipping_street,
+            shipping_city,
+            shipping_country,
+            shipping_phone,
+            shipping_postal_code,
+            customer_type,
             tax_code,
             company_name,
             vat_number,
@@ -116,64 +128,64 @@ function StripeForm() {
             items: transformedItems,
             discount: discountAmount,
             grand_total: grandTotal,
-            subtotal: subtotal,
-            stripe_token: token.id,
-            payment_method: "stripe"
-          }),
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          toast.success(data?.data || "Order placed!");
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 2000);
-        } else {
-          toast.error(data?.message || "Payment failed.");
-        }
-        console.log("Payment Response:", data);
+            subtotal,
+            total_quantity: totalQuantity,
+            tax: subtotal * 0.22,
+            user_id
       }
+
+      // console.log(item_o, "chk datatatata ");
+
+      const response = await fetch(
+        "https://foundation.alphalive.pro/api/front/checkout",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            full_name,
+            email,
+            password,
+            billing_street,
+            billing_city,
+            billing_country,
+            billing_phone,
+            billing_postal_code,
+            shipping_street,
+            shipping_city,
+            shipping_country,
+            shipping_phone,
+            shipping_postal_code,
+            customer_type,
+            tax_code,
+            company_name,
+            vat_number,
+            same_as,
+            items: transformedItems,
+            discount: discountAmount,
+            grand_total: grandTotal,
+            subtotal,
+            total_quantity: totalQuantity,
+            tax: subtotal * 0.22,
+            user_id
+          }),
+        }
+      );
+
+      const data = await response.json();
+      console.log(data, "checouttt,,t,t,t,t")
+      toast.error(data?.error?.billing_city || "All fields are required!");
+      router.push(data.data);
     } catch (err) {
-      // console.error("Checkout error:", err);
-      toast.error("Something went wrong during checkout.");
+      console.log("Something went wrong during checkout.")
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-      />
-      <form onSubmit={handleSubmit} className="card-element-wrapper">
-        <CardElement options={CARD_OPTIONS} />
-        <button type="submit" className="w-100 mt-3" disabled={!stripe}>{loading ? (
-          <>
-            <span
-              className="spinner-border spinner-border-sm me-2"
-              role="status"
-              aria-hidden="true"
-            ></span>
-            Pay With Credit/Debit ....
-          </>
-        ) : (
-          "Pay With Credit/Debit Card"
-        )}</button>
-      </form>
-    </>
-  );
-}
-
-export default function PaymentMethod() {
-  const router = useRouter();
-  const { showStripeForm, setShowStripeForm, stripekey } = useContext(ResponseContext);
-
-  const stripePromise = useMemo(() => {
-    if (!stripekey) return null;
-    return loadStripe(stripekey);
-  }, [stripekey]);
+  // const stripePromise = useMemo(() => {
+  //   if (!stripekey) return null;
+  //   return loadStripe(stripekey);
+  // }, [stripekey]);
 
   const handleBack = () => {
     router.back();
@@ -213,7 +225,7 @@ export default function PaymentMethod() {
                   <hr />
                 </div>
                 <div className="mt-3">
-                  <h4>Select a Payment Method</h4>
+                  {/* <h4>Select a Payment Method</h4>
                   <div>
                     <div className="check_radio_btn_div my-3">
                       <input
@@ -233,7 +245,17 @@ export default function PaymentMethod() {
                   <div className="check_radio_btn_div my-3">
                     <input type="checkbox" />
                     <p>Paypal</p>
-                  </div>
+                  </div> */}
+                  {/* <button className="btn btn-primary" onClick={handleSubmit}>{loading ? "Pay Now.." : "Pay Now"}</button> */}
+                  <form onSubmit={handleSubmit}>
+                    <button
+                      type="submit"
+                      className="btn mt-4"
+                      disabled={loading}
+                    >
+                      {loading ? "Pay Now..." : "Pay Now"}
+                    </button>
+                  </form>
                 </div>
               </div>
 

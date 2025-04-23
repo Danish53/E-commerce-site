@@ -15,6 +15,7 @@ export default function AllProduct() {
 
   // const [showPopup, setShowPopup] = useState(false);
   const { addToCart, products, loading, currency } = useContext(ResponseContext);
+  // console.log(products, 'prodycts all')
   const router = useRouter();
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
@@ -51,7 +52,7 @@ export default function AllProduct() {
   // const { products, loading } = useAllProducts(currentPage);
   const { addToWishlist, removeFromWishlist, wishlist, searchQuery  } = useContext(ResponseContext);
 
-  console.log(wishlist, "Wishlist items");
+  // console.log(wishlist, "Wishlist items");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {

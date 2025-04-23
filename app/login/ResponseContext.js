@@ -20,34 +20,79 @@ export const ResponseProvider = ({ children }) => {
   }, [cart]);
 
   const [showPopup, setShowPopup] = useState(false);
-  const addToCart = (product, quantity = 1) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.id === product.id);
+  // const addToCart = (product, quantity = 1) => {
+  //   setCart((prevCart) => {
+  //     const existingProduct = prevCart.find((item) => item.id === product.id);
 
-      if (existingProduct) {
-        // Ensure quantity is correctly updated
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity } // Properly increase quantity
-            : item
-        );
-      } else {
-        return [...prevCart, { ...product, quantity }]; // Add new product with quantity
-      }
-    });
+  //     if (existingProduct) {
+  //       // Ensure quantity is correctly updated
+  //       return prevCart.map((item) =>
+  //         item.id === product.id
+  //           ? { ...item, quantity: item.quantity + quantity } // Properly increase quantity
+  //           : item
+  //       );
+  //     } else {
+  //       return [...prevCart, { ...product, quantity }]; // Add new product with quantity
+  //     }
+  //   });
 
-    // toast.success(`${product.title} added to cart!`);
-    setShowPopup(true);
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 5000);
-    // console.log("Updated cart:", cart);
-  };
+  //   // toast.success(`${product.title} added to cart!`);
+  //   setShowPopup(true);
+  //   setTimeout(() => {
+  //     setShowPopup(false);
+  //   }, 5000);
+  //   // console.log("Updated cart:", cart);
+  // };
+const addToCart = (product, quantity = 1) => {
+  setCart((prevCart) => {
+    // Match by id, color, and size
+    const existingProduct = prevCart.find(
+      (item) =>
+        item.id === product.id &&
+        item.color === product.color &&
+        item.size === product.size
+    );
 
-  const removeFromCart = (productId) => {
-    setCart(cart.filter((item) => item.id !== productId));
+    if (existingProduct) {
+      // If same id + color + size exists → increase quantity
+      return prevCart.map((item) =>
+        item.id === product.id &&
+        item.color === product.color &&
+        item.size === product.size
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+    } else {
+      // If color/size changed → treat as new cart item
+      return [...prevCart, { ...product, quantity }];
+    }
+  });
+
+  // Show popup or toast
+  setShowPopup(true);
+  setTimeout(() => {
+    setShowPopup(false);
+  }, 5000);
+};
+
+  
+
+  // const removeFromCart = (productId) => {
+  //   setCart(cart.filter((item) => item.id !== productId));
+  //   toast.error("Product removed from cart!");
+  // };
+  const removeFromCart = (productId, color, size) => {
+    setCart(cart.filter(
+      (item) =>
+        !(
+          item.id === productId &&
+          item.color === color &&
+          item.size === size
+        )
+    ));
     toast.error("Product removed from cart!");
   };
+  
 
   const clearCart = () => {
     setCart([]);
@@ -280,11 +325,12 @@ export const ResponseProvider = ({ children }) => {
 
   // orders
   const [ordersData, setOrdersData] = useState([]);
+  console.log(ordersData, "ordersssss....")
 
   const orders = async (userId) => {
     try {
-      const response = await axios.get(`https://foundation.alphalive.pro/api/user/dashboard/${userId}`);
-      // console.log(response, "AiOutlineBorderlessTable.s.s,s,s,s,s,s,")
+      const response = await axios.get(`https://foundation.alphalive.pro/api/user/orders?user_id=${userId}`);
+      console.log(response, "AiOutlineBorderlessTable.s.s,s,s,s,s,s,")
       setOrdersData(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);

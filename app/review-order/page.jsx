@@ -163,7 +163,7 @@ export default function ReviewOrder() {
               </div>
               <button
                 type="button" onClick={handleNavigation}
-                className="btn  w-100 mt-3 mb-3"
+                className="btn w-100 mt-3 mb-3"
               >
                 Continue
               </button>
