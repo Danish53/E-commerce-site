@@ -112,7 +112,8 @@ export const ResponseProvider = ({ children }) => {
     user_id: null,
   });
 
-  // Load user data from sessionStorage (optional)
+
+  // Load user data from sessionStorage (optional) 
   useEffect(() => {
     const storedData = sessionStorage.getItem("authData");
     if (storedData) {
@@ -127,12 +128,16 @@ export const ResponseProvider = ({ children }) => {
     }
   }, [response_Context]);
 
+  console.log(response_Context.user_id, "resss.s.s.s.s.s..s.s.s.s.s.s.s.s9888888888")
+
+  const userId = response_Context?.user?.id || "No ID available"; 
 
   // Wishlist
   const [wishlist, setWishlist] = useState([]);
   const [animateWishlist, setAnimateWishlist] = useState(false);
 
-  var userId = localStorage.getItem("userId") || "No ID available";
+  // var userId = localStorage.getItem("userId") || "No ID available";
+  
   // var [userId, setUserId] = useState(null);
 
   // useEffect(() => {
