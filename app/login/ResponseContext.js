@@ -132,15 +132,15 @@ export const ResponseProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [animateWishlist, setAnimateWishlist] = useState(false);
 
-  // var userId = localStorage.getItem("userId") || "No ID available";
-  const [userId, setUserId] = useState(null);
+  var userId = localStorage.getItem("userId") || "No ID available";
+  // var [userId, setUserId] = useState(null);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const id = localStorage.getItem("userId"); 
-      setUserId(id || "No ID available");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const id = localStorage.getItem("userId"); 
+  //     setUserId(id || "No ID available");
+  //   }
+  // }, []);
 
   // console.log(userId, ";;;..llllkkkkkk"); 
 
@@ -178,6 +178,10 @@ export const ResponseProvider = ({ children }) => {
 
   // Add to Wishlist
   const addToWishlist = async (productId) => {
+    if (!userId || userId === "No ID available") {
+      console.error("User ID not ready yet.");
+      return;
+    }
     try {
       const response = await fetch(
         `https://foundation.alphalive.pro/api/user/wishlist/add`, // Parameters in UR",
@@ -194,7 +198,7 @@ export const ResponseProvider = ({ children }) => {
       );
 
       const data = await response.json();
-      // console.log(data.data.product, "add wishlist");
+      console.log(data, "add wishlist");
 
       if (data.status) {
         const updatedWishlist = [...wishlist, data.data.product];
