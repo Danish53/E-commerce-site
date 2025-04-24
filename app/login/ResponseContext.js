@@ -43,39 +43,39 @@ export const ResponseProvider = ({ children }) => {
   //   }, 5000);
   //   // console.log("Updated cart:", cart);
   // };
-const addToCart = (product, quantity = 1) => {
-  setCart((prevCart) => {
-    // Match by id, color, and size
-    const existingProduct = prevCart.find(
-      (item) =>
-        item.id === product.id &&
-        item.color === product.color &&
-        item.size === product.size
-    );
-
-    if (existingProduct) {
-      // If same id + color + size exists → increase quantity
-      return prevCart.map((item) =>
-        item.id === product.id &&
-        item.color === product.color &&
-        item.size === product.size
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
+  const addToCart = (product, quantity = 1) => {
+    setCart((prevCart) => {
+      // Match by id, color, and size
+      const existingProduct = prevCart.find(
+        (item) =>
+          item.id === product.id &&
+          item.color === product.color &&
+          item.size === product.size
       );
-    } else {
-      // If color/size changed → treat as new cart item
-      return [...prevCart, { ...product, quantity }];
-    }
-  });
 
-  // Show popup or toast
-  setShowPopup(true);
-  setTimeout(() => {
-    setShowPopup(false);
-  }, 5000);
-};
+      if (existingProduct) {
+        // If same id + color + size exists → increase quantity
+        return prevCart.map((item) =>
+          item.id === product.id &&
+            item.color === product.color &&
+            item.size === product.size
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        // If color/size changed → treat as new cart item
+        return [...prevCart, { ...product, quantity }];
+      }
+    });
 
-  
+    // Show popup or toast
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
+  };
+
+
 
   // const removeFromCart = (productId) => {
   //   setCart(cart.filter((item) => item.id !== productId));
@@ -92,7 +92,7 @@ const addToCart = (product, quantity = 1) => {
     ));
     toast.error("Product removed from cart!");
   };
-  
+
 
   const clearCart = () => {
     setCart([]);
@@ -132,8 +132,17 @@ const addToCart = (product, quantity = 1) => {
   const [wishlist, setWishlist] = useState([]);
   const [animateWishlist, setAnimateWishlist] = useState(false);
 
-  var userId = response_Context?.user?.id || "No ID available";
-  // console.log(userId, ";;;..llllkkkkkk");
+  // var userId = localStorage.getItem("userId") || "No ID available";
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const id = localStorage.getItem("userId"); 
+      setUserId(id || "No ID available");
+    }
+  }, []);
+
+  // console.log(userId, ";;;..llllkkkkkk"); 
 
   // Fetch Wishlist
   const fetchWishlist = async () => {
@@ -287,7 +296,7 @@ const addToCart = (product, quantity = 1) => {
 
 
   // Add new address
-  const addAddress = async (newAddress) => { 
+  const addAddress = async (newAddress) => {
     try {
       const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
       // console.log(response, "response address ka");  
@@ -325,12 +334,12 @@ const addToCart = (product, quantity = 1) => {
 
   // orders
   const [ordersData, setOrdersData] = useState([]);
-  console.log(ordersData, "ordersssss....")
+  // console.log(ordersData, "order,,,,,")
 
   const orders = async (userId) => {
     try {
       const response = await axios.get(`https://foundation.alphalive.pro/api/user/orders?user_id=${userId}`);
-      console.log(response, "AiOutlineBorderlessTable.s.s,s,s,s,s,s,")
+      // console.log(response, "order,,,,,")
       setOrdersData(response.data.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -436,25 +445,25 @@ const addToCart = (product, quantity = 1) => {
           },
         }
       );
-  
+
       const data = await response.json();
-  
+
       const stripeData = data.data.find((item) => item.name === "Stripe");
-  
+
       if (stripeData && stripeData.information) {
         const info = JSON.parse(stripeData.information);
         setStripeKey(info.key);
       }
-  
+
     } catch (error) {
       console.error("Error fetching Stripe key:", error);
     }
   };
-  
+
   useEffect(() => {
     StripeKeys();
   }, []);
-  
+
 
 
   // stripe

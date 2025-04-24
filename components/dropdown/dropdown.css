@@ -175,3 +175,9 @@ input.red-green[type="checkbox"] {
   position: relative;
   cursor: pointer;
 }
+
+@media (max-width: 992px) {
+  .Product_Categories{
+    display: none;
+  }
+}

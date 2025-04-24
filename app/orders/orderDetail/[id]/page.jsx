@@ -5,13 +5,13 @@ import Header2 from "@/components/headers/Header2";
 import MyProfile from "../../../../components/MyProfile/profile";
 import "./orderDetail.css";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; // Import CSS for skeleton styling
 
 export default function Page() {
-    const router = useRouter();
-    const { orderId } = useParams();
+    // const router = useRouter();
+    const { id } = useParams();
 
     const [orderDetails, setOrderDetails] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -21,7 +21,7 @@ export default function Page() {
         const fetchOrderDetails = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`https://foundation.alphalive.pro/api/user/order/26/details`);
+                const response = await fetch(`https://foundation.alphalive.pro/api/user/order/${id}/details`);
                 const data = await response.json();
                 if (response.ok) {
                     setOrderDetails(data.data);
@@ -36,7 +36,7 @@ export default function Page() {
         };
 
         fetchOrderDetails();
-    }, [orderId]);
+    }, [id]);
 
     const formatDate = (isoString) => {
         const date = new Date(isoString);

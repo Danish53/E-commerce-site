@@ -3,6 +3,11 @@
   align-items: center;
   margin-right: 30px;
 }
+@media (max-width: 600px) {
+  .icon_div_main {
+    margin-right: 18px;
+  }
+}
 .img_div {
   position: relative;
   cursor: pointer;
@@ -68,6 +73,12 @@
 }
 img.icon_size {
   margin-left: 20px;
+}
+
+@media (max-width: 600px) {
+  img.icon_size {
+    margin-left: 8px;
+  }
 }
 .btn_black {
   background-color: black;

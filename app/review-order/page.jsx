@@ -54,6 +54,10 @@ export default function ReviewOrder() {
   };
 
   const handleBack = () => {
+    setFormDataCheckout((prev) => ({
+      ...prev,
+      items: cart
+    }));
     router.back();
   };
 

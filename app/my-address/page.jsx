@@ -18,7 +18,15 @@ export default function Page() {
 
   const { addresses, deleteAddress, addAddress, updateAddress, loading, setAddresses, response_Context, fetchAddresses } =
     useContext(ResponseContext);
-  const userId = response_Context?.user?.id || "No ID available";
+  // const userId = response_Context?.user?.id || "No ID available";
+  // const userId = localStorage.getItem("userId") || "No ID available";
+  const [userId, setUserId] = useState(null); 
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          const id = localStorage.getItem("userId"); 
+          setUserId(id || "No ID available");
+        }
+      }, []);
 
   const [newAddress, setNewAddress] = useState({
     user_id: userId,

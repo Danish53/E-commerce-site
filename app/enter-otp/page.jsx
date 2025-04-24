@@ -25,7 +25,15 @@ export default function OtpPage() {
   const inputRefs = useRef([]);
 
   const user_Email = response_Context?.data?.user?.email || "No email available";
-  const userId = response_Context?.data?.user?.id || "No ID available";
+  // const userId = response_Context?.data?.user?.id || "No ID available";
+  // const userId = localStorage.getItem("userId") || "No ID available";
+  const [userId, setUserId] = useState(null); 
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          const id = localStorage.getItem("userId"); 
+          setUserId(id || "No ID available");
+        }
+      }, []);
 
   useEffect(() => {
     inputRefs.current[0]?.focus(); // Auto-focus on first input

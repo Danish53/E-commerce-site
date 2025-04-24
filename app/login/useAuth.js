@@ -78,6 +78,7 @@ const useAuth = () => {
         });
 
         localStorage.setItem("token", data.data.token)
+        localStorage.setItem("userId", data.data.user.id)
         toast.success("Login Successful!");
         router.push("/"); // Redirect to the website
         return data;

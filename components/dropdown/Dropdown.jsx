@@ -11,7 +11,7 @@ export default function Dropdown() {
   const [loading, setLoading] = useState();
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
-  console.log(category, "cateeeee..,..,")
+  // console.log(category, "cateeeee..,..,")
   // console.log(filters, "filters pro..,,,,.,.,")
 
   const [showAllCategories, setShowAllCategories] = useState(false);

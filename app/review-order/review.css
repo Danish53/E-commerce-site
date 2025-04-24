@@ -70,7 +70,7 @@ hr {
 
 .page_address input,
 .page_address select {
-  height: 59px;
+  /* height: 59px; */
   border-radius: 6px;
   border: 1px solid black;
   max-width: 669px;

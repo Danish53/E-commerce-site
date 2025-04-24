@@ -320,7 +320,15 @@ import SmallForm from "@/components/SmallForm/SmallForm";
 export default function ShippingAddress() {
   const { response_Context, setFormDataCheckout, addresses, fetchAddresses } = useContext(ResponseContext);
   const router = useRouter();
-  const userId = response_Context?.user?.id || "No ID available";
+  // const userId = response_Context?.user?.id || "No ID available";
+  // const userId = localStorage.getItem("userId") || "No ID available";
+  const [userId, setUserId] = useState(null); 
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const id = localStorage.getItem("userId"); 
+        setUserId(id || "No ID available");
+      }
+    }, []);
   const firstAddress = addresses && addresses.length > 0 ? addresses[0] : {};
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -173,7 +173,7 @@ export default function PaymentMethod() {
 
       const data = await response.json();
       console.log(data, "checouttt,,t,t,t,t")
-      toast.error(data?.error?.billing_city || "All fields are required!");
+      toast.error(data?.error?.message || "error");
       router.push(data.data);
     } catch (err) {
       console.log("Something went wrong during checkout.")
@@ -188,6 +188,10 @@ export default function PaymentMethod() {
   // }, [stripekey]);
 
   const handleBack = () => {
+    setFormDataCheckout((prev) => ({
+      ...prev,
+      items: cart
+    }));
     router.back();
   };
 

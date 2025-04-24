@@ -21,7 +21,15 @@ export default function Page() {
 
     const [data, setData] = useState();
     // console.log(data?.user, "order wala")
-    var userId = response_Context?.user_id || "No ID available";
+    // var userId = response_Context?.user_id || "No ID available";
+    // var userId = localStorage.getItem("userId") || "No ID available";
+    const [userId, setUserId] = useState(null); 
+        useEffect(() => {
+          if (typeof window !== "undefined") {
+            const id = localStorage.getItem("userId"); 
+            setUserId(id || "No ID available");
+          }
+        }, []);
     // console.log(userId, "id aa prof")
   
     // useEffect(() => {
@@ -76,7 +84,7 @@ export default function Page() {
     e.preventDefault();
   
     // Ensure user_id is available
-    const userId = response_Context?.user_id; // Adjust this if user_id is stored differently
+    // const userId = response_Context?.user_id;// Adjust this if user_id is stored differently
     if (!userId) {
       toast.error("User ID is missing");
       return;
@@ -237,7 +245,7 @@ export default function Page() {
               <div className="col-lg-4 mt-2">
                 <div className="card p-3">
                   <div className="text-center">
-                    <img src={response_Context?.user?.propic} style={{borderRadius:"100%", border:"2px solid #000", width:"100px", height:"100px"}} alt="profile" />
+                    <img src={response_Context?.user?.propic || previewphoto} style={{borderRadius:"100%", border:"2px solid #000", width:"100px", height:"100px"}} alt="profile" />
                     <div className="mt-3">
                       <p>{response_Context?.user?.full_name || "User name"}</p>
                       <span className="mt-3">{response_Context?.user?.email}</span>
