@@ -76,7 +76,6 @@ export const ResponseProvider = ({ children }) => {
   };
 
 
-
   // const removeFromCart = (productId) => {
   //   setCart(cart.filter((item) => item.id !== productId));
   //   toast.error("Product removed from cart!");
@@ -115,7 +114,7 @@ export const ResponseProvider = ({ children }) => {
 
   // Load user data from sessionStorage (optional) 
   useEffect(() => {
-    const storedData = sessionStorage.getItem("authData");
+    const storedData = localStorage.getItem("authData");
     if (storedData) {
       setResponse_Context(JSON.parse(storedData));
     }
@@ -124,14 +123,14 @@ export const ResponseProvider = ({ children }) => {
   // Save authentication data when it changes
   useEffect(() => {
     if (response_Context.token) {
-      sessionStorage.setItem("authData", JSON.stringify(response_Context));
+      localStorage.setItem("authData", JSON.stringify(response_Context));
     }
   }, [response_Context]);
 
-  console.log(response_Context.user_id, "resss.s.s.s.s.s..s.s.s.s.s.s.s.s9888888888")
+  // console.log(response_Context.user_id, "resss.s.s.s.s.s..s.s.s.s.s.s.s.s9888888888")
 
   const userId = response_Context?.user?.id || "No ID available"; 
-
+  console.log(userId, "userId exist?")
   // Wishlist
   const [wishlist, setWishlist] = useState([]);
   const [animateWishlist, setAnimateWishlist] = useState(false);
