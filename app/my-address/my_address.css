@@ -3,6 +3,16 @@
   font-family: "Jost" !important ;
   position: relative;
 }
+.my_address h6#default {
+  background-color: green;
+  color: white;
+  border-radius: 10px;
+  padding: 5px 8px;
+  position: absolute;
+  right: 0;
+  bottom: 61px;
+  font-size: 10px;
+}
 form .address_div {
   display: flex;
   align-items: center;
@@ -80,6 +90,7 @@ p#btn {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  position: relative;
 }
 .my_address .address_div .btn_div button {
   padding: 5px 16px;
@@ -118,7 +129,6 @@ p#btn {
   color: #000;
   transition: 0.5s ease-in-out;
 }
-
 
 .my_address .active {
   display: block;

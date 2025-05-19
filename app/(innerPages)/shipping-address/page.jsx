@@ -40,7 +40,6 @@
 //     }
 //   }, [addresses]);
 
-
 //   useEffect(() => {
 //     if (userId) {
 //       fetchAddresses(userId);
@@ -318,25 +317,29 @@ import toast, { Toaster } from "react-hot-toast";
 import SmallForm from "@/components/SmallForm/SmallForm";
 
 export default function ShippingAddress() {
-  const { response_Context, setFormDataCheckout, addresses, fetchAddresses } = useContext(ResponseContext);
+  const { response_Context, setFormDataCheckout, addresses, fetchAddresses } =
+    useContext(ResponseContext);
   const router = useRouter();
   // const userId = response_Context?.user?.id || "No ID available";
   // const userId = localStorage.getItem("userId") || "No ID available";
-  const [userId, setUserId] = useState(null); 
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const id = localStorage.getItem("userId"); 
-        setUserId(id || "No ID available");
-      }
-    }, []);
-  const firstAddress = addresses && addresses.length > 0 ? addresses[0] : {};
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const id = localStorage.getItem("userId");
+      setUserId(id || "No ID available");
+    }
+  }, []);
+  // const firstAddress = addresses && addresses.length > 0 ? addresses[0] : {};
+  const firstAddress =
+    addresses?.find((addres) => addres.isdefault === 1) || {};
+  // console.log("Address are :::", firstAddress);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [same_as, setSame_as] = useState(false);
+  const [same_as, setSame_as] = useState(true);
   const [formErrors, setFormErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    full_name: response_Context?.user?.full_name || "",
+    full_name: firstAddress?.name || "",
     email: response_Context?.user?.email || "",
     password: "",
     customer_type: "",
@@ -365,24 +368,58 @@ export default function ShippingAddress() {
     if (userId) fetchAddresses(userId);
   }, [userId]);
 
+  // useEffect(() => {
+  //   if (addresses && addresses.length > 0) {
+  //     const first = addresses[0];
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       billing_street: first.street_address || "",
+  //       billing_city: first.city || "",
+  //       billing_postal_code: first.zipcode || "",
+  //       billing_country: first.country || "",
+  //       billing_phone: first.phone || "",
+  //       shipping_street: first.street_address || "",
+  //       shipping_city: first.city || "",
+  //       shipping_postal_code: first.zipcode || "",
+  //       shipping_country: first.country || "",
+  //       shipping_phone: first.phone || "",
+  //     }));
+  //   }
+  // }, [addresses]);
+
   useEffect(() => {
-    if (addresses && addresses.length > 0) {
-      const first = addresses[0];
+    if (response_Context?.user || addresses?.length > 0) {
+      const user = response_Context?.user || {};
+      // const first = addresses?.[0] || {};
+      const first = addresses?.find((addres) => addres.isdefault === 1) || {};
+
       setFormData((prev) => ({
         ...prev,
-        billing_street: first.street_address || "",
-        billing_city: first.city || "",
-        billing_postal_code: first.zipcode || "",
-        billing_country: first.country || "",
-        billing_phone: first.phone || "",
-        shipping_street: first.street_address || "",
-        shipping_city: first.city || "",
-        shipping_postal_code: first.zipcode || "",
-        shipping_country: first.country || "",
-        shipping_phone: first.phone || "",
+        full_name: first.name || prev.full_name,
+        email: user.email || prev.email,
+        billing_street: first.street_address || prev.billing_street,
+        billing_city: first.city || prev.billing_city,
+        billing_postal_code: first.zipcode || prev.billing_postal_code,
+        billing_country: first.country || prev.billing_country,
+        billing_phone: first.phone || prev.billing_phone,
+        shipping_street: same_as
+          ? first.street_address || prev.shipping_street
+          : prev.shipping_street,
+        shipping_city: same_as
+          ? first.city || prev.shipping_city
+          : prev.shipping_city,
+        shipping_postal_code: same_as
+          ? first.zipcode || prev.shipping_postal_code
+          : prev.shipping_postal_code,
+        shipping_country: same_as
+          ? first.country || prev.shipping_country
+          : prev.shipping_country,
+        shipping_phone: same_as
+          ? first.phone || prev.shipping_phone
+          : prev.shipping_phone,
       }));
     }
-  }, [addresses]);
+  }, [response_Context?.user, addresses, same_as]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -441,11 +478,19 @@ export default function ShippingAddress() {
     const finalData = {
       ...formData,
       same_as,
-      shipping_street: same_as ? formData.billing_street : formData.shipping_street,
+      shipping_street: same_as
+        ? formData.billing_street
+        : formData.shipping_street,
       shipping_city: same_as ? formData.billing_city : formData.shipping_city,
-      shipping_postal_code: same_as ? formData.billing_postal_code : formData.shipping_postal_code,
-      shipping_country: same_as ? formData.billing_country : formData.shipping_country,
-      shipping_phone: same_as ? formData.billing_phone : formData.shipping_phone,
+      shipping_postal_code: same_as
+        ? formData.billing_postal_code
+        : formData.shipping_postal_code,
+      shipping_country: same_as
+        ? formData.billing_country
+        : formData.shipping_country,
+      shipping_phone: same_as
+        ? formData.billing_phone
+        : formData.shipping_phone,
     };
 
     setFormDataCheckout((prev) => ({ ...prev, address: finalData }));
@@ -462,7 +507,9 @@ export default function ShippingAddress() {
         value={formData[id]}
         onChange={handleChange}
       />
-      {formErrors[id] && <small className="text-danger">{formErrors[id]}</small>}
+      {formErrors[id] && (
+        <small className="text-danger">{formErrors[id]}</small>
+      )}
     </div>
   );
 
@@ -482,7 +529,8 @@ export default function ShippingAddress() {
                 <div className="row">
                   {renderInput("full_name", "Full Name")}
                   {renderInput("email", "Email", "email")}
-                  {!isLoggedIn && renderInput("password", "Password", "password")}
+                  {!isLoggedIn &&
+                    renderInput("password", "Password", "password")}
                   <div className="col-lg-6 mb-3">
                     <label htmlFor="customer_type">For Customers</label>
                     <select
@@ -495,10 +543,15 @@ export default function ShippingAddress() {
                       <option value="0">Receipt</option>
                       <option value="1">Invoice</option>
                     </select>
-                    {formErrors.customer_type && <small className="text-danger">{formErrors.customer_type}</small>}
+                    {formErrors.customer_type && (
+                      <small className="text-danger">
+                        {formErrors.customer_type}
+                      </small>
+                    )}
                   </div>
 
-                  {formData.customer_type === "0" && renderInput("tax_code", "Tax Code")}
+                  {formData.customer_type === "0" &&
+                    renderInput("tax_code", "Tax Code")}
                   {formData.customer_type === "1" && (
                     <>
                       {renderInput("company_name", "Company Name")}
@@ -520,7 +573,9 @@ export default function ShippingAddress() {
                       checked={same_as}
                       onChange={handleCheckboxChange}
                     />
-                    <label htmlFor="sameAsBilling">Same as billing address</label>
+                    <label htmlFor="sameAsBilling">
+                      Same as billing address
+                    </label>
                   </div>
 
                   {!same_as && (
@@ -534,7 +589,9 @@ export default function ShippingAddress() {
                     </>
                   )}
                 </div>
-                <button type="submit" className="btn btn-primary mt-3">Continue</button>
+                <button type="submit" className="btn btn-primary mt-3">
+                  Continue
+                </button>
               </form>
             </div>
             <div className="col-lg-4">
@@ -547,4 +604,3 @@ export default function ShippingAddress() {
     </>
   );
 }
-

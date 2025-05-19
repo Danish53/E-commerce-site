@@ -16,17 +16,29 @@ export default function Page() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editAddress, setEditAddress] = useState(null);
 
-  const { addresses, deleteAddress, addAddress, updateAddress, loading, setAddresses, response_Context, fetchAddresses } =
-    useContext(ResponseContext);
+  const {
+    addresses,
+    deleteAddress,
+    addAddress,
+    updateAddress,
+    loading,
+    setAddresses,
+    response_Context,
+    fetchAddresses,
+  } = useContext(ResponseContext);
   // const userId = response_Context?.user?.id || "No ID available";
   // const userId = localStorage.getItem("userId") || "No ID available";
-  const [userId, setUserId] = useState(null); 
-      useEffect(() => {
-        if (typeof window !== "undefined") {
-          const id = localStorage.getItem("userId"); 
-          setUserId(id || "No ID available");
-        }
-      }, []);
+  const [userId, setUserId] = useState(null);
+  const defaultAddress = addresses.find((address) => address.isdefault === 1);
+
+  // console.log(defaultAddress, "ho gia id");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const id = localStorage.getItem("userId");
+      setUserId(id || "No ID available");
+    }
+  }, []);
 
   const [newAddress, setNewAddress] = useState({
     user_id: userId,
@@ -89,7 +101,7 @@ export default function Page() {
     if (userId) {
       fetchAddresses(userId);
     }
-  }, [userId]);
+  }, [userId, addresses]);
 
   return (
     <section className="my_address">
@@ -107,6 +119,48 @@ export default function Page() {
             <p id="btn" className="mb-3" onClick={handleAddNewClick}>
               + Add New Address
             </p>
+            {/* {addresses && addresses.length > 0 ? (
+              addresses.map((addr) => (
+                <div className="address_parent_div pb-3 mb-3" key={addr.id}>
+                  <h3>{addr.name}</h3>
+                  <div className="address_div">
+                    <div className="flex_div">
+                      <p>
+                        {addr.street_address},{addr.zipcode}
+                      </p>
+                      <div className="phone_div">
+                        <FiPhone className="icon_size" />
+                        <p>{addr.phone}</p>
+                      </div>
+                      <p>
+                        {addr?.city}, {addr?.country}
+                      </p>
+                    </div>
+                    <div className="btn_div">
+                      {defaultAddress && <h6 id="default">Default</h6>}
+                      <button
+                        className="edit"
+                        onClick={() => handleEditClick(addr)}
+                      >
+                        <TiEdit className="edit_icon" />
+                        Edit
+                      </button>
+                      <button
+                        className="delete"
+                        onClick={() => deleteAddress(addr.id)}
+                      >
+                        <RiDeleteBin5Line />
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="alert alert-warning" hidden="">
+                No Addresses Found!
+              </p>
+            )} */}
             {addresses && addresses.length > 0 ? (
               addresses.map((addr) => (
                 <div className="address_parent_div pb-3 mb-3" key={addr.id}>
@@ -114,16 +168,22 @@ export default function Page() {
                   <div className="address_div">
                     <div className="flex_div">
                       <p>
-                        {addr.street_address},
-                        {addr.zipcode}
+                        {addr.street_address},{addr.zipcode}
                       </p>
                       <div className="phone_div">
                         <FiPhone className="icon_size" />
                         <p>{addr.phone}</p>
                       </div>
-                      <p>{addr?.city}, {addr?.country}</p>
+                      <p>
+                        {addr?.city}, {addr?.country}
+                      </p>
                     </div>
                     <div className="btn_div">
+                      {addr?.isdefault === 1 ? (
+                        <h6 id="default">Default</h6>
+                      ) : (
+                        ""
+                      )}
                       <button
                         className="edit"
                         onClick={() => handleEditClick(addr)}
@@ -151,10 +211,7 @@ export default function Page() {
         </div>
 
         {isFormVisible && (
-          <form
-            className="edit_form active"
-            onSubmit={handleSubmit}
-          >
+          <form className="edit_form active" onSubmit={handleSubmit}>
             <div className="address_div">
               <h3>{isEditMode ? "Update Address" : "Add a New Address"}</h3>
               <IoClose
@@ -195,7 +252,7 @@ export default function Page() {
                   onChange={handleChange}
                   className="form-control"
                   placeholder="Address"
-                  style={{ color: "#000 !important", height:"60px" }}
+                  style={{ color: "#000 !important", height: "60px" }}
                 />
               </div>
 
@@ -241,7 +298,10 @@ export default function Page() {
                   id="check_box"
                   checked={newAddress.isdefault}
                   onChange={(e) =>
-                    setNewAddress({ ...newAddress, isdefault: e.target.checked })
+                    setNewAddress({
+                      ...newAddress,
+                      isdefault: e.target.checked,
+                    })
                   }
                 />
                 <label className="form-check-label" htmlFor="check_box">
@@ -251,7 +311,11 @@ export default function Page() {
             </div>
 
             <div className="btn_div">
-              <button id="cancel" type="button" onClick={() => setIsFormVisible(false)}>
+              <button
+                id="cancel"
+                type="button"
+                onClick={() => setIsFormVisible(false)}
+              >
                 Cancel
               </button>
               <button id="add_new" type="submit">
