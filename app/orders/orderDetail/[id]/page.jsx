@@ -7,7 +7,7 @@ import "./orderDetail.css";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css"; // Import CSS for skeleton styling
+import "react-loading-skeleton/dist/skeleton.css"; 
 
 export default function Page() {
   const { id } = useParams();
