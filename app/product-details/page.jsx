@@ -53,7 +53,6 @@ export default function page() {
   };
   return (
     <div>
-      {/* <Header2 /> */}
       <div className="container ">
         <div className="row">
           <div className="col-lg-4">
