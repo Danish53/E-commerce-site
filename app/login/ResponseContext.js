@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -7,7 +7,6 @@ import { AiOutlineBorderlessTable } from "react-icons/ai";
 export const ResponseContext = createContext();
 
 export const ResponseProvider = ({ children }) => {
-
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
@@ -20,32 +19,9 @@ export const ResponseProvider = ({ children }) => {
   }, [cart]);
 
   const [showPopup, setShowPopup] = useState(false);
-  // const addToCart = (product, quantity = 1) => {
-  //   setCart((prevCart) => {
-  //     const existingProduct = prevCart.find((item) => item.id === product.id);
 
-  //     if (existingProduct) {
-  //       // Ensure quantity is correctly updated
-  //       return prevCart.map((item) =>
-  //         item.id === product.id
-  //           ? { ...item, quantity: item.quantity + quantity } // Properly increase quantity
-  //           : item
-  //       );
-  //     } else {
-  //       return [...prevCart, { ...product, quantity }]; // Add new product with quantity
-  //     }
-  //   });
-
-  //   // toast.success(`${product.title} added to cart!`);
-  //   setShowPopup(true);
-  //   setTimeout(() => {
-  //     setShowPopup(false);
-  //   }, 5000);
-  //   // console.log("Updated cart:", cart);
-  // };
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
-      // Match by id, color, and size
       const existingProduct = prevCart.find(
         (item) =>
           item.id === product.id &&
@@ -57,8 +33,8 @@ export const ResponseProvider = ({ children }) => {
         // If same id + color + size exists → increase quantity
         return prevCart.map((item) =>
           item.id === product.id &&
-            item.color === product.color &&
-            item.size === product.size
+          item.color === product.color &&
+          item.size === product.size
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -75,23 +51,19 @@ export const ResponseProvider = ({ children }) => {
     }, 5000);
   };
 
-
   // const removeFromCart = (productId) => {
   //   setCart(cart.filter((item) => item.id !== productId));
   //   toast.error("Product removed from cart!");
   // };
   const removeFromCart = (productId, color, size) => {
-    setCart(cart.filter(
-      (item) =>
-        !(
-          item.id === productId &&
-          item.color === color &&
-          item.size === size
-        )
-    ));
+    setCart(
+      cart.filter(
+        (item) =>
+          !(item.id === productId && item.color === color && item.size === size)
+      )
+    );
     toast.error("Product removed from cart!");
   };
-
 
   const clearCart = () => {
     setCart([]);
@@ -111,8 +83,7 @@ export const ResponseProvider = ({ children }) => {
     user_id: null,
   });
 
-
-  // Load user data from sessionStorage (optional) 
+  // Load user data from sessionStorage (optional)
   useEffect(() => {
     const storedData = localStorage.getItem("authData");
     if (storedData) {
@@ -129,24 +100,11 @@ export const ResponseProvider = ({ children }) => {
 
   // console.log(response_Context.user_id, "resss.s.s.s.s.s..s.s.s.s.s.s.s.s9888888888")
 
-  const userId = response_Context?.user?.id || "No ID available"; 
-  console.log(userId, "userId exist?")
+  const userId = response_Context?.user?.id || "No ID available";
+  console.log(userId, "userId exist?");
   // Wishlist
   const [wishlist, setWishlist] = useState([]);
   const [animateWishlist, setAnimateWishlist] = useState(false);
-
-  // var userId = localStorage.getItem("userId") || "No ID available";
-  
-  // var [userId, setUserId] = useState(null);
-
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const id = localStorage.getItem("userId"); 
-  //     setUserId(id || "No ID available");
-  //   }
-  // }, []);
-
-  // console.log(userId, ";;;..llllkkkkkk"); 
 
   // Fetch Wishlist
   const fetchWishlist = async () => {
@@ -237,7 +195,9 @@ export const ResponseProvider = ({ children }) => {
       const data = await response.json();
 
       if (data.status) {
-        const updatedWishlist = wishlist.filter((item) => item.id !== productId);
+        const updatedWishlist = wishlist.filter(
+          (item) => item.id !== productId
+        );
         setWishlist(updatedWishlist);
         setAnimateWishlist(true);
         localStorage.setItem("wishlist", JSON.stringify(updatedWishlist)); // Update localStorage
@@ -253,7 +213,6 @@ export const ResponseProvider = ({ children }) => {
       fetchWishlist();
     }
   }, [userId]);
-
 
   // filter products
   const [products, setProducts] = useState([]);
@@ -275,7 +234,9 @@ export const ResponseProvider = ({ children }) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams(filters).toString();
-      const response = await fetch(`https://foundation.alphalive.pro/api/front/filter-products?${queryParams}`);
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/front/filter-products?${queryParams}`
+      );
       const data = await response.json();
       setProducts(data.products);
     } catch (error) {
@@ -285,7 +246,7 @@ export const ResponseProvider = ({ children }) => {
     }
   }
 
-
+  //searching products
 
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -294,7 +255,9 @@ export const ResponseProvider = ({ children }) => {
   const fetchAddresses = async (userId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`https://foundation.alphalive.pro/api/user/addresses/${userId}`);
+      const response = await axios.get(
+        `https://foundation.alphalive.pro/api/user/addresses/${userId}`
+      );
       setAddresses(response.data);
     } catch (error) {
       console.error("Error fetching addresses:", error);
@@ -302,14 +265,16 @@ export const ResponseProvider = ({ children }) => {
     setLoading(false);
   };
 
-
   // Add new address
   const addAddress = async (newAddress) => {
     try {
-      const response = await axios.post("https://foundation.alphalive.pro/api/user/addresses/store", newAddress);
-      // console.log(response, "response address ka");  
+      const response = await axios.post(
+        "https://foundation.alphalive.pro/api/user/addresses/store",
+        newAddress
+      );
+      // console.log(response, "response address ka");
       setAddresses((prev) => [...prev, response.data.data]);
-      toast.success("Address add successfully!")
+      toast.success("Address add successfully!");
     } catch (error) {
       console.error("Error adding address:", error);
     }
@@ -318,11 +283,16 @@ export const ResponseProvider = ({ children }) => {
   // Update address
   const updateAddress = async (address_id, updatedData) => {
     try {
-      await axios.put(`https://foundation.alphalive.pro/api/user/addresses/update/${address_id}`, updatedData);
-      setAddresses((prev) =>
-        prev.map((addr) => (addr.id === address_id ? { ...addr, ...updatedData } : addr))
+      await axios.put(
+        `https://foundation.alphalive.pro/api/user/addresses/update/${address_id}`,
+        updatedData
       );
-      toast.success("Address updated successfully!")
+      setAddresses((prev) =>
+        prev.map((addr) =>
+          addr.id === address_id ? { ...addr, ...updatedData } : addr
+        )
+      );
+      toast.success("Address updated successfully!");
     } catch (error) {
       console.error("Error updating address:", error);
     }
@@ -331,14 +301,14 @@ export const ResponseProvider = ({ children }) => {
   // Delete address
   const deleteAddress = async (address_id) => {
     try {
-      await axios.delete(`https://foundation.alphalive.pro/api/user/addresses/delete/${address_id}`);
+      await axios.delete(
+        `https://foundation.alphalive.pro/api/user/addresses/delete/${address_id}`
+      );
       setAddresses((prev) => prev.filter((addr) => addr.id !== address_id));
     } catch (error) {
       console.error("Error deleting address:", error);
     }
   };
-
-
 
   // orders
   const [ordersData, setOrdersData] = useState([]);
@@ -346,7 +316,9 @@ export const ResponseProvider = ({ children }) => {
 
   const orders = async (userId) => {
     try {
-      const response = await axios.get(`https://foundation.alphalive.pro/api/user/orders?user_id=${userId}`);
+      const response = await axios.get(
+        `https://foundation.alphalive.pro/api/user/orders?user_id=${userId}`
+      );
       // console.log(response, "order,,,,,")
       setOrdersData(response.data.data);
     } catch (error) {
@@ -354,15 +326,16 @@ export const ResponseProvider = ({ children }) => {
     }
   };
 
-
   // coupon
   const [discountAmount, setDiscountAmount] = useState(0);
-  const [couponError, setCouponError] = useState('');
-  const [couponCode, setCouponCode] = useState('');
+  const [couponError, setCouponError] = useState("");
+  const [couponCode, setCouponCode] = useState("");
 
   const applyCoupon = async (coupon, subtotal) => {
     try {
-      const res = await axios.get(`https://foundation.alphalive.pro/api/front/get/coupon-code?coupon=${coupon}`);
+      const res = await axios.get(
+        `https://foundation.alphalive.pro/api/front/get/coupon-code?coupon=${coupon}`
+      );
       // console.log(res, "response.....a.a.a.a.");
       const { type, price } = res.data.data;
 
@@ -379,15 +352,49 @@ export const ResponseProvider = ({ children }) => {
       setDiscountAmount(discount);
       setCouponError(res.data.error);
     } catch (err) {
-      setCouponError('Invalid coupon code');
-      setCouponCode('');
+      setCouponError("Invalid coupon code");
+      setCouponCode("");
       setDiscountAmount(0);
     }
   };
 
   // header search
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchedProducts, setSearchedProducts] = useState([]);
+  const [searchedLoading, setSearchedLoading] = useState(false);
 
+  // console.log("searched product response", searchedProducts);
+
+  // Debounced search effect
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.trim() !== "") {
+        fetchResults(searchQuery);
+      } else {
+        setSearchedProducts([]);
+      }
+    }, 200);
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  const fetchResults = async (searchQuery) => {
+    setSearchedLoading(true);
+    try {
+      const response = await fetch(
+        `https://foundation.alphalive.pro/api/front/search?search=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      if (!response.ok) throw new Error("Error fetching data");
+      const data = await response.json();
+      setSearchedProducts(data.data);
+    } catch (error) {
+      console.error(error);
+      setSearchedProducts([]);
+    } finally {
+      setSearchedLoading(false);
+    }
+  };
 
   // general settings
   const [setting, setSettings] = useState();
@@ -440,7 +447,6 @@ export const ResponseProvider = ({ children }) => {
     Currency();
   }, []);
 
-
   const [stripekey, setStripeKey] = useState();
   const StripeKeys = async () => {
     try {
@@ -462,7 +468,6 @@ export const ResponseProvider = ({ children }) => {
         const info = JSON.parse(stripeData.information);
         setStripeKey(info.key);
       }
-
     } catch (error) {
       console.error("Error fetching Stripe key:", error);
     }
@@ -472,47 +477,64 @@ export const ResponseProvider = ({ children }) => {
     StripeKeys();
   }, []);
 
-
-
   // stripe
   const [showStripeForm, setShowStripeForm] = useState(false);
   const [formDataCheckout, setFormDataCheckout] = useState({
     address: {},
     items: [],
-    paymentData: {}
+    paymentData: {},
   });
   // console.log(formDataCheckout, "in context page...,.,,,")
 
   return (
-    <ResponseContext.Provider value={{
-      response_Context, setResponse_Context, cart, addToCart, removeFromCart, clearCart, updateCart, addToWishlist, removeFromWishlist, wishlist, products, filters, setFilters, loading, error, addresses,
-      loading,
-      addAddress,
-      updateAddress,
-      deleteAddress,
-      setAddresses,
-      fetchAddresses,
-      ordersData,
-      orders,
-      discountAmount,
-      applyCoupon,
-      couponCode,
-      couponError,
-      fetchFilteredProducts,
-      searchQuery,
-      setSearchQuery,
-      showPopup,
-      setShowPopup,
-      animateWishlist,
-      setAnimateWishlist,
-      setting,
-      showStripeForm,
-      setShowStripeForm,
-      formDataCheckout,
-      setFormDataCheckout,
-      stripekey,
-      currency
-    }}>
+    <ResponseContext.Provider
+      value={{
+        response_Context,
+        setResponse_Context,
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        updateCart,
+        addToWishlist,
+        removeFromWishlist,
+        wishlist,
+        products,
+        filters,
+        setFilters,
+        loading,
+        error,
+        addresses,
+        loading,
+        addAddress,
+        updateAddress,
+        deleteAddress,
+        setAddresses,
+        fetchAddresses,
+        ordersData,
+        orders,
+        discountAmount,
+        applyCoupon,
+        couponCode,
+        couponError,
+        fetchFilteredProducts,
+        searchQuery,
+        searchedProducts,
+        setSearchQuery,
+        searchedLoading,
+        showPopup,
+        setShowPopup,
+        animateWishlist,
+        setAnimateWishlist,
+        setting,
+        showStripeForm,
+        setShowStripeForm,
+        formDataCheckout,
+        setFormDataCheckout,
+        stripekey,
+        currency,
+      }}
+    >
       {children}
     </ResponseContext.Provider>
   );
